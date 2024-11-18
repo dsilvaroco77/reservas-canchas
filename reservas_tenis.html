@@ -1,72 +1,124 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservas de Canchas de Tenis</title>
+    <title>Canchas de Tenis UCT</title>
     <style>
+        /* Estilos generales */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #d28b4d; /* Color terracota representando la arcilla */
+            background-color: #d28b4d;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             text-align: center;
         }
+
+        /* Contenedor principal */
         .container {
             background: white;
-            padding: 20px 30px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
-            width: 100%;
+            max-width: 90%;
+            width: 400px;
         }
+
         h1 {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: #333;
             font-size: 24px;
         }
-        .court-image {
+
+        .date {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        img {
             width: 100%;
             border-radius: 10px;
             margin-bottom: 20px;
-            border: 4px solid #d28b4d;
         }
-        button {
-            display: block;
-            margin: 15px auto;
-            padding: 12px 20px;
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            background-color: #0073e6;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .calendar-button {
             width: 100%;
         }
-        button:hover {
-            background-color: #005bb5;
-        }
-        a {
-            text-decoration: none;
-            color: white;
-        }
     </style>
+    <!-- Estilos de los botones de Google Calendar -->
+    <link href="https://calendar.google.com/calendar/scheduling-button-script.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>Reserva de Cancha de Tenis</h1>
-        <img src="cec.jpg" alt="CANCHAS DE ARCILLA" class="court-image">
-        <button>
-            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" target="_blank">Cancha 1</a>
-        </button>
-        <button>
-            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" target="_blank">Cancha 2</a>
-        </button>
+        <h1>Canchas de Tenis UCT</h1>
+        <!-- Mostrar mes y año -->
+        <div class="date" id="current-date"></div>
+        <p>Selecciona la cancha que deseas reservar:</p>
+        <!-- Imagen de las canchas -->
+        <img src="cec.jpg" alt="Canchas de tenis">
+        
+        <!-- Botones de reserva -->
+        <div class="buttons">
+            <!-- Botón Cancha 1 -->
+            <div id="botonCancha1" class="button-container"></div>
+            
+            <!-- Botón Cancha 2 -->
+            <div id="botonCancha2" class="button-container"></div>
+        </div>
     </div>
+
+    <!-- Scripts de Google Calendar -->
+    <script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script>
+    <script>
+        // Mostrar mes y año actual
+        const dateElement = document.getElementById('current-date');
+        const currentDate = new Date();
+        const options = { month: 'long', year: 'numeric' };
+        dateElement.textContent = currentDate.toLocaleDateString('es-ES', options);
+
+        // Botón Cancha 1
+        (function() {
+            var target = document.getElementById('botonCancha1');
+            window.addEventListener('load', function() {
+                calendar.schedulingButton.load({
+                    url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true',
+                    color: '#EF6C00',
+                    label: "Reservar Cancha 1",
+                    target,
+                });
+            });
+        })();
+
+        // Botón Cancha 2
+        (function() {
+            var target = document.getElementById('botonCancha2');
+            window.addEventListener('load', function() {
+                calendar.schedulingButton.load({
+                    url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true',
+                    color: '#EF6C00',
+                    label: "Reservar Cancha 2",
+                    target,
+                });
+            });
+        })();
+    </script>
 </body>
 </html>
