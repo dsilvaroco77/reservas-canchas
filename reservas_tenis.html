@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -53,14 +52,28 @@
             gap: 15px;
         }
 
-        .button-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
+        /* Botones estilizados */
+        .calendar-button {
+            background-color: #0073e6;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .calendar-button {
-            width: 100%;
+        .calendar-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .calendar-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
     </style>
     <!-- Estilos de los botones de Google Calendar -->
@@ -78,15 +91,18 @@
         <!-- Botones de reserva -->
         <div class="buttons">
             <!-- Botón Cancha 1 -->
-            <div id="botonCancha1" class="button-container"></div>
+            <button class="calendar-button" onclick="abrirVentana('https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true')">
+                Reservar Cancha 1
+            </button>
             
             <!-- Botón Cancha 2 -->
-            <div id="botonCancha2" class="button-container"></div>
+            <button class="calendar-button" onclick="abrirVentana('https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true')">
+                Reservar Cancha 2
+            </button>
         </div>
     </div>
 
-    <!-- Scripts de Google Calendar -->
-    <script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script>
+    <!-- Script -->
     <script>
         // Mostrar mes y año actual
         const dateElement = document.getElementById('current-date');
@@ -94,31 +110,18 @@
         const options = { month: 'long', year: 'numeric' };
         dateElement.textContent = currentDate.toLocaleDateString('es-ES', options);
 
-        // Botón Cancha 1
-        (function() {
-            var target = document.getElementById('botonCancha1');
-            window.addEventListener('load', function() {
-                calendar.schedulingButton.load({
-                    url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true',
-                    color: '#EF6C00',
-                    label: "Reservar Cancha 1",
-                    target,
-                });
-            });
-        })();
-
-        // Botón Cancha 2
-        (function() {
-            var target = document.getElementById('botonCancha2');
-            window.addEventListener('load', function() {
-                calendar.schedulingButton.load({
-                    url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true',
-                    color: '#EF6C00',
-                    label: "Reservar Cancha 2",
-                    target,
-                });
-            });
-        })();
+        // Función para abrir la ventana emergente
+        function abrirVentana(url) {
+            const width = screen.width < 600 ? screen.width * 0.9 : 600;
+            const height = screen.height < 800 ? screen.height * 0.9 : 800;
+            const left = (screen.width - width) / 2;
+            const top = (screen.height - height) / 2;
+            window.open(
+                url,
+                '_blank',
+                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+            );
+        }
     </script>
 </body>
 </html>
