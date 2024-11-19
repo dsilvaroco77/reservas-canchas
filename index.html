@@ -29,6 +29,13 @@
             font-size: 22px;
         }
 
+        .date-today {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
+            font-weight: bold;
+        }
+
         img {
             max-width: 100%;
             border-radius: 10px;
@@ -105,6 +112,7 @@
 <body>
     <div class="container">
         <h1>Canchas de Tenis UCT</h1>
+        <div class="date-today" id="dateToday"></div>
         <p>Selecciona la cancha que deseas reservar:</p>
         <img src="cec.jpg" alt="Canchas de tenis">
 
@@ -120,13 +128,20 @@
         </div>
 
         <!-- Pronóstico del tiempo -->
-        <h2>Pronóstico del tiempo para los próximos días:</h2>
+        <h2>Pronóstico diario para tu partido:</h2>
         <div class="forecast" id="forecast">
             <!-- Pronóstico generado dinámicamente -->
         </div>
     </div>
 
     <script>
+        // Fecha de hoy
+        const todayElement = document.getElementById('dateToday');
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        todayElement.textContent = today.toLocaleDateString('es-ES', options);
+
+        // Pronóstico del tiempo
         const API_KEY = "d06dfd67b5f179dc16d8e3bd61931be2";
         const CITY = "Temuco";
         const COUNTRY_CODE = "CL";
@@ -170,3 +185,4 @@
     </script>
 </body>
 </html>
+
