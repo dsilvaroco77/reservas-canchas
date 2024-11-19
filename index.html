@@ -5,136 +5,166 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canchas de Tenis UCT</title>
     <style>
-        /* Estilos generales */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #2C2C34; /* Fondo elegante y moderno */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background-color: #2C2C34;
+            color: white;
             text-align: center;
         }
 
-        /* Contenedor principal */
         .container {
+            max-width: 90%;
+            margin: 20px auto;
             background: white;
             padding: 20px;
-            border-radius: 12px; /* Bordes redondeados */
+            border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-            max-width: 90%;
-            width: 400px;
+            color: black;
         }
 
         h1 {
-            margin-bottom: 10px;
-            color: #005BBB; /* Azul elegante */
-            font-size: 24px;
-        }
-
-        .date {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 20px;
+            color: #005BBB;
+            font-size: 20px;
         }
 
         img {
-            width: 100%;
+            max-width: 100%;
             border-radius: 10px;
             margin-bottom: 20px;
         }
 
         .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            margin: 20px 0;
         }
 
-        /* Botones estilizados */
         .calendar-button {
-            background-color: #005BBB; /* Azul oscuro */
+            background-color: #005BBB;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            padding: 12px;
+            padding: 10px;
             border: none;
-            border-radius: 8px; /* Bordes redondeados */
+            border-radius: 8px;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            width: 100%;
+            max-width: 200px;
+            text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .calendar-button:hover {
-            transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
         }
 
-        .calendar-button:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        .forecast {
+            margin-top: 20px;
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow-x: auto;
+            gap: 10px;
         }
 
-        /* Estilos para la letra chica */
-        .small-note {
+        .forecast-day {
+            flex: 0 0 80px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .forecast-day img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .forecast-day span {
+            display: block;
             font-size: 12px;
-            color: #666;
+            margin-top: 5px;
+        }
+
+        .small-note {
             margin-top: 20px;
-            line-height: 1.5;
+            font-size: 12px;
+            color: #555;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Canchas de Tenis UCT</h1>
-        <!-- Mostrar mes y año -->
-        <div class="date" id="current-date"></div>
         <p>Selecciona la cancha que deseas reservar:</p>
-        <!-- Imagen de las canchas -->
         <img src="cec.jpg" alt="Canchas de tenis">
-        
-        <!-- Botones de reserva -->
+
         <div class="buttons">
-            <!-- Botón Cancha 1 -->
-            <button class="calendar-button" onclick="abrirVentana('https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true')">
-                Reservar Cancha 1
-            </button>
-            
-            <!-- Botón Cancha 2 -->
-            <button class="calendar-button" onclick="abrirVentana('https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true')">
-                Reservar Cancha 2
-            </button>
+            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" class="calendar-button">Reservar Cancha 1</a>
+            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" class="calendar-button">Reservar Cancha 2</a>
         </div>
-        
-        <!-- Letra chica -->
+
         <div class="small-note">
             Al finalizar el juego, es obligatorio pasar el escobillón a la cancha para dejar la superficie uniforme. 
             Además, se debe regar la cancha para mantenerla en óptimas condiciones para los próximos jugadores. 
             ¡Gracias por tu colaboración!
         </div>
+
+        <!-- Pronóstico del tiempo -->
+        <h2>Pronóstico del tiempo para los próximos días:</h2>
+        <div class="forecast" id="forecast">
+            <!-- Pronóstico generado dinámicamente -->
+        </div>
     </div>
 
-    <!-- Script -->
     <script>
-        // Mostrar mes y año actual
-        const dateElement = document.getElementById('current-date');
-        const currentDate = new Date();
-        const options = { month: 'long', year: 'numeric' };
-        dateElement.textContent = currentDate.toLocaleDateString('es-ES', options);
+        const API_KEY = "d06dfd67b5f179dc16d8e3bd61931be2";
+        const CITY = "Temuco";
+        const COUNTRY_CODE = "CL";
 
-        // Función para abrir la ventana emergente
-        function abrirVentana(url) {
-            const width = screen.width < 600 ? screen.width * 0.9 : 600;
-            const height = screen.height < 800 ? screen.height * 0.9 : 800;
-            const left = (screen.width - width) / 2;
-            const top = (screen.height - height) / 2;
-            window.open(
-                url,
-                '_blank',
-                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-            );
+        async function fetchWeather() {
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${CITY},${COUNTRY_CODE}&units=metric&lang=es&appid=${API_KEY}`);
+                const data = await response.json();
+                const forecastDiv = document.getElementById('forecast');
+
+                // Filtrar datos para obtener uno por día a las 12:00 PM
+                const dailyData = data.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5);
+
+                dailyData.forEach(day => {
+                    const date = new Date(day.dt * 1000);
+                    const options = { weekday: 'short', day: 'numeric' };
+                    const dayString = date.toLocaleDateString('es-ES', options);
+
+                    const tempMax = Math.round(day.main.temp_max); // Temperatura máxima
+                    const rain = Math.round(day.pop * 100); // Probabilidad de lluvia (%)
+                    const icon = day.weather[0].icon;
+                    const iconUrl = `https://openweathermap.org/img/wn/${icon}.png`;
+
+                    forecastDiv.innerHTML += `
+                        <div class="forecast-day">
+                            <span>${dayString}</span>
+                            <img src="${iconUrl}" alt="Clima">
+                            <span>${tempMax}°C</span>
+                            <span>${rain}% lluvia</span>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                document.getElementById('forecast').innerHTML = "No se pudo cargar el pronóstico del tiempo.";
+            }
         }
+
+        fetchWeather();
     </script>
 </body>
 </html>
