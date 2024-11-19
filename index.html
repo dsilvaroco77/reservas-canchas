@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #FFFFFF; /* Fondo blanco */
+            background-color: #FFFFFF;
             color: black;
             text-align: center;
         }
@@ -18,7 +18,7 @@
             max-width: 90%;
             margin: 20px auto;
             background: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             color: black;
@@ -26,12 +26,12 @@
 
         h1 {
             color: #0066CC;
-            font-size: 22px;
+            font-size: 20px;
         }
 
         .date-today {
-            margin-top: 10px;
-            font-size: 16px;
+            margin: 5px 0;
+            font-size: 14px;
             color: #555;
             font-weight: bold;
         }
@@ -39,27 +39,26 @@
         img {
             max-width: 100%;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin: 15px 0;
         }
 
         .buttons {
-            margin: 20px 0;
+            margin: 10px 0;
         }
 
         .calendar-button {
             background-color: #0099FF;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            padding: 10px;
+            padding: 8px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            margin: 10px;
-            width: 100%;
-            max-width: 200px;
+            margin: 5px;
+            width: calc(50% - 10px);
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -68,10 +67,16 @@
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
         }
 
+        .forecast-title {
+            font-size: 18px;
+            color: #004D70;
+            margin-top: 15px;
+        }
+
         .forecast {
-            margin-top: 20px;
-            background: #F8FCFF; /* Fondo muy claro */
-            padding: 15px;
+            margin-top: 10px;
+            background: #F8FCFF;
+            padding: 10px;
             border-radius: 8px;
             display: flex;
             justify-content: space-between;
@@ -81,29 +86,29 @@
         }
 
         .forecast-day {
-            flex: 0 0 100px; /* Tamaño compacto */
-            background: #B3E5FC; /* Fondo celeste cielo */
+            flex: 0 0 90px;
+            background: #B3E5FC;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 10px;
+            padding: 8px;
             text-align: center;
             color: #004D70;
         }
 
         .forecast-day img {
-            width: 50px; /* Íconos más compactos */
-            height: 50px;
+            width: 40px;
+            height: 40px;
             margin: 5px 0;
         }
 
         .forecast-day span {
             display: block;
-            font-size: 12px; /* Texto compacto */
-            margin-top: 5px;
+            font-size: 11px;
+            margin-top: 3px;
         }
 
         .small-note {
-            margin-top: 20px;
+            margin-top: 10px;
             font-size: 12px;
             color: #555;
         }
@@ -117,25 +122,22 @@
         <img src="cec.jpg" alt="Canchas de tenis">
 
         <div class="buttons">
-            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" class="calendar-button">Reservar Cancha 1</a>
-            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" class="calendar-button">Reservar Cancha 2</a>
+            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" class="calendar-button">Cancha 1</a>
+            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" class="calendar-button">Cancha 2</a>
         </div>
 
         <div class="small-note">
-            Al finalizar el juego, es obligatorio pasar el escobillón a la cancha para dejar la superficie uniforme. 
-            Además, se debe regar la cancha para mantenerla en óptimas condiciones para los próximos jugadores. 
-            ¡Gracias por tu colaboración!
+            Al finalizar el juego, pasa el escobillón y riega la cancha para mantenerla en óptimas condiciones. ¡Gracias!
         </div>
 
-        <!-- Pronóstico del tiempo -->
-        <h2>Pronóstico diario para tu partido:</h2>
+        <h2 class="forecast-title">¿Y el clima?</h2>
         <div class="forecast" id="forecast">
             <!-- Pronóstico generado dinámicamente -->
         </div>
     </div>
 
     <script>
-        // Fecha de hoy
+        // Mostrar la fecha de hoy
         const todayElement = document.getElementById('dateToday');
         const today = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -185,4 +187,3 @@
     </script>
 </body>
 </html>
-
