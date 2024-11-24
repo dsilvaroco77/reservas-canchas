@@ -134,7 +134,7 @@
         </div>
 
         <div class="small-note">
-            Cada franja tiene una duración de 90 minutos, incluyendo el tiempo necesario para pasar el escobillón y regar la cancha, asegurando su mantenimiento en óptimas condiciones. ¡Gracias por tu colaboración!
+            Al finalizar el juego, pasa el escobillón y riega la cancha para mantenerla en óptimas condiciones. ¡Gracias!
         </div>
 
         <h2 class="forecast-title">¿Y el clima?</h2>
@@ -157,6 +157,14 @@
         const API_KEY_TOMORROW = "ID7bqddtJYbEtDNxshQl9I5xfhJ72Ufb";
         const LAT = -38.7359; // Latitud de Temuco
         const LON = -72.5904; // Longitud de Temuco
+
+        const members = [
+            "Luis Otth", "Ismael Devia", "Roberto Bermudez", "Roberto Espinoza", "Pablo Lagos", "Francisco Encina",
+            "Gustavo Curaqueo", "Cristian Henriquez", "Cristian Rebolledo", "Sebastián Garrido", "Rodrigo Castro", "Matías Cáceres",
+            "Juan Maripillán", "David Figueroa", "David Silva", "David Fonseca", "Cristian Farias", "Jaime Castillo",
+            "José Baeza", "José Melgarejo", "Miguel Escalona", "Norman Gatica", "Francisco Muñoz", "Sebastian Aguilar",
+            "Victor Navarrete", "Cristobal Correa"
+        ];
 
         async function fetchWeather() {
             try {
@@ -218,64 +226,44 @@
             let message = "";
 
             if (currentHour >= 7 && currentHour <= 23) {
-                // Mensajes adaptados según el clima
-                if (rainProbability > 70) {
-                    message = "Hoy llueve mucho, es mejor evitar las canchas y planificar otra actividad.";
-                } else if (rainProbability > 30) {
-                    message = "Parece que puede llover un poco. ¡No olvides llevar toalla por si acaso!";
-                } else if (cloudCover > 70) {
-                    message = "El día está nublado, lo que puede ser perfecto para evitar el sol fuerte. ¡Vamos a jugar!";
-                } else if (cloudCover > 30) {
-                    message = "Con un clima parcialmente nublado, ¡disfruta sin preocuparte por el sol intenso!";
-                } else {
-                    message = "Un día soleado perfecto para jugar tenis. ¡Recuerda mantenerte hidratado!";
-                }
+                // Seleccionar un miembro aleatorio
+                const randomMember = members[Math.floor(Math.random() * members.length)];
 
-                // Añadir mensaje personalizado según el grupo
-                const groupMessages = [
-                    "Luis Otth, ¡hoy toca darlo todo en la cancha, aunque seas malo por naturaleza!",
-                    "Ismael Devia, ¡el clima está ideal para practicar tu revés!",
-                    "Roberto Bermudez, ¡hoy es un buen día para mejorar tu saque!",
-                    "Roberto Espinoza, ¡aprovecha este día y diviértete!",
-                    "Pablo Lagos, ¡es un gran día para el tenis, vamos con todo!",
-                    "Francisco Encina, ¡cada punto cuenta, da lo mejor!",
-                    "Gustavo Curaqueo, ¡mantente enfocado, hoy es tu día!",
-                    "Cristian Henriquez, ¡concentración y disciplina, vamos a ganar!",
-                    "Cristian Rebolledo, ¡el clima te acompaña, demuestra tu mejor juego!",
-                    "Sebastián Garrido, ¡hoy tienes una cita con la victoria!",
-                    "Rodrigo Castro, ¡jugar bajo el sol nunca fue tan divertido!",
-                    "Matías Cáceres, ¡las nubes no te detendrán hoy!",
-                    "Juan Maripillán, ¡es un buen día para un partido de dobles!",
-                    "David Figueroa, ¡llueva o truene, el tenis sigue adelante!",
-                    "David Silva, ¡hoy el día está perfecto para jugar y mejorar!",
-                    "David Fonseca, ¡practicar cada día te lleva más cerca de la perfección!",
-                    "Cristian Farias, ¡no hay mejor motivación que el buen clima!",
-                    "Jaime Castillo, ¡el sol está contigo, aprovecha cada segundo!",
-                    "José Baeza, ¡recuerda siempre calentar bien antes de jugar!",
-                    "José Melgarejo, ¡hoy es un buen día para nuevos desafíos!",
-                    "Miguel Escalona, ¡la cancha está lista para ti, no pierdas la oportunidad!",
-                    "Norman Gatica, ¡aprovecha el día y diviértete con el tenis!",
-                    "Francisco Muñoz, ¡mantén el foco en tu objetivo, nada te detiene!",
-                    "Sebastian Aguilar, ¡es un gran momento para mejorar tus voleas!",
-                    "Victor Navarrete, ¡no te olvides de disfrutar cada punto!",
-                    "Cristobal Correa, ¡dale con todo, cada día es una oportunidad para ser mejor!",
-                    "Rodrigo Vergara, ¡mantén la concentración y disfruta del partido!",
-                    "Luis Otth, ¡hoy el clima está de tu lado, da lo mejor!",
-                    "Marcos Silva, ¡es el momento de trabajar en tu revés!",
-                    "Felipe González, ¡hoy es el día para sorprender en la cancha!",
-                    "Andrés Morales, ¡con cada golpe mejoras, sigue así!",
-                    "Ricardo Paredes, ¡el clima está ideal para un gran partido!",
-                    "Raúl Fernández, ¡nada como el tenis en un día como hoy!",
-                    "Alejandro Rojas, ¡aprovecha este clima y mejora tu saque!",
-                    "Martín Reyes, ¡el esfuerzo de hoy será tu triunfo de mañana!",
-                    "Gonzalo Pérez, ¡cada punto es una oportunidad, da lo mejor!",
-                    "Jorge Ramírez, ¡concentración y determinación en cada golpe!",
-                    "Eduardo Soto, ¡el sol está de tu lado, disfruta el partido!"
+                // Mensajes motivacionales o sarcásticos
+                const motivationalMessages = [
+                    `¡Hoy es tu día, ${randomMember}! El clima está perfecto para darlo todo.`,
+                    `${randomMember}, no dejes que unas nubes te desmotiven. ¡A la cancha!`,
+                    `${randomMember}, ¡llueva o truene, el tenis no se detiene!`,
+                    `${randomMember}, el sol está contigo. ¡Vamos a jugar!`,
+                    `${randomMember}, parece que puede llover... pero tú puedes con todo.`,
+                    `${randomMember}, hoy el clima está perfecto para mejorar tu revés.`,
+                    `${randomMember}, no hay excusas hoy, el clima está de tu lado.`,
+                    `${randomMember}, ¡es un buen día para sacar con todo!`,
+                    `${randomMember}, las nubes no son nada comparado con tu energía.`,
+                    `${randomMember}, parece que va a llover, pero ¡eso nunca te detendrá!`,
+                    `${randomMember}, un poco de viento sólo hace el juego más interesante.`,
+                    `${randomMember}, ¡hoy toca darle duro, sin excusas!`,
+                    `${randomMember}, el clima está ideal para entrenar tu saque.`,
+                    `${randomMember}, ¡las nubes están de adorno, vamos a la cancha!`,
+                    `${randomMember}, la cancha está lista, y tú ¿lo estás?`,
+                    `${randomMember}, ¡el día es tuyo, aprovecha cada punto!`,
+                    `${randomMember}, si llueve, ¡sólo juega más rápido!`,
+                    `${randomMember}, recuerda: la actitud lo es todo, incluso bajo la lluvia.`,
+                    `${randomMember}, ¡nada mejor que un día soleado para un buen partido!`,
+                    `${randomMember}, ¡hoy es el día para mejorar cada golpe!`,
+                    `${randomMember}, si no practicas hoy, el clima no será la excusa.`,
+                    `${randomMember}, parece que el viento está a tu favor, ¡vamos a usarlo!`,
+                    `${randomMember}, el pronóstico dice tenis. ¡A jugar!`,
+                    `${randomMember}, cada día cuenta. ¡Vamos a la cancha!`,
+                    `${randomMember}, no importa el pronóstico, ¡importa cómo juegues hoy!`,
+                    `${randomMember}, parece un día perfecto para unos aces.`,
+                    `${randomMember}, el sol está brillando y tu juego también debería.`,
+                    `${randomMember}, con o sin nubes, ¡hoy te toca ganar!`,
+                    `${randomMember}, un poco de lluvia no es nada, ¡hoy toca entrenar con fuerza!`
                 ];
 
-                // Combinar mensaje climático con mensaje personalizado
-                const randomIndex = Math.floor(Math.random() * groupMessages.length);
-                message += " " + groupMessages[randomIndex];
+                // Seleccionar un mensaje aleatorio
+                message = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
             } else {
                 message = "Las canchas están cerradas. ¡Vuelve mañana para más tenis!";
             }
