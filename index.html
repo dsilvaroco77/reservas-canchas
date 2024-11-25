@@ -166,6 +166,26 @@
             "Victor Navarrete", "Cristobal Correa"
         ];
 
+        const motivationalMessages = [
+            "¡Hoy es tu día para brillar en la cancha!",
+            "No hay nada mejor que el sol para llenarnos de energía. ¡Vamos a jugar!",
+            "El clima está perfecto, no hay excusas. ¡Dale con todo!",
+            "¡Vamos a aprovechar el buen tiempo y mejorar ese revés!",
+            "El sol brilla tanto como tu determinación. ¡A la cancha!",
+            "Un día nublado significa menos calor. ¡Perfecto para entrenar sin parar!",
+            "Hoy el clima está ideal para practicar tus saques. ¡Hazlo valer!",
+            "No hay mejor clima para mejorar tu técnica. ¡Aprovecha!",
+            "El sol está contigo, igual que tu pasión por el tenis. ¡Vamos!",
+            "Nublado pero sin lluvia, ¡una razón más para no detenerse!",
+            "Nada mejor que un día soleado para mostrar de qué estás hecho.",
+            "El clima perfecto para esos rallies largos. ¡Vamos a practicar!",
+            "Con este clima, cada punto cuenta. ¡Vamos con todo!",
+            "Hoy toca darle fuerte, el clima está de nuestro lado.",
+            "Aprovecha este día sin lluvia para dar lo mejor de ti.",
+            "Hoy el sol está para acompañarte a mejorar. ¡A la cancha!",
+            "El clima no podría ser mejor, ¡a aprovechar cada minuto!"
+        ];
+
         async function fetchWeather() {
             try {
                 const response = await fetch(`https://api.tomorrow.io/v4/timelines?location=${LAT},${LON}&fields=temperatureMax,temperatureMin,precipitationProbability,cloudCover&units=metric&timesteps=1d&apikey=${API_KEY_TOMORROW}`);
@@ -216,8 +236,15 @@
         // Actualizar mensaje motivacional según el clima
         function updateMotivationalMessage(forecast) {
             const tennisMessageElement = document.getElementById('tennisMessage');
-            const currentHour = new Date().getHours();
+            const currentDay = today.getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+            const currentHour = today.getHours();
             
+            // Si es domingo, las canchas están cerradas
+            if (currentDay === 0) {
+                tennisMessageElement.textContent = "Las canchas están cerradas los domingos. Aprovecha el día para descansar y planificar cómo mejorar tu juego la próxima semana.";
+                return;
+            }
+
             // Obtener el pronóstico de hoy
             const todayForecast = forecast[0];
             const rainProbability = Math.round(todayForecast.values.precipitationProbability);
@@ -228,42 +255,15 @@
             if (currentHour >= 7 && currentHour <= 23) {
                 // Seleccionar un miembro aleatorio
                 const randomMember = members[Math.floor(Math.random() * members.length)];
+                // Seleccionar un mensaje motivacional aleatorio
+                const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
 
-                // Mensajes motivacionales o sarcásticos
-                const motivationalMessages = [
-                    `¡Hoy es tu día, ${randomMember}! El clima está perfecto para darlo todo.`,
-                    `${randomMember}, no dejes que unas nubes te desmotiven. ¡A la cancha!`,
-                    `${randomMember}, ¡llueva o truene, el tenis no se detiene!`,
-                    `${randomMember}, el sol está contigo. ¡Vamos a jugar!`,
-                    `${randomMember}, parece que puede llover... pero tú puedes con todo.`,
-                    `${randomMember}, hoy el clima está perfecto para mejorar tu revés.`,
-                    `${randomMember}, no hay excusas hoy, el clima está de tu lado.`,
-                    `${randomMember}, ¡es un buen día para sacar con todo!`,
-                    `${randomMember}, las nubes no son nada comparado con tu energía.`,
-                    `${randomMember}, parece que va a llover, pero ¡eso nunca te detendrá!`,
-                    `${randomMember}, un poco de viento sólo hace el juego más interesante.`,
-                    `${randomMember}, ¡hoy toca darle duro, sin excusas!`,
-                    `${randomMember}, el clima está ideal para entrenar tu saque.`,
-                    `${randomMember}, ¡las nubes están de adorno, vamos a la cancha!`,
-                    `${randomMember}, la cancha está lista, y tú ¿lo estás?`,
-                    `${randomMember}, ¡el día es tuyo, aprovecha cada punto!`,
-                    `${randomMember}, si llueve, ¡sólo juega más rápido!`,
-                    `${randomMember}, recuerda: la actitud lo es todo, incluso bajo la lluvia.`,
-                    `${randomMember}, ¡nada mejor que un día soleado para un buen partido!`,
-                    `${randomMember}, ¡hoy es el día para mejorar cada golpe!`,
-                    `${randomMember}, si no practicas hoy, el clima no será la excusa.`,
-                    `${randomMember}, parece que el viento está a tu favor, ¡vamos a usarlo!`,
-                    `${randomMember}, el pronóstico dice tenis. ¡A jugar!`,
-                    `${randomMember}, cada día cuenta. ¡Vamos a la cancha!`,
-                    `${randomMember}, no importa el pronóstico, ¡importa cómo juegues hoy!`,
-                    `${randomMember}, parece un día perfecto para unos aces.`,
-                    `${randomMember}, el sol está brillando y tu juego también debería.`,
-                    `${randomMember}, con o sin nubes, ¡hoy te toca ganar!`,
-                    `${randomMember}, un poco de lluvia no es nada, ¡hoy toca entrenar con fuerza!`
-                ];
-
-                // Seleccionar un mensaje aleatorio
-                message = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+                // Mensajes específicos según el clima
+                if (rainProbability > 70) {
+                    message = `${randomMember}, hoy llueve mucho, las canchas no están en condiciones de ser usadas. Es mejor evitar el riesgo de resbalar.`;
+                } else {
+                    message = `${randomMember}, ${randomMessage}`;
+                }
             } else {
                 message = "Las canchas están cerradas. ¡Vuelve mañana para más tenis!";
             }
