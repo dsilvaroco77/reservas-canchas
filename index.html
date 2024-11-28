@@ -227,9 +227,9 @@
         // Función para asignar íconos dinámicos
         const getWeatherIcon = (cloudCover, rainProbability) => {
             if (rainProbability > 70) return "🌧️"; // Lluvia intensa
-            if (rainProbability > 30) return "🌦️"; // Lluvia ligera
-            if (cloudCover > 70) return "☁️"; // Nublado
-            if (cloudCover > 30) return "⛅"; // Parcialmente nublado
+            if (rainProbability > 20) return "🌦️"; // Lluvia ligera
+            if (cloudCover > 80) return "☁️"; // Nublado
+            if (cloudCover > 50) return "⛅"; // Parcialmente nublado
             return "☀️"; // Soleado
         };
 
