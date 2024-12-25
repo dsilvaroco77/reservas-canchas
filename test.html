@@ -134,7 +134,7 @@
         </div>
 
         <div class="small-note">
-            Al finalizar el juego pasa el escobillón, barre las lineas y riega la cancha para mantenerla en óptimas condiciones. Ocupa los basureros!. Solo se permite una reserva diaria por socio ¡Gracias!
+            Al finalizar el juego pasa el escobillón, barre las líneas y riega la cancha para mantenerla en óptimas condiciones. Ocupa los basureros. Solo se permite una reserva diaria por socio. ¡Gracias!
         </div>
 
         <h2 class="forecast-title">¿Y el clima?</h2>
@@ -154,7 +154,60 @@
     </div>
 
     <script>
-        // Código JavaScript permanece igual (mostrar fecha, clima, etc.)
+        // Mostrar la fecha de hoy
+        const todayElement = document.getElementById('dateToday');
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        todayElement.textContent = today.toLocaleDateString('es-ES', options);
+
+        // Pronóstico del tiempo con Tomorrow.io
+        const API_KEY_TOMORROW = "ID7bqddtJYbEtDNxshQl9I5xfhJ72Ufb";
+        const LAT = -38.7359; // Latitud de Temuco
+        const LON = -72.5904; // Longitud de Temuco
+
+        async function fetchWeather() {
+            try {
+                const response = await fetch(`https://api.tomorrow.io/v4/timelines?location=${LAT},${LON}&fields=temperatureMax,temperatureMin,precipitationProbability,cloudCover&units=metric&timesteps=1d&apikey=${API_KEY_TOMORROW}`);
+                const data = await response.json();
+                const forecastDiv = document.getElementById('forecast');
+
+                const dailyData = data.data.timelines[0].intervals.slice(0, 7);
+                dailyData.forEach(day => {
+                    const date = new Date(day.startTime);
+                    const options = { weekday: 'short', day: 'numeric' };
+                    const dayString = date.toLocaleDateString('es-ES', options);
+
+                    const tempMax = Math.round(day.values.temperatureMax);
+                    const tempMin = Math.round(day.values.temperatureMin);
+                    const rain = Math.round(day.values.precipitationProbability);
+                    const cloudCover = Math.round(day.values.cloudCover);
+
+                    const icon = getWeatherIcon(cloudCover, rain);
+
+                    forecastDiv.innerHTML += `
+                        <div class="forecast-day">
+                            <span>${dayString}</span>
+                            <span style="font-size: 30px;">${icon}</span>
+                            <span>Máx: ${tempMax}°C</span>
+                            <span>Mín: ${tempMin}°C</span>
+                            <span>${rain}% lluvia</span>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                document.getElementById('forecast').innerHTML = "No se pudo cargar el pronóstico del tiempo.";
+            }
+        }
+
+        const getWeatherIcon = (cloudCover, rainProbability) => {
+            if (rainProbability > 70) return "🌧️";
+            if (rainProbability > 20) return "🌦️";
+            if (cloudCover > 80) return "☁️";
+            if (cloudCover > 50) return "⛅";
+            return "☀️";
+        };
+
+        fetchWeather();
     </script>
 </body>
 </html>
