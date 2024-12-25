@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canchas de Tenis UCT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FFFFFF;
+            color: black;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 90%;
+            margin: 20px auto;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: black;
+        }
+
+        h1, h2 {
+            color: #0066CC;
+            font-size: 20px;
+        }
+
+        .date-today {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .tennis-message {
+            margin: 15px 0;
+            font-size: 16px;
+            color: #007700;
+            font-weight: bold;
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .buttons {
+            margin: 10px 0;
+        }
+
+        .calendar-button {
+            background-color: #0099FF;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+            width: calc(50% - 10px);
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-button:hover {
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .forecast-title {
+            font-size: 18px;
+            color: #004D70;
+            margin-top: 15px;
+        }
+
+        .forecast {
+            margin-top: 10px;
+            background: #F8FCFF;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow-x: auto;
+            gap: 10px;
+        }
+
+        .forecast-day {
+            flex: 0 0 90px;
+            background: #B3E5FC;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 8px;
+            text-align: center;
+            color: #004D70;
+        }
+
+        .forecast-day img {
+            width: 40px;
+            height: 40px;
+            margin: 5px 0;
+        }
+
+        .forecast-day span {
+            display: block;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .small-note {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Canchas de Tenis UCT</h1>
+        <div class="date-today" id="dateToday"></div>
+        <p>Selecciona la cancha que deseas reservar:</p>
+        <img src="cec.jpg" alt="Canchas de tenis">
+
+        <div class="buttons">
+            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" class="calendar-button">Cancha 1</a>
+            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" class="calendar-button">Cancha 2</a>
+        </div>
+
+        <div class="small-note">
+            Al finalizar el juego pasa el escobillón, barre las lineas y riega la cancha para mantenerla en óptimas condiciones. Ocupa los basureros!. Solo se permite una reserva diaria por socio ¡Gracias!
+        </div>
+
+        <h2 class="forecast-title">¿Y el clima?</h2>
+        <div class="forecast" id="forecast">
+            <!-- Pronóstico generado dinámicamente -->
+        </div>
+
+        <!-- Frase Motivacional -->
+        <div class="tennis-message" id="tennisMessage">Generando frase motivacional...</div>
+
+        <!-- Normas de Uso -->
+        <div class="container">
+            <h2>Normas de Uso de las Canchas</h2>
+            <p>Es importante seguir las normas para mantener nuestras canchas en óptimas condiciones. Haz clic en el enlace para leerlas:</p>
+            <a href="letrero_canchas_png.png" class="calendar-button" target="_blank">Ver Normas de Uso</a>
+        </div>
+    </div>
+
+    <script>
+        // Código JavaScript permanece igual (mostrar fecha, clima, etc.)
+    </script>
+</body>
+</html>
