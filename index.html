@@ -50,6 +50,9 @@
         }
 
         .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             margin: 10px 0;
         }
 
@@ -63,15 +66,38 @@
             border-radius: 8px;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
             margin: 5px;
-            width: calc(50% - 10px);
+            width: 45%;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .calendar-button:hover {
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .small-button {
+            background-color: #FF9900;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 6px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 5px;
+            width: 30%;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .small-button:hover {
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .complex {
+            margin-top: 20px;
         }
 
         .forecast-title {
@@ -126,19 +152,34 @@
         <h1>Canchas de Tenis UCT</h1>
         <div class="date-today" id="dateToday"></div>
         <p>Selecciona la cancha que deseas reservar:</p>
-        <img src="cec.jpg" alt="Canchas de tenis">
 
-        <div class="buttons">
-            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" class="calendar-button">Cancha 1</a>
-            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" class="calendar-button">Cancha 2</a>
-<a href="normas.html" class="calendar-button">Normas de Uso</a>
-
+        <!-- Complejo CEC -->
+        <div class="complex">
+            <h2>Complejo CEC (Canchas de Arcilla)</h2>
+            <img src="cec.jpg" alt="Canchas de Arcilla">
+            <div class="buttons">
+                <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" class="calendar-button">Cancha CEC 1</a>
+                <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" class="calendar-button">Cancha CEC 2</a>
+            </div>
         </div>
+
+        <!-- Complejo CJP -->
+        <div class="complex">
+            <h2>Complejo CJP (Canchas de Asfalto)</h2>
+            <img src="cjp.jpg" alt="Canchas de Asfalto">
+            <div class="buttons">
+                <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1GpWHQQiPLKIG7X4TDDUcngRRUAB6Dbo-xM-Ponh2IWTxNwwFnT74l71-bL-toFqDC6b0mAhhu?gv=true" class="calendar-button">Cancha CJP 1</a>
+                <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ23FAuAAPtwBFxJUeCMMAKAQlZTRGMrX3JGA8s3b0Rl9TOj0du1cb6m1cin96U30DfFV03piwMA?gv=true" class="calendar-button">Cancha CJP 2</a>
+            </div>
+        </div>
+
+        <a href="normas.html" class="small-button">Normas de Uso</a>
 
         <div class="small-note">
-            Al finalizar el juego pasa el escobillón, barre las lineas y riega la cancha para mantenerla en óptimas condiciones. Ocupa los basureros!. Solo se permite una reserva diaria por socio ¡Gracias!
+            Al finalizar el juego pasa el escobillón, barre las líneas y riega la cancha para mantenerla en óptimas condiciones. ¡Ocupa los basureros! Solo se permite una reserva diaria por socio. ¡Gracias!
         </div>
 
+      
         <h2 class="forecast-title">¿Y el clima?</h2>
         <div class="forecast" id="forecast">
             <!-- Pronóstico generado dinámicamente -->
