@@ -15,14 +15,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         body {
@@ -73,7 +67,7 @@
             background-size: cover;
             background-position: center;
             border-radius: 24px;
-            padding: 40px;
+            padding: 30px;
             min-height: 450px;
             display: flex;
             flex-direction: column;
@@ -97,14 +91,7 @@
             z-index: 1;
         }
 
-        .complex-card > * {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .card-content {
-            color: white;
-        }
+        .complex-card > * { position: relative; z-index: 2; }
         
         .card-content h2 {
             font-size: 32px;
@@ -121,11 +108,7 @@
             text-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
         
-        .buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
+        .buttons { display: flex; gap: 15px; flex-wrap: wrap; }
 
         .calendar-button {
             background-color: var(--glass-background);
@@ -151,7 +134,7 @@
         .info-section {
             background-color: var(--card-background);
             border-radius: 24px;
-            padding: 40px;
+            padding: 30px;
             margin-bottom: 60px;
         }
         
@@ -186,10 +169,6 @@
             transition: background-color 0.3s ease;
         }
         
-        .forecast-day:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
         .forecast-day span { display: block; font-size: 14px; font-weight: 500; }
         .forecast-day .day-name { color: var(--subtle-text-color); font-weight: 600; }
         .forecast-day .weather-icon { font-size: 36px; margin: 8px 0; }
@@ -208,6 +187,7 @@
             max-width: 700px;
             margin: 0 auto 30px;
             line-height: 1.5;
+            min-height: 50px; /* Evita saltos de layout */
         }
 
         .footer-links a {
@@ -235,6 +215,21 @@
             margin-right: auto;
             line-height: 1.6;
         }
+        
+        @media (max-width: 768px) {
+            .main-container { padding: 20px 15px; }
+            header { margin-bottom: 40px; }
+            header h1 { font-size: 36px; }
+            header .date-today { font-size: 16px; }
+            .complex-grid { gap: 20px; }
+            .complex-card { padding: 25px; min-height: 400px; }
+            .card-content h2 { font-size: 28px; }
+            .card-content p { font-size: 16px; }
+            .info-section { padding: 25px; }
+            .section-title { font-size: 24px; }
+            .tennis-message { font-size: 18px; }
+        }
+
     </style>
 </head>
 <body>
@@ -288,11 +283,10 @@
     </div>
 
     <script>
+        // --- ELEMENTOS Y DATOS GLOBALES ---
         const todayElement = document.getElementById('dateToday');
+        const tennisMessageElement = document.getElementById('tennisMessage');
         const today = new Date();
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        todayElement.textContent = today.toLocaleDateString('es-ES', options);
-
         const API_KEY_TOMORROW = "ID7bqddtJYbEtDNxshQl9I5xfhJ72Ufb";
         const LAT = -38.7359;
         const LON = -72.5904;
@@ -324,6 +318,8 @@
             "Hoy no jugamos para ganar, sino para demostrar que sabemos correr.", "Tu saque es tan rápido que ni tú sabes a dónde va... ¡sorpresa!", "Eres mas malo que el presidente del club.", "cuidado que los mutantes estan ganando todo!", "no robes puntos como Melgarejo!","tambien fuiste atendido por el \"nana vieja\"?"
         ];
 
+        // --- FUNCIONES ---
+
         const getWeatherIcon = (cloudCover, rainProbability) => {
             if (rainProbability > 70) return "🌧️";
             if (rainProbability > 20) return "🌦️";
@@ -332,30 +328,27 @@
             return "☀️";
         };
 
-        function updateMotivationalMessage(forecast) {
-            const tennisMessageElement = document.getElementById('tennisMessage');
+        function updateMotivationalMessage(forecastData = null) {
             const currentDay = today.getDay();
             const currentHour = today.getHours();
+            let message = "¡A jugar!";
             
             if (currentDay === 0) {
-                tennisMessageElement.textContent = "Las canchas están cerradas los domingos. Aprovecha para descansar y planificar cómo mejorar tu juego la próxima semana.";
-                return;
-            }
-
-            const todayForecast = forecast[0];
-            const rainProbability = Math.round(todayForecast.values.precipitationProbability);
-            let message = "";
-
-            if (currentHour >= 7 && currentHour <= 23) {
+                message = "Las canchas están cerradas los domingos. Aprovecha para descansar y planificar tu próxima semana de juego.";
+            } else if (currentHour < 7 || currentHour > 23) {
+                message = "Las canchas están cerradas por ahora. ¡Vuelve mañana para más tenis!";
+            } else {
                 const randomMember = members[Math.floor(Math.random() * members.length)];
                 const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
-                if (rainProbability > 70) {
-                    message = `${randomMember}, hoy llueve mucho y las canchas no están en condiciones de ser usadas. Es mejor evitar el riesgo de resbalar.`;
-                } else {
-                    message = `"${randomMessage}"`;
+                message = `${randomMember}, ${randomMessage}`;
+
+                // Si tenemos datos del clima, revisamos si hay que poner un aviso de lluvia
+                if (forecastData) {
+                    const rainProbability = Math.round(forecastData[0].values.precipitationProbability);
+                    if (rainProbability > 70) {
+                        message = `${randomMember}, hoy llueve mucho y las canchas no están en condiciones. Es mejor evitar el riesgo de resbalar.`;
+                    }
                 }
-            } else {
-                message = "Las canchas están cerradas por ahora. ¡Vuelve mañana para más tenis!";
             }
             tennisMessageElement.textContent = message;
         }
@@ -367,8 +360,8 @@
                 const data = await response.json();
                 
                 forecastDiv.innerHTML = ""; 
-
                 const dailyData = data.data.timelines[0].intervals.slice(0, 7);
+                
                 dailyData.forEach(day => {
                     const date = new Date(day.startTime);
                     const dayString = new Intl.DateTimeFormat('es-ES', { weekday: 'short' }).format(date).replace(/^\w/, c => c.toUpperCase());
@@ -390,14 +383,26 @@
                     `;
                 });
                 
+                // Actualiza el mensaje con la información del clima recién obtenida
                 updateMotivationalMessage(dailyData);
             } catch (error) {
-                console.error("Error fetching weather data:", error);
+                console.error("Error al cargar el clima:", error);
                 forecastDiv.innerHTML = "<p>No se pudo cargar el pronóstico del tiempo.</p>";
             }
         }
         
+        // --- EJECUCIÓN INICIAL ---
+
+        // 1. Muestra la fecha
+        todayElement.textContent = today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        
+        // 2. Muestra un mensaje personalizado INMEDIATAMENTE al cargar
+        updateMotivationalMessage();
+
+        // 3. Busca el clima y actualiza el mensaje y el pronóstico
         fetchWeather();
+        
+        // 4. Configura la actualización del clima cada hora
         setInterval(fetchWeather, 60 * 60 * 1000);
     </script>
 </body>
