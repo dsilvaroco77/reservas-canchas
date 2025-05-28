@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canchas de Tenis UCT (Con Open-Meteo)</title>
+    <title>Canchas de Tenis UCT</title>
     <style>
         :root {
             --background-color: #111;
@@ -11,7 +11,6 @@
             --subtle-text-color: #a1a1a6;
             --accent-color: #007aff;
             --card-background: rgba(35, 35, 35, 0.5);
-            --glass-background: rgba(30, 30, 30, 0.75);
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: var(--background-color); color: var(--text-color); overflow-x: hidden; }
@@ -19,25 +18,96 @@
         header { text-align: center; margin-bottom: 60px; }
         header h1 { font-size: 48px; font-weight: 700; margin: 0; letter-spacing: -1px; }
         header .date-today { font-size: 18px; color: var(--subtle-text-color); font-weight: 500; margin-top: 8px; }
-        .complex-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 60px; }
-        .complex-card { background-size: cover; background-position: center; border-radius: 24px; padding: 30px; min-height: 450px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); transition: transform 0.4s ease; }
-        .complex-card::after { content: ""; position: absolute; top: 0; left: -150%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent); transition: left 0.6s ease; }
-        .complex-card:hover { transform: scale(1.03); }
-        .complex-card:hover::after { left: 150%; }
-        .complex-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%); z-index: 1; }
-        .complex-card > * { position: relative; z-index: 2; }
-        .card-content h2 { font-size: 32px; font-weight: 700; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .card-content p { font-size: 18px; font-weight: 500; margin: 5px 0 0; color: rgba(255, 255, 255, 0.85); text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .buttons { display: flex; gap: 15px; flex-wrap: wrap; }
-        .calendar-button { background-color: var(--glass-background); color: white; font-size: 16px; font-weight: 600; padding: 12px 24px; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 30px; cursor: pointer; text-decoration: none; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: background-color 0.3s ease, transform 0.2s ease; }
-        .calendar-button:hover { background-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+        
+        .complex-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+
+        .complex-wrapper {
+            text-align: center;
+        }
+
+        .complex-title {
+            margin-bottom: 15px;
+        }
+
+        .complex-title h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+        }
+
+        .complex-title p {
+            font-size: 16px;
+            color: var(--subtle-text-color);
+            margin: 0;
+        }
+
+        .complex-card {
+            position: relative;
+            width: 100%;
+            padding-top: 60%; 
+            background-size: cover;
+            background-position: center;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .clickable-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            z-index: 2;
+        }
+
+        .court-link-zone {
+            flex: 1;
+            height: 100%;
+            transition: background-color 0.3s ease;
+            /* AÑADIDO: Para centrar el texto que aparecerá */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .court-link-zone:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+        }
+        
+        /* --- NUEVO: Estilo para el texto dentro del botón --- */
+        .zone-text {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+            text-align: center;
+            padding: 10px;
+            opacity: 0; /* Invisible por defecto */
+            transition: opacity 0.3s ease;
+            pointer-events: none; /* Para que no interfiera con el link */
+        }
+
+        .court-link-zone:hover .zone-text {
+            opacity: 1; /* Visible en hover */
+        }
+
+
         .info-section { background-color: var(--card-background); border-radius: 24px; padding: 30px; margin-bottom: 60px; }
         .section-title { font-size: 28px; font-weight: 600; margin-top: 0; margin-bottom: 5px; color: var(--text-color); }
         .smart-suggestion { font-size: 16px; color: var(--accent-color); font-weight: 500; margin-bottom: 25px; min-height: 24px;}
         .forecast-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 20px; }
         .forecast-container::-webkit-scrollbar { display: none; }
         .forecast-container { -ms-overflow-style: none; scrollbar-width: none; }
-        .forecast-day { flex: 0 0 110px; background: var(--glass-background); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; padding: 15px; text-align: center; }
+        .forecast-day { flex: 0 0 110px; background: rgba(30, 30, 30, 0.75); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 18px; padding: 15px; text-align: center; }
         .forecast-day span { display: block; font-size: 14px; font-weight: 500; margin-top: 5px; }
         .weather-icon-emoji { font-size: 36px; line-height: 1; margin: 8px 0; }
         footer { text-align: center; padding: 0 20px 40px; color: var(--subtle-text-color); }
@@ -45,7 +115,7 @@
         .footer-links a { color: var(--subtle-text-color); background-color: var(--card-background); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 10px 20px; text-decoration: none; margin: 0 10px; transition: color 0.3s, background-color 0.3s; }
         .footer-links a:hover { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
         .small-note { margin-top: 30px; font-size: 14px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-        @media (max-width: 768px) { .main-container { padding: 20px 15px; } header { margin-bottom: 40px; } header h1 { font-size: 36px; } header .date-today { font-size: 16px; } .complex-grid { gap: 20px; } .complex-card { padding: 25px; min-height: 400px; } .card-content h2 { font-size: 28px; } .card-content p { font-size: 16px; } .info-section { padding: 25px; } .section-title { font-size: 24px; } .tennis-message { font-size: 18px; } }
+        @media (max-width: 768px) { .main-container { padding: 20px 15px; } header { margin-bottom: 40px; } header h1 { font-size: 36px; } header .date-today { font-size: 16px; } .complex-grid { grid-template-columns: 1fr; gap: 40px;} .info-section { padding: 25px; } .section-title { font-size: 24px; } .tennis-message { font-size: 18px; } }
     </style>
 </head>
 <body>
@@ -56,21 +126,41 @@
         </header>
         <main>
             <div class="complex-grid">
-                <article class="complex-card" style="background-image: url('cec.jpg');">
-                    <div class="card-content"><h2>Complejo CEC</h2><p>Canchas de Arcilla</p></div>
-                    <div class="buttons">
-                        <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" target="_blank" class="calendar-button">Reservar Cancha 1</a>
-                        <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" target="_blank" class="calendar-button">Reservar Cancha 2</a>
+                <div class="complex-wrapper">
+                    <div class="complex-title">
+                        <h2>Complejo CEC</h2>
+                        <p>Canchas de Arcilla</p>
                     </div>
-                </article>
-                <article class="complex-card" style="background-image: url('cjp.jpg');">
-                    <div class="card-content"><h2>Complejo CJP</h2><p>Canchas de Asfalto</p></div>
-                    <div class="buttons">
-                        <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1GpWHQQiPLKIG7X4TDDUcngRRUAB6Dbo-xM-Ponh2IWTxNwwFnT74l71-bL-toFqDC6b0mAhhu?gv=true" target="_blank" class="calendar-button">Reservar Cancha 1</a>
-                        <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ23FAuAAPtwBFxJUeCMMAKAQlZTRGMrX3JGA8s3b0Rl9TOj0du1cb6m1cin96U30DfFV03piwMA?gv=true" target="_blank" class="calendar-button">Reservar Cancha 2</a>
+                    <div class="complex-card" style="background-image: url('cec.jpg');">
+                        <div class="clickable-overlay">
+                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CEC 1">
+                                <span class="zone-text">Reserva Cancha CEC 1</span>
+                            </a>
+                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CEC 2">
+                                <span class="zone-text">Reserva Cancha CEC 2</span>
+                            </a>
+                        </div>
                     </div>
-                </article>
+                </div>
+
+                <div class="complex-wrapper">
+                    <div class="complex-title">
+                        <h2>Complejo CJP</h2>
+                        <p>Canchas de Asfalto</p>
+                    </div>
+                    <div class="complex-card" style="background-image: url('cjp.jpg');">
+                        <div class="clickable-overlay">
+                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1GpWHQQiPLKIG7X4TDDUcngRRUAB6Dbo-xM-Ponh2IWTxNwwFnT74l71-bL-toFqDC6b0mAhhu?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CJP 1">
+                                <span class="zone-text">Reserva Cancha CJP 1</span>
+                            </a>
+                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ23FAuAAPtwBFxJUeCMMAKAQlZTRGMrX3JGA8s3b0Rl9TOj0du1cb6m1cin96U30DfFV03piwMA?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CJP 2">
+                                <span class="zone-text">Reserva Cancha CJP 2</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <section class="info-section">
                 <h2 class="section-title">Pronóstico del Tiempo en Temuco</h2>
                 <p class="smart-suggestion" id="smartSuggestion">Analizando el mejor momento para jugar...</p>
@@ -95,29 +185,9 @@
         const members = ["Luis Otth", "Ismael Devia", "Roberto Bermudez", "Roberto Espinoza", "Pablo Lagos", "Francisco Encina", "Gustavo Curaqueo", "Cristian Henriquez", "Cristian Rebolledo", "Sebastián Garrido", "Rodrigo Castro", "Matías Cáceres", "Juan Maripillán", "David Figueroa", "David Silva", "David Fonseca", "Cristian Farias", "Jaime Castillo", "José Baeza", "José Melgarejo", "Miguel Escalona", "Rodrigo Zuñiga", "Francisco Muñoz", "Sebastian Aguilar", "Victor Navarrete", "Cristobal Correa", "Jano Medina", "Miguel Angulo", "Carolina Cárdenas", "Mauricio Matus", "Angélica Encina", "Maria José", "Francisco Mendez", "Violeta Moreno", "Valeria Schatter"];
         const motivationalMessages = ["¡Hoy es tu día para brillar en la cancha!", "No hay nada mejor que el sol para llenarnos de energía. ¡Vamos a jugar!", "El clima está perfecto, no hay excusas. ¡Dale con todo!", "¡Vamos a aprovechar el buen tiempo y mejorar ese revés!", "El sol brilla tanto como tu determinación. ¡A la cancha!", "Un día nublado significa menos calor. ¡Perfecto para entrenar sin parar!", "Hoy el clima está ideal para practicar tus saques. ¡Hazlo valer!", "No hay mejor clima para mejorar tu técnica. ¡Aprovecha!", "El sol está contigo, igual que tu pasión por el tenis. ¡Vamos!", "Nublado pero sin lluvia, ¡una razón más para no detenerse!", "Nada mejor que un día soleado para mostrar de qué estás hecho.", "El clima perfecto para esos rallies largos. ¡Vamos a practicar!", "Con este clima, cada punto cuenta. ¡Vamos con todo!", "Hoy toca darle fuerte, el clima está de nuestro lado.", "Aprovecha este día sin lluvia para dar lo mejor de ti.", "Hoy el sol está para acompañarte a mejorar. ¡A la cancha!", "El clima no podría ser mejor, ¡a aprovechar cada minuto!", "La victoria está en tu mente antes de estar en la cancha.", "El tenis es 90% mental y 10% evitar tropezar con la línea blanca.", "Si pierdes el partido, al menos no pierdas la compostura. Bueno, tal vez un poco.", "¡No culpes a la raqueta! Ella está haciendo lo mejor que puede.", "Hoy no se trata de ganar, se trata de no romper otra cuerda.", "Si no puedes ganar el punto, al menos haz que tu rival sude por él.", "¿Hoy vienes a jugar o a dar un curso de errores no forzados?", "Recuerda, el tenis es como la vida: a veces solo intentas no hacer el ridículo.", "¡Gran saque! Lástima que fue fuera por medio metro.", "Siempre dicen que el esfuerzo lo es todo. Bueno, hoy lo intentaste.", "Tu revés tiene un 50% de probabilidades de ir a la red... optimismo, ¿no?", "Un día sin tenis es un día perdido. ¡A la cancha!", "Con cada golpe, estás más cerca de la perfección. ¡Sigue así!", "Tu mayor rival no está del otro lado de la red, sino en tu mente. ¡Véncelo!", "El clima es perfecto, igual que tu determinación. ¡Dale!", "El éxito es 1% inspiración y 99% transpiración... ¡y hoy toca sudar!", "El tenis es el único deporte donde puedes discutir contigo mismo y perder.", "Si la pelota va hacia ti, ¡corre! Es una pista, no una selfie.", "La raqueta está en tus manos, pero la magia viene del café que tomaste antes.", "Hoy no jugamos para ganar, sino para demostrar que sabemos correr.", "Tu saque es tan rápido que ni tú sabes a dónde va... ¡sorpresa!", "Eres mas malo que el presidente del club.", "cuidado que los mutantes estan ganando todo!", "no robes puntos como Melgarejo!", "tambien fuiste atendido por el \"nana vieja\"?"];
 
-        /**
-         * NUEVO: Mapeo de códigos de clima de Open-Meteo a emojis.
-         * Más info: https://open-meteo.com/en/docs
-         */
         function getWeatherIcon(wmoCode) {
-            const icons = {
-                0: "☀️", // Clear sky
-                1: "🌤️", // Mainly clear
-                2: "⛅", // Partly cloudy
-                3: "☁️", // Overcast
-                45: "🌫️", // Fog
-                48: "🌫️", // Depositing rime fog
-                51: "🌦️", // Drizzle: Light
-                53: "🌦️", // Drizzle: Moderate
-                55: "🌦️", // Drizzle: Dense
-                61: "🌧️", // Rain: Slight
-                63: "🌧️", // Rain: Moderate
-                65: "🌧️", // Rain: Heavy
-                80: "⛈️", // Rain showers: Slight
-                81: "⛈️", // Rain showers: Moderate
-                82: "⛈️", // Rain showers: Violent
-            };
-            return icons[wmoCode] || "🤷"; // Icono por defecto
+            const icons = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌦️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 80: "⛈️", 81: "⛈️", 82: "⛈️" };
+            return icons[wmoCode] || "🤷";
         }
 
         function updateMotivationalMessage(dailyData = null) {
@@ -145,16 +215,12 @@
             }
         }
         
-        /**
-         * NUEVO: Función de clima adaptada para Open-Meteo.
-         */
         async function fetchWeather() {
             const forecastDiv = document.getElementById('forecast');
             const suggestionEl = document.getElementById('smartSuggestion');
             const URL = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=precipitation_probability&timezone=America/Santiago`;
             
             let dailyData = null;
-
             try {
                 const response = await fetch(URL);
                 if (!response.ok) throw new Error(`Error de red: ${response.statusText}`);
@@ -163,12 +229,10 @@
                 dailyData = data.daily;
                 forecastDiv.innerHTML = "";
                 
-                // Procesar datos diarios
                 for (let i = 0; i < dailyData.time.length; i++) {
-                    const date = new Date(dailyData.time[i] + 'T00:00:00'); // Asegurar zona horaria local
+                    const date = new Date(dailyData.time[i] + 'T00:00:00');
                     const dayString = new Intl.DateTimeFormat('es-ES', { weekday: 'short' }).format(date).replace(/^\w/, c => c.toUpperCase());
                     const icon = getWeatherIcon(dailyData.weathercode[i]);
-                    
                     forecastDiv.innerHTML += `
                         <div class="forecast-day">
                             <span>${dayString}</span>
@@ -179,7 +243,6 @@
                         </div>`;
                 }
 
-                // Lógica para la sugerencia inteligente con datos por hora
                 const hourlyData = data.hourly;
                 let bestTimeFound = false;
                 for (let i = 0; i < hourlyData.time.length; i++) {
@@ -195,7 +258,6 @@
                 if (!bestTimeFound) {
                     suggestionEl.textContent = "Hoy el clima no acompaña, revisa el pronóstico detallado.";
                 }
-
             } catch (error) {
                 console.error("Error al cargar el clima:", error);
                 suggestionEl.textContent = "No se pudo cargar la información del clima.";
@@ -207,7 +269,6 @@
         
         fetchWeather();
         setInterval(fetchWeather, 60 * 60 * 1000);
-
     </script>
 </body>
 </html>
