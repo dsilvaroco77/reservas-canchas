@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canchas de Tenis UCT</title>
+
+    <meta name="theme-color" content="#111111"/>
+    <link rel="manifest" href="manifest.json">
+    
     <style>
         :root {
             --background-color: #111;
@@ -18,18 +22,8 @@
         header { text-align: center; margin-bottom: 60px; }
         header h1 { font-size: 48px; font-weight: 700; margin: 0; letter-spacing: -1px; }
         header .date-today { font-size: 18px; color: var(--subtle-text-color); font-weight: 500; margin-top: 8px; }
-        
-        /* --- NUEVO: Estilo para la instrucción en móviles --- */
-        .mobile-instruction {
-            display: none; /* Oculto por defecto en escritorio */
-        }
-
-        .complex-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 50px;
-            margin-bottom: 60px;
-        }
+        .mobile-instruction { display: none; }
+        .complex-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 50px; margin-bottom: 60px; }
         .complex-wrapper { text-align: center; }
         .complex-title { margin-bottom: 15px; }
         .complex-title h2 { font-size: 28px; font-weight: 600; margin: 0 0 5px 0; }
@@ -54,27 +48,7 @@
         .footer-links a { color: var(--subtle-text-color); background-color: var(--card-background); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 10px 20px; text-decoration: none; margin: 0 10px; transition: color 0.3s, background-color 0.3s; }
         .footer-links a:hover { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
         .small-note { margin-top: 30px; font-size: 14px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-        
-        @media (max-width: 768px) { 
-            .main-container { padding: 20px 15px; } 
-            header { margin-bottom: 40px; } 
-            header h1 { font-size: 36px; } 
-            header .date-today { font-size: 16px; } 
-            
-            /* --- NUEVO: Se muestra la instrucción y se le da estilo --- */
-            .mobile-instruction {
-                display: block;
-                text-align: center;
-                color: var(--subtle-text-color);
-                margin-bottom: 30px;
-                font-style: italic;
-            }
-
-            .complex-grid { grid-template-columns: 1fr; gap: 40px;} 
-            .info-section { padding: 25px; } 
-            .section-title { font-size: 24px; } 
-            .tennis-message { font-size: 18px; } 
-        }
+        @media (max-width: 768px) { .main-container { padding: 20px 15px; } header { margin-bottom: 40px; } header h1 { font-size: 36px; } header .date-today { font-size: 16px; } .mobile-instruction { display: block; text-align: center; color: var(--subtle-text-color); margin-bottom: 30px; font-style: italic; } .complex-grid { grid-template-columns: 1fr; gap: 40px;} .info-section { padding: 25px; } .section-title { font-size: 24px; } .tennis-message { font-size: 18px; } }
     </style>
 </head>
 <body>
@@ -84,8 +58,7 @@
             <div class="date-today" id="dateToday"></div>
         </header>
         <main>
-            <p class="mobile-instruction">Pincha la cancha que deseas reservar.</p>
-
+            <p class="mobile-instruction">Pincha en la cancha que deseas reservar.</p>
             <div class="complex-grid">
                 <div class="complex-wrapper">
                     <div class="complex-title">
@@ -94,16 +67,11 @@
                     </div>
                     <div class="complex-card" style="background-image: url('cec.jpg');">
                         <div class="clickable-overlay">
-                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CEC 1">
-                                <span class="zone-text">Reserva Cancha CEC 1</span>
-                            </a>
-                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CEC 2">
-                                <span class="zone-text">Reserva Cancha CEC 2</span>
-                            </a>
+                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pS98lJc9AnurRJsrrFELO8p7lFqT8SE5tpaJPiVixBHN83PpSWM4oqIfom2EAtwcVqooJYG7K?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CEC 1"><span class="zone-text">Reserva Cancha CEC 1</span></a>
+                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1ijnDghWGh6GVpsD6Q76qxlJqEdDhj9E0MvboyNI_rTAkbn0JfXE3qFoYECfCMjyEPSGpaTRk4?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CEC 2"><span class="zone-text">Reserva Cancha CEC 2</span></a>
                         </div>
                     </div>
                 </div>
-
                 <div class="complex-wrapper">
                     <div class="complex-title">
                         <h2>Complejo CJP</h2>
@@ -111,17 +79,12 @@
                     </div>
                     <div class="complex-card" style="background-image: url('cjp.jpg');">
                         <div class="clickable-overlay">
-                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1GpWHQQiPLKIG7X4TDDUcngRRUAB6Dbo-xM-Ponh2IWTxNwwFnT74l71-bL-toFqDC6b0mAhhu?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CJP 1">
-                                <span class="zone-text">Reserva Cancha CJP 1</span>
-                            </a>
-                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ23FAuAAPtwBFxJUeCMMAKAQlZTRGMrX3JGA8s3b0Rl9TOj0du1cb6m1cin96U30DfFV03piwMA?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CJP 2">
-                                <span class="zone-text">Reserva Cancha CJP 2</span>
-                            </a>
+                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1GpWHQQiPLKIG7X4TDDUcngRRUAB6Dbo-xM-Ponh2IWTxNwwFnT74l71-bL-toFqDC6b0mAhhu?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CJP 1"><span class="zone-text">Reserva Cancha CJP 1</span></a>
+                            <a href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ23FAuAAPtwBFxJUeCMMAKAQlZTRGMrX3JGA8s3b0Rl9TOj0du1cb6m1cin96U30DfFV03piwMA?gv=true" target="_blank" class="court-link-zone" aria-label="Reservar Cancha CJP 2"><span class="zone-text">Reserva Cancha CJP 2</span></a>
                         </div>
                     </div>
                 </div>
             </div>
-
             <section class="info-section">
                 <h2 class="section-title">Pronóstico del Tiempo en Temuco</h2>
                 <p class="smart-suggestion" id="smartSuggestion">Analizando el mejor momento para jugar...</p>
@@ -134,102 +97,30 @@
             <div class="small-note">Al finalizar el juego en arcilla pasa el escobillón, barre las líneas y riega la cancha para mantenerla en óptimas condiciones. ¡Ocupa los basureros! Solo se permite una reserva diaria por socio. ¡Gracias!</div>
         </footer>
     </div>
-
     <script>
         const todayElement = document.getElementById('dateToday');
         const today = new Date();
         todayElement.textContent = today.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
         const LAT = -38.7359;
         const LON = -72.5904;
-
         const members = ["Luis Otth", "Ismael Devia", "Roberto Bermudez", "Roberto Espinoza", "Pablo Lagos", "Francisco Encina", "Gustavo Curaqueo", "Cristian Henriquez", "Cristian Rebolledo", "Sebastián Garrido", "Rodrigo Castro", "Matías Cáceres", "Juan Maripillán", "David Figueroa", "David Silva", "David Fonseca", "Cristian Farias", "Jaime Castillo", "José Baeza", "José Melgarejo", "Miguel Escalona", "Rodrigo Zuñiga", "Francisco Muñoz", "Sebastian Aguilar", "Victor Navarrete", "Cristobal Correa", "Jano Medina", "Miguel Angulo", "Carolina Cárdenas", "Mauricio Matus", "Angélica Encina", "Maria José", "Francisco Mendez", "Violeta Moreno", "Valeria Schatter"];
         const motivationalMessages = ["¡Hoy es tu día para brillar en la cancha!", "No hay nada mejor que el sol para llenarnos de energía. ¡Vamos a jugar!", "El clima está perfecto, no hay excusas. ¡Dale con todo!", "¡Vamos a aprovechar el buen tiempo y mejorar ese revés!", "El sol brilla tanto como tu determinación. ¡A la cancha!", "Un día nublado significa menos calor. ¡Perfecto para entrenar sin parar!", "Hoy el clima está ideal para practicar tus saques. ¡Hazlo valer!", "No hay mejor clima para mejorar tu técnica. ¡Aprovecha!", "El sol está contigo, igual que tu pasión por el tenis. ¡Vamos!", "Nublado pero sin lluvia, ¡una razón más para no detenerse!", "Nada mejor que un día soleado para mostrar de qué estás hecho.", "El clima perfecto para esos rallies largos. ¡Vamos a practicar!", "Con este clima, cada punto cuenta. ¡Vamos con todo!", "Hoy toca darle fuerte, el clima está de nuestro lado.", "Aprovecha este día sin lluvia para dar lo mejor de ti.", "Hoy el sol está para acompañarte a mejorar. ¡A la cancha!", "El clima no podría ser mejor, ¡a aprovechar cada minuto!", "La victoria está en tu mente antes de estar en la cancha.", "El tenis es 90% mental y 10% evitar tropezar con la línea blanca.", "Si pierdes el partido, al menos no pierdas la compostura. Bueno, tal vez un poco.", "¡No culpes a la raqueta! Ella está haciendo lo mejor que puede.", "Hoy no se trata de ganar, se trata de no romper otra cuerda.", "Si no puedes ganar el punto, al menos haz que tu rival sude por él.", "¿Hoy vienes a jugar o a dar un curso de errores no forzados?", "Recuerda, el tenis es como la vida: a veces solo intentas no hacer el ridículo.", "¡Gran saque! Lástima que fue fuera por medio metro.", "Siempre dicen que el esfuerzo lo es todo. Bueno, hoy lo intentaste.", "Tu revés tiene un 50% de probabilidades de ir a la red... optimismo, ¿no?", "Un día sin tenis es un día perdido. ¡A la cancha!", "Con cada golpe, estás más cerca de la perfección. ¡Sigue así!", "Tu mayor rival no está del otro lado de la red, sino en tu mente. ¡Véncelo!", "El clima es perfecto, igual que tu determinación. ¡Dale!", "El éxito es 1% inspiración y 99% transpiración... ¡y hoy toca sudar!", "El tenis es el único deporte donde puedes discutir contigo mismo y perder.", "Si la pelota va hacia ti, ¡corre! Es una pista, no una selfie.", "La raqueta está en tus manos, pero la magia viene del café que tomaste antes.", "Hoy no jugamos para ganar, sino para demostrar que sabemos correr.", "Tu saque es tan rápido que ni tú sabes a dónde va... ¡sorpresa!", "Eres mas malo que el presidente del club.", "cuidado que los mutantes estan ganando todo!", "no robes puntos como Melgarejo!", "tambien fuiste atendido por el \"nana vieja\"?"];
-
-        function getWeatherIcon(wmoCode) {
-            const icons = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌦️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 80: "⛈️", 81: "⛈️", 82: "⛈️" };
-            return icons[wmoCode] || "🤷";
-        }
-
-        function updateMotivationalMessage(dailyData = null) {
-            const tennisMessageElement = document.getElementById('tennisMessage');
-            const currentDay = today.getDay();
-            const currentHour = today.getHours();
-            if (currentDay === 0) {
-                tennisMessageElement.textContent = "Las canchas están cerradas los domingos. Aprovecha para descansar y planificar tu próxima semana de juego.";
-                return;
-            }
-            let rainProbability = 0;
-            if (dailyData) {
-                rainProbability = dailyData.precipitation_probability_max[0];
-            }
-            if (currentHour >= 7 && currentHour <= 23) {
-                const randomMember = members[Math.floor(Math.random() * members.length)];
-                const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
-                if (rainProbability > 70) {
-                    tennisMessageElement.textContent = `${randomMember}, hoy llueve mucho y las canchas no están en condiciones. Es mejor evitar el riesgo de resbalar.`;
-                } else {
-                    tennisMessageElement.textContent = `${randomMember}, ${randomMessage}`;
-                }
-            } else {
-                tennisMessageElement.textContent = "Las canchas están cerradas. ¡Vuelve mañana para más tenis!";
-            }
-        }
-        
-        async function fetchWeather() {
-            const forecastDiv = document.getElementById('forecast');
-            const suggestionEl = document.getElementById('smartSuggestion');
-            const URL = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=precipitation_probability&timezone=America/Santiago`;
-            
-            let dailyData = null;
-            try {
-                const response = await fetch(URL);
-                if (!response.ok) throw new Error(`Error de red: ${response.statusText}`);
-                const data = await response.json();
-                
-                dailyData = data.daily;
-                forecastDiv.innerHTML = "";
-                
-                for (let i = 0; i < dailyData.time.length; i++) {
-                    const date = new Date(dailyData.time[i] + 'T00:00:00');
-                    const dayString = new Intl.DateTimeFormat('es-ES', { weekday: 'short' }).format(date).replace(/^\w/, c => c.toUpperCase());
-                    const icon = getWeatherIcon(dailyData.weathercode[i]);
-                    forecastDiv.innerHTML += `
-                        <div class="forecast-day">
-                            <span>${dayString}</span>
-                            <div class="weather-icon-emoji">${icon}</div>
-                            <span>Máx: ${Math.round(dailyData.temperature_2m_max[i])}°C</span>
-                            <span>Mín: ${Math.round(dailyData.temperature_2m_min[i])}°C</span>
-                            <span>${dailyData.precipitation_probability_max[i]}% lluvia</span>
-                        </div>`;
-                }
-
-                const hourlyData = data.hourly;
-                let bestTimeFound = false;
-                for (let i = 0; i < hourlyData.time.length; i++) {
-                    const hourDate = new Date(hourlyData.time[i]);
-                    if (!bestTimeFound && hourDate > today) {
-                        if (hourDate.getHours() >= 8 && hourDate.getHours() <= 21 && hourlyData.precipitation_probability[i] < 15) {
-                            const hourString = new Intl.DateTimeFormat('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false }).format(hourDate);
-                            suggestionEl.textContent = `Sugerencia: ¡El mejor momento para jugar hoy es alrededor de las ${hourString} hrs!`;
-                            bestTimeFound = true;
-                        }
-                    }
-                }
-                if (!bestTimeFound) {
-                    suggestionEl.textContent = "Hoy el clima no acompaña, revisa el pronóstico detallado.";
-                }
-            } catch (error) {
-                console.error("Error al cargar el clima:", error);
-                suggestionEl.textContent = "No se pudo cargar la información del clima.";
-                forecastDiv.innerHTML = "<p>El pronóstico no está disponible.</p>";
-            } finally {
-                updateMotivationalMessage(dailyData);
-            }
-        }
-        
-        fetchWeather();
-        setInterval(fetchWeather, 60 * 60 * 1000);
+        function getWeatherIcon(wmoCode) { const icons = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌦️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 80: "⛈️", 81: "⛈️", 82: "⛈️" }; return icons[wmoCode] || "🤷"; }
+        function updateMotivationalMessage(dailyData = null) { const tennisMessageElement = document.getElementById('tennisMessage'); const currentDay = today.getDay(); const currentHour = today.getHours(); if (currentDay === 0) { tennisMessageElement.textContent = "Las canchas están cerradas los domingos. Aprovecha para descansar y planificar tu próxima semana de juego."; return; } let rainProbability = 0; if (dailyData) { rainProbability = dailyData.precipitation_probability_max[0]; } if (currentHour >= 7 && currentHour <= 23) { const randomMember = members[Math.floor(Math.random() * members.length)]; const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)]; if (rainProbability > 70) { tennisMessageElement.textContent = `${randomMember}, hoy llueve mucho y las canchas no están en condiciones. Es mejor evitar el riesgo de resbalar.`; } else { tennisMessageElement.textContent = `${randomMember}, ${randomMessage}`; } } else { tennisMessageElement.textContent = "Las canchas están cerradas. ¡Vuelve mañana para más tenis!"; } }
+        async function fetchWeather() { const forecastDiv = document.getElementById('forecast'); const suggestionEl = document.getElementById('smartSuggestion'); const URL = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=precipitation_probability&timezone=America/Santiago`; let dailyData = null; try { const response = await fetch(URL); if (!response.ok) throw new Error(`Error de red: ${response.statusText}`); const data = await response.json(); dailyData = data.daily; forecastDiv.innerHTML = ""; for (let i = 0; i < dailyData.time.length; i++) { const date = new Date(dailyData.time[i] + 'T00:00:00'); const dayString = new Intl.DateTimeFormat('es-ES', { weekday: 'short' }).format(date).replace(/^\w/, c => c.toUpperCase()); const icon = getWeatherIcon(dailyData.weathercode[i]); forecastDiv.innerHTML += `<div class="forecast-day"><span>${dayString}</span><div class="weather-icon-emoji">${icon}</div><span>Máx: ${Math.round(dailyData.temperature_2m_max[i])}°C</span><span>Mín: ${Math.round(dailyData.temperature_2m_min[i])}°C</span><span>${dailyData.precipitation_probability_max[i]}% lluvia</span></div>`; } const hourlyData = data.hourly; let bestTimeFound = false; for (let i = 0; i < hourlyData.time.length; i++) { const hourDate = new Date(hourlyData.time[i]); if (!bestTimeFound && hourDate > today) { if (hourDate.getHours() >= 8 && hourDate.getHours() <= 21 && hourlyData.precipitation_probability[i] < 15) { const hourString = new Intl.DateTimeFormat('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false }).format(hourDate); suggestionEl.textContent = `Sugerencia: ¡El mejor momento para jugar hoy es alrededor de las ${hourString} hrs!`; bestTimeFound = true; } } } if (!bestTimeFound) { suggestionEl.textContent = "Hoy el clima no acompaña, revisa el pronóstico detallado."; } } catch (error) { console.error("Error al cargar el clima:", error); suggestionEl.textContent = "No se pudo cargar la información del clima."; forecastDiv.innerHTML = "<p>El pronóstico no está disponible.</p>"; } finally { updateMotivationalMessage(dailyData); } }
+        fetchWeather(); setInterval(fetchWeather, 60 * 60 * 1000);
+    </script>
+    
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(registration => {
+            console.log('SW registrado: ', registration);
+          }).catch(registrationError => {
+            console.log('SW registro falló: ', registrationError);
+          });
+        });
+      }
     </script>
 </body>
 </html>
