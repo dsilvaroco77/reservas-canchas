@@ -45,7 +45,23 @@
         .weather-icon-emoji { font-size: 36px; line-height: 1; margin: 8px 0; }
         footer { text-align: center; padding: 0 20px 40px; color: var(--subtle-text-color); }
         .tennis-message { font-size: 22px; font-style: italic; max-width: 700px; margin: 0 auto 30px; line-height: 1.5; }
-        .footer-links a { color: var(--subtle-text-color); background-color: var(--card-background); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 10px 20px; text-decoration: none; margin: 0 10px; transition: color 0.3s, background-color 0.3s; }
+        .footer-links {
+            display: flex; /* Para alinear botones horizontalmente si hay espacio */
+            justify-content: center;
+            flex-wrap: wrap; /* Para que se apilen en móviles si no caben */
+            gap: 15px; /* Espacio entre botones */
+            margin-bottom: 20px; /* Espacio antes de la nota pequeña */
+        }
+        .footer-links a { 
+            color: var(--subtle-text-color); 
+            background-color: var(--card-background); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 20px; 
+            padding: 10px 20px; 
+            text-decoration: none; 
+            /* margin: 0 10px; Ya no es necesario con gap */
+            transition: color 0.3s, background-color 0.3s; 
+        }
         .footer-links a:hover { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
         .small-note { margin-top: 30px; font-size: 14px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
         @media (max-width: 768px) { 
@@ -103,7 +119,10 @@
         </main>
         <footer>
             <div class="tennis-message" id="tennisMessage">Generando frase motivacional...</div>
-            <div class="footer-links"><a href="normas.html">Normas de Uso</a></div>
+            <div class="footer-links">
+                <a href="ranking.html">Ver Ranking</a> 
+                <a href="normas.html">Normas de Uso</a>
+            </div>
             <div class="small-note">Al finalizar el juego en arcilla pasa el escobillón, barre las líneas y riega la cancha para mantenerla en óptimas condiciones. ¡Ocupa los basureros! Solo se permite una reserva diaria por socio. ¡Gracias!</div>
         </footer>
     </div>
@@ -179,8 +198,7 @@
             "[Nombre], no robes puntos como Melgarejo! Juega limpio, o al menos, que no te pillen.",
             "[Nombre], ¿también fuiste atendido por el \"nana vieja\"? Esas historias son leyenda."
         ];
-
-        // --- NUEVO: Array para Relatos de Dos Jugadores ---
+        
         const twoPlayerStoryTemplates = [
             "Se comenta en los pasillos que [Nombre1] está entrenando en secreto para ganarle el próximo set a [Nombre2]. Las apuestas están 100 a 1... a favor de [Nombre2].",
             "Dicen las malas lenguas que [Nombre1] tiene un revés más temible que el de [Nombre2]. Claro, si por 'temible' entendemos 'impredeciblemente fuera'.",
@@ -214,11 +232,9 @@
             let message = "";
 
             if (currentHour >= 7 && currentHour <= 23) {
-                // --- MODIFICADO: Lógica para elegir entre mensaje individual o de dos jugadores ---
-                if (Math.random() < 0.3 && members.length >= 2) { // 30% de probabilidad de historia de dos jugadores, si hay al menos 2 miembros
+                if (Math.random() < 0.3 && members.length >= 2) { 
                     let member1Index = Math.floor(Math.random() * members.length);
                     let member2Index = Math.floor(Math.random() * members.length);
-                    // Asegurarse de que los dos miembros sean diferentes
                     while (member2Index === member1Index) {
                         member2Index = Math.floor(Math.random() * members.length);
                     }
@@ -228,13 +244,12 @@
                     let storyTemplate = twoPlayerStoryTemplates[Math.floor(Math.random() * twoPlayerStoryTemplates.length)];
                     message = storyTemplate.replace("[Nombre1]", member1).replace("[Nombre2]", member2);
 
-                } else { // Mensaje individual
+                } else { 
                     const randomMember = members[Math.floor(Math.random() * members.length)]; 
                     let randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
                     message = randomMessage.replace("[Nombre]", randomMember);
                 }
 
-                // Sobrescribir si llueve mucho
                 if (rainProbability > 70) { 
                     const randomMember = members[Math.floor(Math.random() * members.length)]; 
                     message = `${randomMember}, hoy llueve más que tus excusas post-partido. Mejor quédate en casa viendo tutoriales de cómo no hacer una doble falta.`; 
