@@ -45,21 +45,6 @@
         .weather-icon-emoji { font-size: 36px; line-height: 1; margin: 8px 0; }
         footer { text-align: center; padding: 0 20px 40px; color: var(--subtle-text-color); }
         .tennis-message { font-size: 22px; font-style: italic; max-width: 700px; margin: 0 auto 30px; line-height: 1.5; }
-        
-        /* --- NUEVO: Estilo para el Consejo Irónico --- */
-        .ironic-tip {
-            font-size: 16px;
-            font-style: italic;
-            color: var(--subtle-text-color);
-            max-width: 700px;
-            margin: 20px auto 30px auto;
-            line-height: 1.5;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            border-left: 3px solid var(--accent-color);
-        }
-
         .footer-links a { color: var(--subtle-text-color); background-color: var(--card-background); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 10px 20px; text-decoration: none; margin: 0 10px; transition: color 0.3s, background-color 0.3s; }
         .footer-links a:hover { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
         .small-note { margin-top: 30px; font-size: 14px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
@@ -73,7 +58,6 @@
             .info-section { padding: 25px; } 
             .section-title { font-size: 24px; } 
             .tennis-message { font-size: 18px; } 
-            .ironic-tip { font-size: 14px; }
         }
     </style>
 </head>
@@ -119,7 +103,6 @@
         </main>
         <footer>
             <div class="tennis-message" id="tennisMessage">Generando frase motivacional...</div>
-            <p class="ironic-tip" id="ironicTip"></p>
             <div class="footer-links"><a href="normas.html">Normas de Uso</a></div>
             <div class="small-note">Al finalizar el juego en arcilla pasa el escobillón, barre las líneas y riega la cancha para mantenerla en óptimas condiciones. ¡Ocupa los basureros! Solo se permite una reserva diaria por socio. ¡Gracias!</div>
         </footer>
@@ -132,76 +115,96 @@
         const LON = -72.5904;
         const members = ["Luis Otth", "Ismael Devia", "Roberto Bermudez", "Roberto Espinoza", "Pablo Lagos", "Francisco Encina", "Gustavo Curaqueo", "Cristian Henriquez", "Cristian Rebolledo", "Sebastián Garrido", "Rodrigo Castro", "Matías Cáceres", "Juan Maripillán", "David Figueroa", "David Silva", "David Fonseca", "Cristian Farias", "Jaime Castillo", "José Baeza", "José Melgarejo", "Miguel Escalona", "Rodrigo Zuñiga", "Francisco Muñoz", "Sebastian Aguilar", "Victor Navarrete", "Cristobal Correa", "Jano Medina", "Miguel Angulo", "Carolina Cárdenas", "Mauricio Matus", "Angélica Encina", "Maria José", "Francisco Mendez", "Violeta Moreno", "Valeria Schatter"];
         
-        // --- MOTIVATIONAL MESSAGES AMPLIADO ---
+        // --- MOTIVATIONAL MESSAGES SUPER AMPLIADO CON SARCASMO E IRONÍA ---
         const motivationalMessages = [
-            "¡Hoy es tu día para brillar en la cancha!", "No hay nada mejor que el sol para llenarnos de energía. ¡Vamos a jugar!", 
-            "El clima está perfecto, no hay excusas. ¡Dale con todo!", "¡Vamos a aprovechar el buen tiempo y mejorar ese revés!", 
-            "El sol brilla tanto como tu determinación. ¡A la cancha!", "Un día nublado significa menos calor. ¡Perfecto para entrenar sin parar!", 
-            "Hoy el clima está ideal para practicar tus saques. ¡Hazlo valer!", "No hay mejor clima para mejorar tu técnica. ¡Aprovecha!", 
-            "El sol está contigo, igual que tu pasión por el tenis. ¡Vamos!", "Nublado pero sin lluvia, ¡una razón más para no detenerse!", 
-            "Nada mejor que un día soleado para mostrar de qué estás hecho.", "El clima perfecto para esos rallies largos. ¡Vamos a practicar!", 
-            "Con este clima, cada punto cuenta. ¡Vamos con todo!", "Hoy toca darle fuerte, el clima está de nuestro lado.", 
-            "Aprovecha este día sin lluvia para dar lo mejor de ti.", "Hoy el sol está para acompañarte a mejorar. ¡A la cancha!", 
-            "El clima no podría ser mejor, ¡a aprovechar cada minuto!", "La victoria está en tu mente antes de estar en la cancha.",
-            "El tenis es 90% mental y 10% evitar tropezar con la línea blanca.", "Si pierdes el partido, al menos no pierdas la compostura. Bueno, tal vez un poco.",
-            "¡No culpes a la raqueta! Ella está haciendo lo mejor que puede.", "Hoy no se trata de ganar, se trata de no romper otra cuerda.",
-            "Si no puedes ganar el punto, al menos haz que tu rival sude por él.", "¿Hoy vienes a jugar o a dar un curso de errores no forzados?",
-            "Recuerda, el tenis es como la vida: a veces solo intentas no hacer el ridículo.", "¡Gran saque! Lástima que fue fuera por medio metro.",
-            "Siempre dicen que el esfuerzo lo es todo. Bueno, hoy lo intentaste.", "Tu revés tiene un 50% de probabilidades de ir a la red... optimismo, ¿no?",
-            "Un día sin tenis es un día perdido. ¡A la cancha!", "Con cada golpe, estás más cerca de la perfección. ¡Sigue así!",
-            "Tu mayor rival no está del otro lado de la red, sino en tu mente. ¡Véncelo!", "El clima es perfecto, igual que tu determinación. ¡Dale!",
-            "El éxito es 1% inspiración y 99% transpiración... ¡y hoy toca sudar!", "El tenis es el único deporte donde puedes discutir contigo mismo y perder.",
-            "Si la pelota va hacia ti, ¡corre! Es una pista, no una selfie.", "La raqueta está en tus manos, pero la magia viene del café que tomaste antes.",
-            "Hoy no jugamos para ganar, sino para demostrar que sabemos correr.", "Tu saque es tan rápido que ni tú sabes a dónde va... ¡sorpresa!",
-            "Eres mas malo que el presidente del club.", "cuidado que los mutantes estan ganando todo!", "no robes puntos como Melgarejo!","tambien fuiste atendido por el \"nana vieja\"?",
-            // --- NUEVAS FRASES IRÓNICAS ---
-            "Recuerda: la pelota no siempre aterriza donde apuntas. A veces, incluso aterriza en la cancha.",
-            "Juega como si nadie te estuviera mirando... porque probablemente nadie lo está haciendo bien en ese momento.",
-            "El único error hoy es no culpar a la raqueta, al viento o al sol.",
-            "Hoy es un buen día para practicar tu saque. O para decidir que el pádel no está tan mal después de todo.",
-            "No te preocupes por los errores, la cancha ya ha visto cosas peores. Probablemente ayer, también contigo.",
-            "¡Ánimo! Algún día esas pelotas que se van fuera... seguirán yéndose fuera, pero con más estilo.",
-            "La diferencia entre un buen jugador y uno como nosotros es que ellos fallan menos. O lo disimulan mejor.",
-            "Si el plan A no funciona, recuerda que el abecedario tiene más letras... y el bar del club tiene otras opciones.",
-            "Recuerda, el tenis es como la vida: a veces solo intentas no hacer el ridículo... y a veces lo logras.",
-            "Hoy es un día para darle con todo. Y si no le das a la pelota, al menos dale una buena historia para contar."
+            "¡Hoy es tu día para brillar en la cancha, [Nombre]! (O al menos para no tropezar con tus propios pies).",
+            "[Nombre], el sol brilla, ¡casi tanto como tu futuro revés si practicas hoy! O no.",
+            "El clima está perfecto, [Nombre]. Sin excusas... excepto quizás tu condición física.",
+            "¡Vamos a aprovechar el buen tiempo, [Nombre], y a mejorar ese revés! O a resignarnos a que siempre será así.",
+            "El sol brilla tanto como tu determinación, [Nombre]. Lástima que la pelota no siempre siga esa misma luz.",
+            "Día nublado, [Nombre], perfecto para que nadie vea tus errores no forzados con claridad. ¡Aprovéchalo!",
+            "Hoy el clima está ideal para practicar tus saques, [Nombre]. Apunta a la cancha, es un buen comienzo.",
+            "No hay mejor clima para mejorar tu técnica, [Nombre]. O para darte cuenta de que no tienes.",
+            "El sol está contigo, [Nombre], igual que tu pasión por el tenis. La pelota, a veces, está en tu contra.",
+            "Nublado pero sin lluvia, [Nombre]. ¡Una razón más para no detenerse... o para quedarse en casa viendo Netflix!",
+            "Nada mejor que un día soleado para mostrar de qué estás hecho, [Nombre]. Y de qué no, también.",
+            "El clima perfecto para esos rallies largos, [Nombre]. Si es que logras pasar la segunda pelota.",
+            "Con este clima, cada punto cuenta, [Nombre]. Especialmente los que pierdes por errores tontos.",
+            "Hoy toca darle fuerte, [Nombre], el clima está de nuestro lado. La red, ya veremos.",
+            "Aprovecha este día sin lluvia para dar lo mejor de ti, [Nombre]. O al menos, inténtalo.",
+            "Hoy el sol está para acompañarte a mejorar, [Nombre]. Y para que se vea bien claro cuándo fallas.",
+            "El clima no podría ser mejor, [Nombre], ¡a aprovechar cada minuto! (Probablemente los últimos de tu energía).",
+            "La victoria está en tu mente antes de estar en la cancha, [Nombre]. Y a veces, solo se queda ahí.",
+            "El tenis es 90% mental y 10% evitar tropezar con la línea blanca, [Nombre]. Concentración.",
+            "Si pierdes el partido, [Nombre], al menos no pierdas la compostura. Bueno, tal vez un poco. O mucho.",
+            "¡No culpes a la raqueta, [Nombre]! Ella está haciendo lo mejor que puede con el material que tiene.",
+            "Hoy no se trata de ganar, [Nombre], se trata de no romper otra cuerda... ni tu paciencia.",
+            "Si no puedes ganar el punto, [Nombre], al menos haz que tu rival sude por él. O que se ría.",
+            "¿Hoy vienes a jugar o a dar un curso de errores no forzados, [Nombre]? Ambas son válidas.",
+            "Recuerda, [Nombre], el tenis es como la vida: a veces solo intentas no hacer el ridículo.",
+            "¡Gran saque, [Nombre]! Lástima que fue fuera por medio metro. O dos.",
+            "Siempre dicen que el esfuerzo lo es todo, [Nombre]. Bueno, hoy lo intentaste. Eso ya es algo.",
+            "Tu revés tiene un 50% de probabilidades de ir a la red, [Nombre]... optimismo, ¿no?",
+            "Un día sin tenis es un día perdido, [Nombre]. O un día ganado para tus rodillas.",
+            "Con cada golpe, [Nombre], estás más cerca de la perfección. O de la siguiente pelota perdida.",
+            "Tu mayor rival no está del otro lado de la red, [Nombre], sino en tu mente. Y a veces, es tu propio físico.",
+            "El clima es perfecto, igual que tu determinación, [Nombre]. Lástima que la pelota tenga sus propias ideas.",
+            "El éxito es 1% inspiración y 99% transpiración, [Nombre]... ¡y hoy toca sudar para disimular los errores!",
+            "El tenis es el único deporte donde puedes discutir contigo mismo y perder, [Nombre].",
+            "Si la pelota va hacia ti, [Nombre], ¡corre! Es una pista, no una selfie. Aunque una buena selfie después de un punto (ganado) no está mal.",
+            "La raqueta está en tus manos, [Nombre], pero la magia viene del café que tomaste antes. O del ibuprofeno.",
+            "Hoy no jugamos para ganar, [Nombre], sino para demostrar que sabemos correr... aunque sea detrás de la pelota.",
+            "Tu saque es tan rápido, [Nombre], que ni tú sabes a dónde va... ¡sorpresa! (Generalmente fuera).",
+            "[Nombre], dicen que la práctica hace al maestro. A estas alturas, tú deberías ser un maestro... en encontrar excusas.",
+            "Hoy es un día perfecto para que tu revés paralelo sorprenda a todos, [Nombre]. Principalmente a ti mismo si entra.",
+            "Recuerda [Nombre], cada error no forzado es una oportunidad de aprendizaje. Ya debes ser un erudito.",
+            "[Nombre], no te presiones. La probabilidad de que esa dejada toque la red es alta, pero la esperanza es lo último que se pierde... después de la pelota.",
+            "El pronóstico dice sol, [Nombre]. Ideal para que el reflejo no sea tu excusa cuando la pelota pase de largo.",
+            "¡Vamos [Nombre]! Hoy es un buen día para donar algunas pelotas a las canchas vecinas con tus saques.",
+            "Tu plan de juego hoy, [Nombre]: 1. Pegarle a la pelota. 2. Intentar que entre. 3. Repetir el paso 1 con más optimismo.",
+            "[Nombre], si te sientes frustrado, solo recuerda que hay gente que paga por esto. Tú, por ejemplo.",
+            "Dicen que el tenis es un deporte de caballeros, [Nombre]. Intenta no lanzar la raqueta... muy lejos.",
+            "Objetivo del día, [Nombre]: que la cantidad de pelotas perdidas sea menor que tu edad. ¡Tú puedes (quizás)!",
+            "[Nombre], la clave está en la anticipación. Anticipa que vas a correr mucho... y probablemente en vano.",
+            "Si tu oponente te gana con un 'lucky shot', [Nombre], recuerda que tú llevas todo el partido jugando 'unlucky shots'.",
+            "[Nombre], hoy tu derecha podría ser ilegal de tan potente... si le apuntaras a la cancha.",
+            "No te preocupes por el marcador, [Nombre]. Lo importante es que el atuendo combine.",
+            "[Nombre], piensa en la pelota como ese problema que evitas. Tarde o temprano, te va a volver... o se va a ir muy lejos.",
+            "Hoy puede ser el día en que todos tus globos aterricen dentro, [Nombre]. O el día que descubras el bádminton.",
+            "Recuerda, [Nombre]: un buen grito después de un mal golpe no mejora el punto, pero libera el alma (y asusta a las palomas).",
+            "[Nombre], la red es tu amiga. A veces demasiado... especialmente en los drop shots.",
+            "No subestimes el poder de una buena charla técnica contigo mismo en medio del punto, [Nombre]. Aunque nadie más la entienda.",
+            "Ánimo, [Nombre]. Aunque no ganes el partido, siempre puedes ganar la discusión sobre si la pelota fue buena o mala.",
+            "Eres mas malo que el presidente del club, [Nombre]. (Es broma... o no).",
+            "[Nombre], cuidado que los mutantes estan ganando todo! Mantén la guardia alta.",
+            "[Nombre], no robes puntos como Melgarejo! Juega limpio, o al menos, que no te pillen.",
+            "[Nombre], ¿también fuiste atendido por el \"nana vieja\"? Esas historias son leyenda."
         ];
-
-        // --- NUEVO: Array para Consejos Irónicos ---
-        const ironicTennisTips = [
-            "Si vas a fallar el saque, que sea con potencia. Así al menos intimidas (o le das a la reja con estilo).",
-            "La ropa no hace al jugador, pero ayuda mucho a disimular lo mal que juegas.",
-            "Culpar al viento, al sol o a esa pelota que claramente no está bien inflada, son tácticas subestimadas y siempre válidas.",
-            "Si sientes que no estás mejorando, no te preocupes. La constancia es clave... para ser consistentemente regular.",
-            "Un '¡vamos!' bien gritado después de un error garrafal puede confundir a tu oponente. O a ti mismo.",
-            "El 'drop shot' es como la lotería: pocas veces toca, pero qué alegría cuando entra (en la cancha, claro).",
-            "No importa cuántas veces pierdas, lo importante es que el tercer tiempo siempre se gana."
-        ];
-
+        
         function getWeatherIcon(wmoCode) { const icons = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌦️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 80: "⛈️", 81: "⛈️", 82: "⛈️" }; return icons[wmoCode] || "🤷"; }
         
         function updateMotivationalMessage(dailyData = null) { 
             const tennisMessageElement = document.getElementById('tennisMessage'); 
             const currentDay = today.getDay(); 
             const currentHour = today.getHours(); 
-            if (currentDay === 0) { tennisMessageElement.textContent = "Las canchas están cerradas los domingos. Aprovecha para descansar y planificar tu próxima semana de juego."; return; } 
+            if (currentDay === 0) { tennisMessageElement.textContent = "Las canchas están cerradas los domingos. Aprovecha para descansar y planificar tu próxima semana de juego (o cómo evitarla)."; return; } 
             let rainProbability = 0; 
             if (dailyData) { rainProbability = dailyData.precipitation_probability_max[0]; } 
+            
+            const randomMember = members[Math.floor(Math.random() * members.length)]; 
+            let randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+            // Reemplazar [Nombre] con el nombre del socio
+            randomMessage = randomMessage.replace("[Nombre]", randomMember);
+            
             if (currentHour >= 7 && currentHour <= 23) { 
-                const randomMember = members[Math.floor(Math.random() * members.length)]; 
-                const randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)]; 
-                if (rainProbability > 70) { tennisMessageElement.textContent = `${randomMember}, hoy llueve mucho y las canchas no están en condiciones. Es mejor evitar el riesgo de resbalar.`; 
-                } else { tennisMessageElement.textContent = `${randomMember}, ${randomMessage}`; } 
-            } else { tennisMessageElement.textContent = "Las canchas están cerradas. ¡Vuelve mañana para más tenis!"; } 
-        }
-
-        // --- NUEVO: Función para mostrar Consejo Irónico ---
-        function displayIronicTip() {
-            const tipElement = document.getElementById('ironicTip');
-            if (tipElement && ironicTennisTips.length > 0) {
-                const randomTip = ironicTennisTips[Math.floor(Math.random() * ironicTennisTips.length)];
-                tipElement.textContent = `Consejo (no tan) útil del día: ${randomTip}`;
-            }
+                if (rainProbability > 70) { 
+                    tennisMessageElement.textContent = `${randomMember}, hoy llueve más que tus excusas post-partido. Mejor quédate en casa.`; 
+                } else { 
+                    tennisMessageElement.textContent = randomMessage; 
+                } 
+            } else { 
+                tennisMessageElement.textContent = "Las canchas duermen, y tú también deberías, ${randomMember}. Mañana será otro día para... intentarlo."; 
+            } 
         }
         
         async function fetchWeather() { 
@@ -223,23 +226,27 @@
                 } 
                 const hourlyData = data.hourly; 
                 let bestTimeFound = false; 
+                let suggestedHourString = "";
+
                 for (let i = 0; i < hourlyData.time.length; i++) { 
                     const hourDate = new Date(hourlyData.time[i]); 
                     if (!bestTimeFound && hourDate > today) { 
                         if (hourDate.getHours() >= 8 && hourDate.getHours() <= 21 && hourlyData.precipitation_probability[i] < 15) { 
-                            const hourString = new Intl.DateTimeFormat('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false }).format(hourDate); 
-                            // --- MODIFICADO: "La Cancha Opina" para la sugerencia ---
-                            const courtOpinions = [
-                                `La Cancha ${ (Math.random() < 0.5 ? "CEC 1" : "CJP 2") } te guiña un ojo. Dice que a las ${hourString} hrs está despejada y lista para tus (intentos de) dejadas.`,
-                                `Parece que a las ${hourString} hrs hay una ventana perfecta. ¡Las canchas esperan tu saque (dentro, por favor)!`,
-                                `A las ${hourString} hrs el clima dice 'sí'. La cancha dice 'tráeme tus mejores errores no forzados'.`
-                            ];
-                            suggestionEl.textContent = courtOpinions[Math.floor(Math.random() * courtOpinions.length)];
+                            suggestedHourString = new Intl.DateTimeFormat('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false }).format(hourDate); 
                             bestTimeFound = true; 
                         } 
                     } 
                 } 
-                if (!bestTimeFound) { 
+                
+                // --- "LA CANCHA OPINA" ---
+                if (bestTimeFound) {
+                    const courtOpinions = [
+                        `La Cancha ${ (Math.random() < 0.5 ? "CEC 1" : "CJP 2") } te guiña un ojo. Dice que a las ${suggestedHourString} hrs está despejada y lista para tus (intentos de) dejadas.`,
+                        `Parece que a las ${suggestedHourString} hrs hay una ventana perfecta. ¡Las canchas esperan tu saque (dentro, por favor)!`,
+                        `A las ${suggestedHourString} hrs el clima dice 'sí'. La cancha dice 'tráeme tus mejores errores no forzados'.`
+                    ];
+                    suggestionEl.textContent = courtOpinions[Math.floor(Math.random() * courtOpinions.length)];
+                } else { 
                     const noTimeOpinions = [
                         "Uf, parece que hoy el clima en Temuco está más complicado que explicarle el fuera de juego a tu tía. Revisa bien el pronóstico.",
                         "Las canchas están en modo 'mejor otro día'. El clima no coopera para una exhibición de tu talento.",
@@ -247,7 +254,7 @@
                     ];
                     suggestionEl.textContent = noTimeOpinions[Math.floor(Math.random() * noTimeOpinions.length)]; 
                 } 
-                // Si hay lluvia fuerte, sobreescribir la opinión
+                
                 if (dailyData && dailyData.precipitation_probability_max[0] > 70) {
                      suggestionEl.textContent = `La Cancha ${(Math.random() < 0.5 ? "CEC" : "CJP")} sugiere que hoy te dediques al waterpolo. ¡Está lloviendo a cántaros!`;
                 }
@@ -258,7 +265,7 @@
                 forecastDiv.innerHTML = "<p>El pronóstico no está disponible. Intenta de nuevo o asume que es día de descanso.</p>"; 
             } finally { 
                 updateMotivationalMessage(dailyData); 
-                displayIronicTip(); // --- NUEVO: Mostrar consejo irónico ---
+                // El Consejo Irónico ha sido eliminado
             } 
         }
         fetchWeather(); 
