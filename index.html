@@ -115,7 +115,6 @@
         const LON = -72.5904;
         const members = ["Luis Otth", "Ismael Devia", "Roberto Bermudez", "Roberto Espinoza", "Pablo Lagos", "Francisco Encina", "Gustavo Curaqueo", "Cristian Henriquez", "Cristian Rebolledo", "Sebastián Garrido", "Rodrigo Castro", "Matías Cáceres", "Juan Maripillán", "David Figueroa", "David Silva", "David Fonseca", "Cristian Farias", "Jaime Castillo", "José Baeza", "José Melgarejo", "Miguel Escalona", "Rodrigo Zuñiga", "Francisco Muñoz", "Sebastian Aguilar", "Victor Navarrete", "Cristobal Correa", "Jano Medina", "Miguel Angulo", "Carolina Cárdenas", "Mauricio Matus", "Angélica Encina", "Maria José", "Francisco Mendez", "Violeta Moreno", "Valeria Schatter"];
         
-        // --- MOTIVATIONAL MESSAGES SUPER AMPLIADO CON SARCASMO E IRONÍA ---
         const motivationalMessages = [
             "¡Hoy es tu día para brillar en la cancha, [Nombre]! (O al menos para no tropezar con tus propios pies).",
             "[Nombre], el sol brilla, ¡casi tanto como tu futuro revés si practicas hoy! O no.",
@@ -180,6 +179,20 @@
             "[Nombre], no robes puntos como Melgarejo! Juega limpio, o al menos, que no te pillen.",
             "[Nombre], ¿también fuiste atendido por el \"nana vieja\"? Esas historias son leyenda."
         ];
+
+        // --- NUEVO: Array para Relatos de Dos Jugadores ---
+        const twoPlayerStoryTemplates = [
+            "Se comenta en los pasillos que [Nombre1] está entrenando en secreto para ganarle el próximo set a [Nombre2]. Las apuestas están 100 a 1... a favor de [Nombre2].",
+            "Dicen las malas lenguas que [Nombre1] tiene un revés más temible que el de [Nombre2]. Claro, si por 'temible' entendemos 'impredeciblemente fuera'.",
+            "Hoy, [Nombre1] y [Nombre2] podrían enfrentarse. El pronóstico es reservado, pero se espera una alta probabilidad de risas (y errores no forzados).",
+            "Alerta de Clásico UCTenis: [Nombre1] vs [Nombre2]. Se juega el honor, la última Coca-Cola del refri y el derecho a presumir por una semana.",
+            "[Nombre1] le preguntó a [Nombre2] el secreto de su saque. [Nombre2] respondió: 'Apuntar adentro y rezar un poco no viene mal'.",
+            "Última hora desde las canchas: [Nombre1] fue visto practicando dejadas. [Nombre2] fue visto comprando zapatillas más rápidas... y un casco.",
+            "Si [Nombre1] y [Nombre2] juegan hoy, recuerden la regla de oro del club: lo importante no es ganar, es tener una buena anécdota para el tercer tiempo.",
+            "La rivalidad entre [Nombre1] y [Nombre2] es legendaria. Como el monstruo del Lago Ness: muchos hablan de ella, pocos la han visto terminar bien para ambos.",
+            "[Nombre1] dice que su derecha es como la de Federer. [Nombre2] dice que sí, si Federer jugara con la mano izquierda, los ojos vendados y después de tres piscolas.",
+            "Dicen que [Nombre1] tiene la volea de un profesional. [Nombre2] pregunta de qué profesional hablamos, ¿uno de bádminton o de recoger pelotas?"
+        ];
         
         function getWeatherIcon(wmoCode) { const icons = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌦️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 80: "⛈️", 81: "⛈️", 82: "⛈️" }; return icons[wmoCode] || "🤷"; }
         
@@ -187,24 +200,50 @@
             const tennisMessageElement = document.getElementById('tennisMessage'); 
             const currentDay = today.getDay(); 
             const currentHour = today.getHours(); 
-            if (currentDay === 0) { tennisMessageElement.textContent = "Las canchas están cerradas los domingos. Aprovecha para descansar y planificar tu próxima semana de juego (o cómo evitarla)."; return; } 
-            let rainProbability = 0; 
-            if (dailyData) { rainProbability = dailyData.precipitation_probability_max[0]; } 
-            
-            const randomMember = members[Math.floor(Math.random() * members.length)]; 
-            let randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
-            // Reemplazar [Nombre] con el nombre del socio
-            randomMessage = randomMessage.replace("[Nombre]", randomMember);
-            
-            if (currentHour >= 7 && currentHour <= 23) { 
-                if (rainProbability > 70) { 
-                    tennisMessageElement.textContent = `${randomMember}, hoy llueve más que tus excusas post-partido. Mejor quédate en casa.`; 
-                } else { 
-                    tennisMessageElement.textContent = randomMessage; 
-                } 
-            } else { 
-                tennisMessageElement.textContent = "Las canchas duermen, y tú también deberías, ${randomMember}. Mañana será otro día para... intentarlo."; 
+
+            if (currentDay === 0) { 
+                tennisMessageElement.textContent = "Las canchas están cerradas los domingos. Aprovecha para descansar, planificar tu semana de juego... o cómo evitarla."; 
+                return; 
             } 
+            
+            let rainProbability = 0; 
+            if (dailyData && dailyData.precipitation_probability_max && dailyData.precipitation_probability_max.length > 0) { 
+                rainProbability = dailyData.precipitation_probability_max[0]; 
+            } 
+            
+            let message = "";
+
+            if (currentHour >= 7 && currentHour <= 23) {
+                // --- MODIFICADO: Lógica para elegir entre mensaje individual o de dos jugadores ---
+                if (Math.random() < 0.3 && members.length >= 2) { // 30% de probabilidad de historia de dos jugadores, si hay al menos 2 miembros
+                    let member1Index = Math.floor(Math.random() * members.length);
+                    let member2Index = Math.floor(Math.random() * members.length);
+                    // Asegurarse de que los dos miembros sean diferentes
+                    while (member2Index === member1Index) {
+                        member2Index = Math.floor(Math.random() * members.length);
+                    }
+                    const member1 = members[member1Index];
+                    const member2 = members[member2Index];
+                    
+                    let storyTemplate = twoPlayerStoryTemplates[Math.floor(Math.random() * twoPlayerStoryTemplates.length)];
+                    message = storyTemplate.replace("[Nombre1]", member1).replace("[Nombre2]", member2);
+
+                } else { // Mensaje individual
+                    const randomMember = members[Math.floor(Math.random() * members.length)]; 
+                    let randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+                    message = randomMessage.replace("[Nombre]", randomMember);
+                }
+
+                // Sobrescribir si llueve mucho
+                if (rainProbability > 70) { 
+                    const randomMember = members[Math.floor(Math.random() * members.length)]; 
+                    message = `${randomMember}, hoy llueve más que tus excusas post-partido. Mejor quédate en casa viendo tutoriales de cómo no hacer una doble falta.`; 
+                }
+            } else { 
+                const randomMember = members[Math.floor(Math.random() * members.length)]; 
+                message = `Las canchas duermen, y tú también deberías, ${randomMember}. Mañana será otro día para... seguir intentando que esa pelota entre.`; 
+            } 
+            tennisMessageElement.textContent = message;
         }
         
         async function fetchWeather() { 
@@ -238,7 +277,6 @@
                     } 
                 } 
                 
-                // --- "LA CANCHA OPINA" ---
                 if (bestTimeFound) {
                     const courtOpinions = [
                         `La Cancha ${ (Math.random() < 0.5 ? "CEC 1" : "CJP 2") } te guiña un ojo. Dice que a las ${suggestedHourString} hrs está despejada y lista para tus (intentos de) dejadas.`,
@@ -250,7 +288,7 @@
                     const noTimeOpinions = [
                         "Uf, parece que hoy el clima en Temuco está más complicado que explicarle el fuera de juego a tu tía. Revisa bien el pronóstico.",
                         "Las canchas están en modo 'mejor otro día'. El clima no coopera para una exhibición de tu talento.",
-                        "Hoy el pronóstico sugiere que es un día perfecto para... ver tenis en la tele. O afilar la raqueta."
+                        "Hoy el pronóstico sugiere que es un día perfecto para... ver tenis en la tele. O afilar la raqueta (mentalmente)."
                     ];
                     suggestionEl.textContent = noTimeOpinions[Math.floor(Math.random() * noTimeOpinions.length)]; 
                 } 
@@ -262,10 +300,9 @@
             } catch (error) { 
                 console.error("Error al cargar el clima:", error); 
                 suggestionEl.textContent = "No se pudo cargar la información del clima... quizás los dioses del tenis están ocupados."; 
-                forecastDiv.innerHTML = "<p>El pronóstico no está disponible. Intenta de nuevo o asume que es día de descanso.</p>"; 
+                forecastDiv.innerHTML = "<p>El pronóstico no está disponible. Intenta de nuevo o asume que es día de descanso oficial.</p>"; 
             } finally { 
                 updateMotivationalMessage(dailyData); 
-                // El Consejo Irónico ha sido eliminado
             } 
         }
         fetchWeather(); 
