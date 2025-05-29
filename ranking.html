@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking de Jugadores - UCTenis</title>
+    <style>
+        /* REUTILIZA LOS ESTILOS PRINCIPALES DE TU INDEX.HTML */
+        :root {
+            --background-color: #111;
+            --text-color: #f5f5f7;
+            --subtle-text-color: #a1a1a6;
+            --accent-color: #007aff;
+            --card-background: rgba(35, 35, 35, 0.5);
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: var(--background-color); color: var(--text-color); }
+        .main-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; animation: fadeIn 1s ease-out forwards; }
+        .header-section { text-align: center; margin-bottom: 40px; }
+        .uct-logo { max-width: 150px; height: auto; margin-bottom: 20px; } /* Asegúrate de tener esta imagen o quítala */
+        h1 { font-size: 36px; font-weight: 700; letter-spacing: -1px; color: var(--text-color); margin: 0; }
+
+        /* Estilos para la tabla del ranking */
+        .ranking-table-container {
+            background-color: var(--card-background);
+            border-radius: 18px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #rankingTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: var(--text-color);
+        }
+        #rankingTable th, #rankingTable td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #rankingTable th {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+        #rankingTable tr:last-child td {
+            border-bottom: none;
+        }
+        #rankingTable tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .loading-ranking {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: var(--subtle-text-color);
+        }
+        .footer-nav { text-align: center; margin-top: 40px; }
+        .back-button { display: inline-block; background-color: var(--accent-color); color: white; font-size: 16px; font-weight: 600; padding: 12px 30px; border: none; border-radius: 30px; cursor: pointer; text-decoration: none; transition: background-color 0.3s ease, transform 0.2s ease; }
+        .back-button:hover { background-color: #0056b3; transform: translateY(-2px); }
+        @media (max-width: 768px) { 
+            h1 { font-size: 28px; } 
+            .ranking-table-container { padding: 15px; }
+            #rankingTable th, #rankingTable td { padding: 8px 10px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <h1>Ranking de Jugadores UCTenis</h1>
+        </div>
+
+        <div class="ranking-table-container">
+            <p id="loadingMessage" class="loading-ranking">Cargando ranking...</p>
+            <table id="rankingTable" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Nombre</th>
+                        <th>Puntos</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="footer-nav">
+            <a href="index.html" class="back-button">Volver a Reservar</a>
+        </div>
+    </div>
+
+    <script>
+        // --- MUY IMPORTANTE: Reemplaza esta URL con la URL de tu Aplicación Web de Google Apps Script ---
+        const RANKING_API_URL = 'URL_DE_TU_APPS_SCRIPT_AQUI'; 
+
+        async function fetchRanking() {
+            const tableBody = document.getElementById('rankingBody');
+            const table = document.getElementById('rankingTable');
+            const loadingMessage = document.getElementById('loadingMessage');
+
+            if (!tableBody || !table || !loadingMessage) {
+                console.error("Elementos de la tabla no encontrados.");
+                return;
+            }
+
+            try {
+                const response = await fetch(RANKING_API_URL);
+                if (!response.ok) {
+                    throw new Error(`Error al cargar el ranking: ${response.statusText}`);
+                }
+                const data = await response.json();
+
+                tableBody.innerHTML = ''; // Limpiar datos anteriores
+
+                if (data.length === 0) {
+                    loadingMessage.textContent = "Aún no hay datos en el ranking.";
+                    table.style.display = 'none';
+                    return;
+                }
+
+                data.forEach(player => {
+                    const row = tableBody.insertRow();
+                    row.insertCell().textContent = player.posicion;
+                    row.insertCell().textContent = player.nombre;
+                    row.insertCell().textContent = player.puntos;
+                    // Si añadiste más columnas, insértalas aquí:
+                    // row.insertCell().textContent = player.partidos; 
+                });
+
+                table.style.display = ''; // Mostrar tabla
+                loadingMessage.style.display = 'none'; // Ocultar mensaje de carga
+
+            } catch (error) {
+                console.error("Error al obtener el ranking:", error);
+                loadingMessage.textContent = "No se pudo cargar el ranking. Intenta más tarde.";
+                table.style.display = 'none';
+            }
+        }
+
+        // Cargar el ranking cuando la página se cargue
+        document.addEventListener('DOMContentLoaded', fetchRanking);
+    </script>
+</body>
+</html>
