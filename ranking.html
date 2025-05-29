@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking de Jugadores - UCTenis</title>
     <style>
-        /* REUTILIZA LOS ESTILOS PRINCIPALES DE TU INDEX.HTML */
         :root {
             --background-color: #111;
             --text-color: #f5f5f7;
@@ -16,21 +15,28 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: var(--background-color); color: var(--text-color); }
         .main-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; animation: fadeIn 1s ease-out forwards; }
-        .header-section { text-align: center; margin-bottom: 40px; }
-        .uct-logo { max-width: 150px; height: auto; margin-bottom: 20px; } 
+        .header-section { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 36px; font-weight: 700; letter-spacing: -1px; color: var(--text-color); margin: 0; }
+
+        .ranking-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .last-updated-date {
+            font-size: 14px;
+            color: var(--subtle-text-color);
+            font-style: italic;
+        }
 
         .ranking-table-container {
             background-color: var(--card-background);
             border-radius: 18px;
             padding: 20px;
-            margin-top: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         #rankingTable {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
             color: var(--text-color);
         }
         #rankingTable th, #rankingTable td {
@@ -48,6 +54,10 @@
         #rankingTable tr:hover {
             background-color: rgba(255, 255, 255, 0.05);
         }
+        #rankingTable th:first-child, #rankingTable td:first-child {
+            width: 100px; 
+            text-align: center;
+        }
         .loading-ranking {
             text-align: center;
             padding: 20px;
@@ -61,6 +71,7 @@
             h1 { font-size: 28px; } 
             .ranking-table-container { padding: 15px; }
             #rankingTable th, #rankingTable td { padding: 8px 10px; font-size: 14px; }
+            #rankingTable th:first-child, #rankingTable td:first-child { width: 80px; }
         }
     </style>
 </head>
@@ -70,6 +81,10 @@
             <h1>Ranking de Jugadores UCTenis</h1>
         </div>
 
+        <div class="ranking-info">
+            <p id="lastUpdatedDate" class="last-updated-date"></p>
+        </div>
+
         <div class="ranking-table-container">
             <p id="loadingMessage" class="loading-ranking">Cargando ranking...</p>
             <table id="rankingTable" style="display:none;">
@@ -77,11 +92,10 @@
                     <tr>
                         <th>Posición</th>
                         <th>Nombre</th>
-                        <th>Puntos</th>
                     </tr>
                 </thead>
                 <tbody id="rankingBody">
-                    </tbody>
+                </tbody>
             </table>
         </div>
 
@@ -91,42 +105,46 @@
     </div>
 
     <script>
-        // --- URL de tu Aplicación Web de Google Apps Script ---
         const RANKING_API_URL = 'https://script.google.com/macros/s/AKfycbz7xwT8QECTamymk3fjq0K0XJZRmewkphc5yoHF_5IePkTM2MGamyefRypSj44XyYxeLg/exec'; 
 
         async function fetchRanking() {
             const tableBody = document.getElementById('rankingBody');
             const table = document.getElementById('rankingTable');
             const loadingMessage = document.getElementById('loadingMessage');
-            
-            if (!tableBody || !table || !loadingMessage) {
-                console.error("Elementos de la tabla no encontrados.");
+            const lastUpdatedElement = document.getElementById('lastUpdatedDate');
+
+            if (!tableBody || !table || !loadingMessage || !lastUpdatedElement) {
+                console.error("Elementos de la página de ranking no encontrados.");
                 return;
             }
+
+            // --- MOSTRAR LA FECHA ACTUAL ---
+            const hoy = new Date();
+            const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
+            lastUpdatedElement.textContent = `Ranking al día: ${hoy.toLocaleDateString('es-CL', opcionesFecha)}`; // Usamos es-CL para formato chileno
 
             try {
                 const response = await fetch(RANKING_API_URL);
                 if (!response.ok) {
                     throw new Error(`Error al cargar el ranking: ${response.status} ${response.statusText}`);
                 }
-                const data = await response.json();
+                const rankingData = await response.json(); // El script ahora solo devuelve el array de ranking
 
                 tableBody.innerHTML = ''; 
 
-                if (data.length === 0) {
+                if (!rankingData || rankingData.length === 0) {
                     loadingMessage.textContent = "Aún no hay datos en el ranking o la hoja está vacía.";
                     table.style.display = 'none';
                     loadingMessage.style.display = 'block';
                     return;
                 }
 
-                data.forEach(player => {
+                rankingData.forEach(player => {
                     const row = tableBody.insertRow();
                     row.insertCell().textContent = player.posicion;
                     row.insertCell().textContent = player.nombre;
-                    row.insertCell().textContent = player.puntos;
                 });
-                
+
                 table.style.display = ''; 
                 loadingMessage.style.display = 'none';
 
@@ -135,6 +153,7 @@
                 loadingMessage.textContent = "No se pudo cargar el ranking. Verifica la URL del script o la configuración de la Hoja de Cálculo.";
                 table.style.display = 'none';
                 loadingMessage.style.display = 'block';
+                // No borramos la fecha actual en caso de error, ya que es la fecha de consulta
             }
         }
 
