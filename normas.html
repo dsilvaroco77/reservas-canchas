@@ -123,48 +123,23 @@
     </style>
 <style>
 :root {
-    --background-color: #001f33; /* Azul medianoche */
-    --text-color: #f5f5f7;
-    --subtle-text-color: #a1a1a6;
-    --accent-color: #c6d300; /* Verde del logo UCTenis */
-    --card-background: rgba(255, 255, 255, 0.05);
+  --background-color:#001f33;
+  --text-color:#f5f5f7;
+  --subtle-text-color:#a1a1a6;
+  --accent-color:#c6d300;
+  --card-background:rgba(255,255,255,0.05);
 }
-body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-h1, h2, h3, h4, h5, h6, a {
-    color: var(--accent-color);
-}
-.uct-logo {
-    max-height: 80px;
-    margin-bottom: 10px;
-}
-.back-button {
-    display: inline-block;
-    background-color: var(--accent-color);
-    color: #001f33;
-    font-size: 16px;
-    font-weight: 600;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.back-button:hover {
-    background-color: #a4b200;
-    transform: translateY(-2px);
-}
+body{background:var(--background-color);color:var(--text-color)}
+/* Logo responsive en normas */
+.uct-logo{ width: clamp(96px, 14vw, 168px); height:auto; display:block; margin:0 auto 12px; }
+/* Botón consistente */
+.back-button{ background:var(--accent-color); color:#001f33; }
+.back-button:hover{ background:#a4b200; }
 </style></head>
-<body><div class="header-section"><img alt="Logo UCTenis Club" class="uct-logo" src="logo_uctenis_v03.png"/></div>
+<body>
 <div class="main-container">
 <div class="header-section">
-<img alt="Logo Universidad Católica de Temuco" class="uct-logo" src="logouct_blanco.png"/>
+<img alt="Logo UCTenis Club" class="uct-logo" loading="lazy" src="logo_uctenis_v03.png"/>
 <h1>Normas de Uso de Canchas</h1>
 </div>
 <div class="rules-content">
