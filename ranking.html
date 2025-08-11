@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking de Jugadores - UCTenis</title>
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ranking de Jugadores - UCTenis</title>
+<style>
         :root {
             --background-color: #111;
             --text-color: #f5f5f7;
@@ -74,37 +75,64 @@
             #rankingTable th:first-child, #rankingTable td:first-child { width: 80px; }
         }
     </style>
-</head>
+<style>
+:root {
+    --background-color:#001f33; /* Azul medianoche */
+    --text-color:#f5f5f7;
+    --subtle-text-color:#a1a1a6;
+    --accent-color:#c6d300; /* Verde del logo */
+    --card-background:rgba(255,255,255,0.05);
+}
+body { background: var(--background-color); color: var(--text-color); }
+</style><style>
+/* Logo responsivo igual que en el sitio principal */
+.uct-logo{
+  width: clamp(96px, 14vw, 168px);
+  height: auto;
+  display: block;
+  margin: 0 auto 12px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+}
+
+/* Tarjeta y tabla conservan estilos originales, solo ajustamos acento */
+#rankingTable th { color: var(--accent-color); }
+
+/* Botón de volver consistente con paleta del sitio */
+.back-button{
+  background-color: var(--accent-color);
+  color: #001f33;
+}
+.back-button:hover{
+  background-color: #a4b200;
+  transform: translateY(-2px);
+}
+</style></head>
 <body>
-    <div class="main-container">
-        <div class="header-section">
-            <h1>Ranking de Jugadores UCTenis</h1>
-        </div>
-
-        <div class="ranking-info">
-            <p id="lastUpdatedDate" class="last-updated-date"></p>
-        </div>
-
-        <div class="ranking-table-container">
-            <p id="loadingMessage" class="loading-ranking">Cargando ranking...</p>
-            <table id="rankingTable" style="display:none;">
-                <thead>
-                    <tr>
-                        <th>Posición</th>
-                        <th>Nombre</th>
-                    </tr>
-                </thead>
-                <tbody id="rankingBody">
-                </tbody>
-            </table>
-        </div>
-
-        <div class="footer-nav">
-            <a href="index.html" class="back-button">Volver a Reservar</a>
-        </div>
-    </div>
-
-    <script>
+<div class="main-container">
+<div class="header-section"><img alt="Logo UCTenis Club" class="uct-logo" loading="lazy" src="logo_uctenis_v03.png"/>
+<h1>Ranking de Jugadores UCTenis</h1>
+</div>
+<div class="ranking-info">
+<p class="last-updated-date" id="lastUpdatedDate"></p>
+</div>
+<div class="ranking-table-container">
+<p class="loading-ranking" id="loadingMessage">Cargando ranking...</p>
+<table id="rankingTable" style="display:none;">
+<thead>
+<tr>
+<th>Posición</th>
+<th>Nombre</th>
+</tr>
+</thead>
+<tbody id="rankingBody">
+</tbody>
+</table>
+</div>
+<div class="footer-nav">
+<a class="back-button" href="index.html">Volver a Reservar</a>
+</div>
+</div>
+<script>
         const RANKING_API_URL = 'https://script.google.com/macros/s/AKfycbz7xwT8QECTamymk3fjq0K0XJZRmewkphc5yoHF_5IePkTM2MGamyefRypSj44XyYxeLg/exec'; 
 
         async function fetchRanking() {
