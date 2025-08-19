@@ -6,13 +6,7 @@
 <title>Ranking de Jugadores - UCTenis</title>
 <meta name="theme-color" content="#001f33"/>
 <style>
-:root{
-  --background-color:#001f33; /* Azul medianoche */
-  --text-color:#f5f5f7;
-  --subtle-text-color:#a1a1a6;
-  --accent-color:#c6d300;     /* Verde UCTenis */
-  --card-background:rgba(255,255,255,0.05);
-}
+:root{--background-color:#001f33;--text-color:#f5f5f7;--subtle-text-color:#a1a1a6;--accent-color:#c6d300;--card-background:rgba(255,255,255,0.05)}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;background:var(--background-color);color:var(--text-color)}
 .main-container{max-width:900px;margin:0 auto;padding:40px 20px;animation:fadeIn 1s ease-out forwards}
@@ -33,12 +27,7 @@ th:first-child,td:first-child{width:110px;text-align:center}
 .footer-nav{text-align:center;margin-top:28px}
 .back-button{display:inline-block;background:var(--accent-color);color:#001f33;font-size:16px;font-weight:700;padding:12px 30px;border:none;border-radius:30px;cursor:pointer;text-decoration:none;transition:background-color .2s ease,transform .15s ease}
 .back-button:hover{background-color:#a4b200;transform:translateY(-2px)}
-@media (max-width:768px){
-  h1{font-size:28px}
-  th,td{padding:10px;font-size:14px}
-  th:first-child,td:first-child{width:80px}
-  .section h2{font-size:20px}
-}
+@media (max-width:768px){h1{font-size:28px}th,td{padding:10px;font-size:14px}th:first-child,td:first-child{width:80px}.section h2{font-size:20px}}
 </style>
 </head>
 <body>
@@ -53,7 +42,7 @@ th:first-child,td:first-child{width:110px;text-align:center}
   </div>
 
   <!-- MUJERES -->
-  <section class="section" id="secM">
+  <section class="section">
     <h2>Ranking Mujeres</h2>
     <div class="loading" id="loadingM">Cargando ranking…</div>
     <table id="tableM">
@@ -63,7 +52,7 @@ th:first-child,td:first-child{width:110px;text-align:center}
   </section>
 
   <!-- VARONES -->
-  <section class="section" id="secH">
+  <section class="section">
     <h2>Ranking Varones</h2>
     <div class="loading" id="loadingH">Cargando ranking…</div>
     <table id="tableH">
@@ -78,7 +67,7 @@ th:first-child,td:first-child{width:110px;text-align:center}
 </div>
 
 <script>
-// TU Web App (la que me pasaste)
+// URL correcta que me diste
 const BASE_URL = 'https://script.google.com/macros/s/AKfycbxdeFlyJ-G6v6bPyzLIF-6febQ9uipFI5OVr-3nXmAhYnaV0I_ewscb41WlIA1uzX0rVA/exec';
 
 function setFecha(){
@@ -86,16 +75,16 @@ function setFecha(){
     'Ranking al día: ' + new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});
 }
 
-async function cargarTabla(hoja, ids){
-  const url = `${BASE_URL}?sheet=${encodeURIComponent(hoja)}`;
-  const loading = document.getElementById(ids.loading);
-  const table   = document.getElementById(ids.table);
-  const tbody   = document.getElementById(ids.tbody);
+async function cargarTabla(hoja, {loadingId, tableId, tbodyId}){
+  const url = `${BASE_URL}?sheet=${encodeURIComponent(hoja)}&v=${Date.now()}`; // cache-bust
+  const loading = document.getElementById(loadingId);
+  const table   = document.getElementById(tableId);
+  const tbody   = document.getElementById(tbodyId);
 
   try{
     const res = await fetch(url, { cache: 'no-store' });
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json(); // Se espera: [{posicion, nombre}, ...]
+    const data = await res.json(); // [{posicion,nombre}, ...]
 
     tbody.innerHTML = '';
     if(!Array.isArray(data) || data.length === 0){
@@ -103,13 +92,11 @@ async function cargarTabla(hoja, ids){
       table.style.display = 'none';
       return;
     }
-
     for(const p of data){
       const tr = document.createElement('tr');
       tr.innerHTML = `<td>${p.posicion ?? ''}</td><td>${p.nombre ?? ''}</td>`;
       tbody.appendChild(tr);
     }
-
     loading.style.display = 'none';
     table.style.display = '';
   }catch(err){
@@ -121,10 +108,9 @@ async function cargarTabla(hoja, ids){
 
 document.addEventListener('DOMContentLoaded', ()=>{
   setFecha();
-  // Mujeres primero
-  cargarTabla('ranking m', { loading:'loadingM', table:'tableM', tbody:'tbodyM' });
-  // Luego varones
-  cargarTabla('ranking h', { loading:'loadingH', table:'tableH', tbody:'tbodyH' });
+  // Mujeres primero, luego varones
+  cargarTabla('ranking m', { loadingId:'loadingM', tableId:'tableM', tbodyId:'tbodyM' });
+  cargarTabla('ranking h', { loadingId:'loadingH', tableId:'tableH', tbodyId:'tbodyH' });
 });
 </script>
 </body>
