@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ranking de Jugadores - UCTenis</title>
 <style>
 :root{
-  --background-color:#001f33; /* Azul medianoche */
+  --background-color:#001f33;
   --text-color:#f5f5f7;
   --subtle-text-color:#a1a1a6;
-  --accent-color:#c6d300; /* Verde UCTenis */
+  --accent-color:#c6d300;
   --card-background:rgba(255,255,255,0.05);
 }
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -20,8 +20,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 h1{font-size:36px;font-weight:700;letter-spacing:-1px;margin:0}
 .ranking-info{text-align:center;margin-bottom:20px}
 .last-updated-date{font-size:14px;color:var(--subtle-text-color);font-style:italic}
-.section-title{font-size:22px;font-weight:700;margin:14px 6px;color:var(--accent-color)}
-.ranking-table-container{background:var(--card-background);border-radius:18px;padding:18px 16px;margin-bottom:24px;border:1px solid rgba(255,255,255,.1)}
+.section{background:var(--card-background);border-radius:18px;padding:18px 16px;margin-bottom:24px;border:1px solid rgba(255,255,255,.1)}
+.section h2{font-size:22px;font-weight:700;margin:6px 6px 12px;color:var(--accent-color)}
 table{width:100%;border-collapse:collapse;color:var(--text-color);display:none}
 th,td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
 th{font-weight:600;color:var(--accent-color)}
@@ -29,16 +29,10 @@ tr:last-child td{border-bottom:none}
 tr:hover{background:rgba(255,255,255,.05)}
 th:first-child,td:first-child{width:110px;text-align:center}
 .loading{color:var(--subtle-text-color);font-style:italic;text-align:center;padding:10px}
-.note{font-size:12px;color:var(--subtle-text-color);text-align:center;margin-top:6px;word-break:break-all}
 .footer-nav{text-align:center;margin-top:28px}
 .back-button{display:inline-block;background:var(--accent-color);color:#001f33;font-size:16px;font-weight:700;padding:12px 30px;border:none;border-radius:30px;cursor:pointer;text-decoration:none;transition:background-color .2s ease,transform .15s ease}
-.back-button:hover{background-color:#a4b200;transform:translateY(-2px)}
-@media (max-width:768px){
-  h1{font-size:28px}
-  th,td{padding:10px;font-size:14px}
-  th:first-child,td:first-child{width:80px}
-  .section-title{font-size:20px}
-}
+.back-button:hover{background:#a4b200;transform:translateY(-2px)}
+@media (max-width:768px){h1{font-size:28px}th,td{padding:10px;font-size:14px}th:first-child,td:first-child{width:80px}}
 </style>
 </head>
 <body>
@@ -52,27 +46,25 @@ th:first-child,td:first-child{width:110px;text-align:center}
     <p class="last-updated-date" id="lastUpdatedDate">Cargando fecha…</p>
   </div>
 
-  <!-- MUJERES -->
-  <div class="ranking-table-container" id="boxM">
-    <h2 class="section-title">Ranking Mujeres</h2>
+  <!-- MUJERES PRIMERO -->
+  <section class="section" id="secM">
+    <h2>Ranking Mujeres</h2>
     <div class="loading" id="loadingM">Cargando ranking…</div>
     <table id="tableM">
       <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
       <tbody id="tbodyM"></tbody>
     </table>
-    <div class="note" id="noteM"></div>
-  </div>
+  </section>
 
   <!-- VARONES -->
-  <div class="ranking-table-container" id="boxH">
-    <h2 class="section-title">Ranking Varones</h2>
+  <section class="section" id="secH">
+    <h2>Ranking Varones</h2>
     <div class="loading" id="loadingH">Cargando ranking…</div>
     <table id="tableH">
       <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
       <tbody id="tbodyH"></tbody>
     </table>
-    <div class="note" id="noteH"></div>
-  </div>
+  </section>
 
   <div class="footer-nav">
     <a class="back-button" href="index.html">Volver a Reservar</a>
@@ -80,25 +72,23 @@ th:first-child,td:first-child{width:110px;text-align:center}
 </div>
 
 <script>
-// PON AQUÍ TU URL /exec DEL WEB APP
-const BASE_URL = 'https://script.google.com/macros/s/AKfycbz7xwT8QECTamymk3fjq0K0XJZRmewkphc5yoHF_5IePkTM2MGamyefRypSj44XyYxeLg/exec';
+// REEMPLAZA ESTO POR TU URL /exec DEL WEB APP
+const BASE_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXX/exec';
 
 function setFecha(){
-  const el = document.getElementById('lastUpdatedDate');
-  el.textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('lastUpdatedDate').textContent =
+    'Ranking al día: ' + new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});
 }
 
 async function cargarTabla(hoja, ids){
   const url = `${BASE_URL}?sheet=${encodeURIComponent(hoja)}`;
   const loading = document.getElementById(ids.loading);
-  const table = document.getElementById(ids.table);
-  const tbody = document.getElementById(ids.tbody);
-  const note  = document.getElementById(ids.note);
+  const table   = document.getElementById(ids.table);
+  const tbody   = document.getElementById(ids.tbody);
 
-  note.textContent = `Fuente: ${url}`;
   try{
     const res = await fetch(url, { cache: 'no-store' });
-    if(!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
     tbody.innerHTML = '';
@@ -107,31 +97,4 @@ async function cargarTabla(hoja, ids){
       table.style.display = 'none';
       return;
     }
-
-    for(const p of data){
-      const tr = document.createElement('tr');
-      const tdPos = document.createElement('td'); tdPos.textContent = p.posicion ?? '';
-      const tdNom = document.createElement('td'); tdNom.textContent = p.nombre ?? '';
-      tr.appendChild(tdPos); tr.appendChild(tdNom);
-      tbody.appendChild(tr);
-    }
-
-    loading.style.display = 'none';
-    table.style.display = '';
-  }catch(err){
-    console.error('Fallo cargando', hoja, err);
-    loading.textContent = 'Error cargando datos. Revisa la URL /exec y que la hoja exista.';
-    table.style.display = 'none';
-  }
-}
-
-document.addEventListener('DOMContentLoaded', ()=>{
-  setFecha();
-  // Mujeres primero
-  cargarTabla('ranking m', { loading:'loadingM', table:'tableM', tbody:'tbodyM', note:'noteM' });
-  // Luego varones
-  cargarTabla('ranking h', { loading:'loadingH', table:'tableH', tbody:'tbodyH', note:'noteH' });
-});
-</script>
-</body>
-</html>
+    for(cons
