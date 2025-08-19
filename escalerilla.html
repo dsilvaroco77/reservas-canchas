@@ -1,277 +1,741 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Favicon y manifest, igual que index -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="icon" href="logo_uctenis_v03.png" type="image/png">
-    <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestor de Club Deportivo · UCTenis</title>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escalerilla · UCTenis</title>
-    <meta name="theme-color" content="#001f33"/>
+  <!-- Tailwind (tu elección original) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        :root{
-            --background-color:#001f33;   /* mismo override de index (azul medianoche) */
-            --text-color:#f5f5f7;
-            --subtle-text-color:#cdd1d4;
-            --accent-color:#c6d300;       /* acento verde/amarillo de tu index */
-            --card-background:rgba(255,255,255,0.08);
-            --border-soft:rgba(255,255,255,0.1);
-        }
-        @keyframes fadeIn {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-        *{box-sizing:border-box}
-        body{
-            margin:0; background:var(--background-color); color:var(--text-color);
-            font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-        }
-        .main-container{max-width:1200px;margin:0 auto;padding:40px 20px;animation:fadeIn .8s ease-out forwards}
-        header{text-align:center;margin-bottom:30px}
-        .club-logo{width:140px;height:auto;display:block;margin:0 auto 10px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
-        h1{font-size:40px;letter-spacing:-.5px;margin:0}
-        .subhead{color:var(--subtle-text-color);margin-top:6px}
+  <!-- Opcional: igual que en index -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#001f33"/>
 
-        /* Tabs */
-        .tabs{display:flex;gap:8px;justify-content:center;margin:24px 0 30px;border-bottom:1px solid var(--border-soft)}
-        .tab-btn{
-            appearance:none;background:none;border:none;color:var(--subtle-text-color);
-            padding:12px 16px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;
-        }
-        .tab-btn:hover{color:#fff}
-        .tab-btn.tab-active{color:var(--accent-color);border-bottom-color:var(--accent-color)}
-        .hidden{display:none}
+  <style>
+    :root{
+      /* Paleta de la INDEX */
+      --background-color:#001f33;     /* azul medianoche */
+      --text-color:#f5f5f7;
+      --subtle-text-color:#cdd1d4;
+      --accent-color:#c6d300;         /* verde/amarillo UCTenis */
+      --card-background:rgba(255,255,255,0.08);
+      --border-soft:rgba(255,255,255,0.10);
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
-        /* Layout tarjetas */
-        .grid{display:grid;grid-template-columns:1fr;gap:20px}
-        @media(min-width:900px){ .grid{grid-template-columns:320px 1fr} }
+    /* Base */
+    html,body{height:100%}
+    body{
+      font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background:var(--background-color);
+      color:var(--text-color);
+    }
 
-        .card{
-            background:var(--card-background); border:1px solid var(--border-soft);
-            border-radius:20px; padding:22px;
-        }
-        .card h2,.card h3{margin:0 0 12px}
-        .muted{color:var(--subtle-text-color)}
-        .kpi{font-size:26px;font-weight:800}
-        .kpi.ok{color:#7be07b}
-        .pill{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700}
-        .pill.green{background:rgba(0,255,0,.12);color:#86e986}
-        .pill.red{background:rgba(255,0,0,.12);color:#ff9a9a}
-        .pill.yellow{background:rgba(255,216,0,.14);color:#ffe066}
+    /* Remapeo de Tailwind para adoptar la paleta de la index sin reescribir tu HTML */
+    .bg-white{ background:var(--card-background)!important; }
+    .bg-gray-50{ background:rgba(255,255,255,0.06)!important; }
+    .bg-gray-100{ background:transparent!important; } /* fondo general ya es azul */
+    .text-gray-900,.text-gray-800{ color:var(--text-color)!important; }
+    .text-gray-700,.text-gray-600,.text-gray-500{ color:var(--subtle-text-color)!important; }
+    .divide-gray-200 > :not([hidden]) ~ :not([hidden]){ border-color:var(--border-soft)!important; }
+    .border-gray-300{ border-color:var(--border-soft)!important; }
+    .hover\:bg-gray-50:hover{ background:rgba(255,255,255,0.05)!important; }
 
-        /* Botones */
-        .btn{appearance:none;border:none;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:700}
-        .btn:disabled{opacity:.45;cursor:not-allowed}
-        .btn-primary{background:var(--accent-color);color:#111}
-        .btn-primary:hover{filter:brightness(1.05)}
-        .btn-blue{background:#2ea0ff;color:#fff}
-        .btn-blue:hover{filter:brightness(1.1)}
-        .btn-green{background:#21c07a;color:#072}
-        .btn-green:hover{filter:brightness(1.05)}
-        .btn-ghost{background:transparent;color:var(--subtle-text-color);border:1px solid var(--border-soft)}
-        .btn-ghost:hover{color:#fff}
+    /* Acentos igual que index */
+    .text-blue-600,.hover\:text-blue-600:hover{ color:var(--accent-color)!important; }
+    .bg-blue-600{ background:var(--accent-color)!important; color:#111!important; }
+    .hover\:bg-blue-700:hover{ filter:brightness(0.95)!important; }
+    .border-blue-600{ border-color:var(--accent-color)!important; }
 
-        /* Tabla */
-        .table-wrap{overflow:auto}
-        table{width:100%;border-collapse:collapse}
-        th,td{padding:12px 14px;border-bottom:1px solid var(--border-soft);text-align:left}
-        thead th{color:var(--accent-color);font-weight:700}
-        tbody tr:hover{background:rgba(255,255,255,0.05)}
-        .actions a,.actions button{margin-right:10px}
+    /* Verdes y amarillos (píldoras) sobre fondo oscuro */
+    .bg-green-100{ background:rgba(33,192,122,0.18)!important; }
+    .text-green-800{ color:#86e986!important; }
+    .bg-yellow-100{ background:rgba(255,216,0,0.18)!important; }
+    .text-yellow-800{ color:#ffe066!important; }
+    .bg-red-100{ background:rgba(255,87,87,0.20)!important; }
+    .text-red-800{ color:#ff9a9a!important; }
 
-        /* Sub-tabs ranking */
-        .subtabs{display:flex;gap:6px;background:rgba(255,255,255,0.06);border:1px solid var(--border-soft);border-radius:12px;padding:6px;width:max-content}
-        .subtab{padding:8px 14px;border-radius:8px;cursor:pointer;color:var(--subtle-text-color);font-weight:700}
-        .subtab:hover{color:#fff}
-        .sub-tab-active{background:var(--accent-color);color:#111}
+    /* Inputs en modo oscuro */
+    input,select,textarea{
+      background:rgba(255,255,255,0.06)!important;
+      color:var(--text-color)!important;
+      border:1px solid var(--border-soft)!important;
+    }
+    input::placeholder,textarea::placeholder{ color:#9fb0bd99; }
 
-        /* Rank arrows */
-        .rank-btn{background:transparent;border:1px solid var(--border-soft);border-radius:10px;padding:6px 10px;color:var(--subtle-text-color);cursor:pointer}
-        .rank-btn:hover{color:#fff;border-color:var(--accent-color)}
-        .rank-btn:disabled{opacity:.35}
+    /* Tabs estilo index */
+    .tab-active{
+      border-bottom-width:3px!important;
+      border-bottom-color:var(--accent-color)!important;
+      color:var(--accent-color)!important;
+      font-weight:700!important;
+    }
 
-        /* Modales */
-        .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
-        .modal-backdrop.show{display:flex}
-        .modal{background:#0f2536;border:1px solid var(--border-soft);border-radius:16px;padding:22px;width:min(92vw,520px);max-height:90vh;overflow:auto}
-        .modal h2{margin-top:0}
-        .form-grid{display:grid;grid-template-columns:1fr;gap:12px}
-        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-        label{font-size:13px;color:var(--subtle-text-color)}
-        input,select,textarea{
-            width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border-soft);
-            background:rgba(255,255,255,0.06);color:var(--text-color)
-        }
-        textarea{resize:vertical}
-        .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+    /* Sub-tabs */
+    .sub-tab-active{
+      background:var(--accent-color)!important;
+      color:#111!important;
+      font-weight:700!important;
+    }
 
-        /* Footer */
-        footer{text-align:center;margin-top:30px;color:var(--subtle-text-color)}
-        .footer-links{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:14px 0 8px}
-        .footer-links a{
-            color:var(--subtle-text-color); text-decoration:none; padding:10px 16px;
-            border:1px solid var(--border-soft); border-radius:18px; background:var(--card-background);
-        }
-        .footer-links a:hover{background:var(--accent-color);color:#111;border-color:var(--accent-color)}
-        .brand-legend{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px}
-        .brand-legend img{width:42px;height:auto;filter:drop-shadow(0 1px 3px rgba(0,0,0,.3))}
-    </style>
+    /* Modales con look index */
+    .modal-backdrop{
+      position:fixed; inset:0; background:rgba(0,0,0,0.6);
+      display:none; justify-content:center; align-items:center; z-index:50;
+    }
+    .modal-backdrop:not(.hidden){ display:flex; }
+    .modal-content{
+      background:#0f2536!important; color:var(--text-color);
+      border:1px solid var(--border-soft); border-radius:16px;
+      max-height:90vh; overflow:auto;
+    }
+
+    /* Botones secundarios */
+    .bg-teal-600{ background:#21c07a!important; }
+    .hover\:bg-teal-700:hover{ filter:brightness(0.95)!important; }
+    .bg-green-600{ background:#21c07a!important; color:#072!important; }
+    .hover\:bg-green-700:hover{ filter:brightness(0.95)!important; }
+    .bg-gray-300{ background:rgba(255,255,255,0.12)!important; color:var(--text-color)!important; }
+    .hover\:bg-gray-400:hover{ background:rgba(255,255,255,0.18)!important; }
+
+    /* Contenedores y títulos */
+    .container{ animation:fadeIn .7s ease-out forwards; }
+    .page-title{ letter-spacing:-0.5px; }
+
+    /* Header y footer con logo */
+    .club-logo{ width:140px; height:auto; margin:0 auto 10px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.35)); display:block; }
+    .footer-links a{
+      color:var(--subtle-text-color); text-decoration:none; padding:10px 16px;
+      border:1px solid var(--border-soft); border-radius:18px; background:var(--card-background);
+    }
+    .footer-links a:hover{ background:var(--accent-color); color:#111; border-color:var(--accent-color); }
+  </style>
 </head>
-<body>
-    <div class="main-container">
-        <header>
-            <img src="logo_uctenis_v03.png" alt="Logo UCTenis" class="club-logo">
-            <h1>Escalerilla UCTenis</h1>
-            <div class="subhead">Miembros, ranking y libro de desafíos</div>
-        </header>
 
-        <!-- Navegación de secciones -->
-        <nav class="tabs" aria-label="Secciones">
-            <button id="tab-miembros" class="tab-btn tab-active">Gestión de Miembros</button>
-            <button id="tab-ranking" class="tab-btn">Ranking</button>
-            <button id="tab-desafios" class="tab-btn">Libro de Desafíos</button>
-        </nav>
+<body class="bg-gray-100 text-gray-800">
+  <div class="container mx-auto p-4 md:p-8 max-w-6xl">
 
-        <main>
-            <!-- Gestión de Miembros -->
-            <section id="content-miembros">
-                <div class="grid">
-                    <!-- Resumen -->
-                    <aside class="card">
-                        <h3>Resumen del Club</h3>
-                        <div class="muted">Total de Miembros</div>
-                        <div id="total-miembros" class="kpi">0</div>
-                        <div class="muted" style="margin-top:10px">Miembros Activos</div>
-                        <div id="miembros-activos" class="kpi ok">0</div>
-                        <div class="muted" style="margin-top:10px">División Masculina</div>
-                        <div id="division-masculino" class="kpi">0</div>
-                        <div class="muted" style="margin-top:10px">División Femenina</div>
-                        <div id="division-femenino" class="kpi">0</div>
-                    </aside>
+    <!-- HEADER con logo UCTenis (igual que index) -->
+    <header class="text-center mb-6">
+      <img src="logo_uctenis_v03.png" alt="Logo UCTenis" class="club-logo">
+      <h1 class="page-title text-4xl font-bold text-gray-900">Plataforma de Gestión Deportiva</h1>
+      <p class="text-lg text-gray-600 mt-2">Administra los miembros, el ranking y los desafíos de tu club.</p>
+    </header>
 
-                    <!-- Tabla -->
-                    <section class="card">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-                            <h2>Lista de Miembros</h2>
-                            <div style="display:flex;gap:8px">
-                                <button id="bulk-upload-btn" class="btn btn-green">Carga Masiva (CSV)</button>
-                                <button id="add-member-btn" class="btn btn-blue">Agregar Miembro</button>
-                            </div>
-                        </div>
-                        <div class="table-wrap">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Nombre Completo</th>
-                                        <th>RUT</th>
-                                        <th>Categoría</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="members-table-body"></tbody>
-                            </table>
-                        </div>
-                    </section>
-                </div>
-            </section>
-
-            <!-- Ranking -->
-            <section id="content-ranking" class="hidden">
-                <div class="card">
-                    <h2 style="margin-bottom:10px">Ranking de Jugadores Activos</h2>
-
-                    <div class="subtabs" style="margin-bottom:12px">
-                        <button id="sub-tab-masculino" class="subtab sub-tab-active">Masculino</button>
-                        <button id="sub-tab-femenino" class="subtab">Femenino</button>
-                    </div>
-
-                    <!-- Masculino -->
-                    <div id="ranking-content-masculino">
-                        <div class="table-wrap">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Posición</th>
-                                        <th>Jugador</th>
-                                        <th>Categoría</th>
-                                        <th>Ajustar</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ranking-table-body-masculino"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Femenino -->
-                    <div id="ranking-content-femenino" class="hidden">
-                        <div class="table-wrap">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Posición</th>
-                                        <th>Jugador</th>
-                                        <th>Categoría</th>
-                                        <th>Ajustar</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ranking-table-body-femenino"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Libro de Desafíos -->
-            <section id="content-desafios" class="hidden">
-                <div class="card">
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-                        <h2>Libro de Desafíos</h2>
-                        <button id="add-challenge-btn" class="btn btn-green">Nuevo Desafío</button>
-                    </div>
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Fecha y Hora</th>
-                                    <th>Partido</th>
-                                    <th>Resultado</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="challenges-table-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <div class="footer-links">
-                <a href="index.html">Reservar Canchas</a>
-                <a href="ranking.html">Ver Ranking Público</a>
-                <a href="normas.html">Normas de Uso</a>
-            </div>
-            <div class="brand-legend">
-                <img src="logo_uctenis_v03.png" alt="Escudo UCTenis">
-                <span>UCTenis Club · Universidad Católica de Temuco</span>
-            </div>
-        </footer>
+    <!-- Tabs de Navegación -->
+    <div class="mb-6 border-b" style="border-color:var(--border-soft);">
+      <nav class="flex flex-wrap gap-3 md:gap-6 justify-center" aria-label="Tabs">
+        <button id="tab-miembros" class="tab-active py-3 px-1 border-b-2 font-medium text-sm text-gray-500 focus:outline-none">
+          Gestión de Miembros
+        </button>
+        <button id="tab-ranking" class="py-3 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 focus:outline-none">
+          Ranking
+        </button>
+        <button id="tab-desafios" class="py-3 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 focus:outline-none">
+          Libro de Desafíos
+        </button>
+      </nav>
     </div>
 
-    <!-- Input oculto para CSV -->
-    <input type="file" id="csv-file-input" class="hidden" accept=".csv" style="display:none">
+    <!-- Contenido -->
+    <main>
+      <!-- Sección Miembros -->
+      <div id="content-miembros">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <!-- Resumen -->
+          <div id="summary-box" class="md:col-span-1 bg-white p-6 rounded-2xl shadow-md space-y-4" style="border:1px solid var(--border-soft);">
+            <h3 class="text-lg font-semibold border-b pb-2" style="border-color:var(--border-soft);">Resumen del Club</h3>
+            <div>
+              <p class="text-gray-600">Total de Miembros:</p>
+              <p id="total-miembros" class="text-2xl font-extrabold">0</p>
+            </div>
+            <div>
+              <p class="text-gray-600">Miembros Activos:</p>
+              <p id="miembros-activos" class="text-2xl font-extrabold text-green-600">0</p>
+            </div>
+            <div>
+              <p class="text-gray-600">División Masculina:</p>
+              <p id="division-masculino" class="text-2xl font-extrabold">0</p>
+            </div>
+            <div>
+              <p class="text-gray-600">División Femenina:</p>
+              <p id="division-femenino" class="text-2xl font-extrabold">0</p>
+            </div>
+          </div>
 
-    <!-- Modales -->
-    <div id="member-modal" class="modal-backdrop">
-        <div class="modal">
-            <h2 id="member-modal-title">Agregar Miembro</h2>
-            <form id="member-form">
-                <input type="hidden" id="member-id">
-                <div class="form-row">
-                    <div>
-                        <label for="nombres">Nombres</label>
-                        <input type="text" id="nombres" required>
-                    </div>
-                    <div>
+          <!-- Tabla de Miembros -->
+          <div class="md:col-span-3 bg-white p-6 rounded-2xl shadow-md" style="border:1px solid var(--border-soft);">
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-0 justify-between items-center mb-4">
+              <h2 class="text-2xl font-bold">Lista de Miembros</h2>
+              <div class="flex gap-2">
+                <button id="bulk-upload-btn" class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition duration-300">
+                  Carga Masiva (CSV)
+                </button>
+                <button id="add-member-btn" class="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                  Agregar Miembro
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="min-w-full bg-white rounded-xl overflow-hidden">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Nombre Completo</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">RUT</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Categoría</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Estado</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="members-table-body" class="divide-y divide-gray-200"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección Ranking -->
+      <div id="content-ranking" class="hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-md" style="border:1px solid var(--border-soft);">
+          <h2 class="text-2xl font-bold mb-4">Ranking de Jugadores Activos</h2>
+
+          <!-- Sub-tabs -->
+          <div class="mb-4 border rounded-xl p-1" style="border-color:var(--border-soft); background:rgba(255,255,255,0.06);">
+            <div class="flex items-center gap-1">
+              <button id="sub-tab-masculino" class="sub-tab-ranking sub-tab-active flex-1 text-center px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">Masculino</button>
+              <button id="sub-tab-femenino" class="sub-tab-ranking flex-1 text-center px-4 py-2 rounded-md text-sm font-medium text-gray-600 transition-colors duration-200">Femenino</button>
+            </div>
+          </div>
+
+          <!-- Masculino -->
+          <div id="ranking-content-masculino">
+            <div class="overflow-x-auto">
+              <table class="min-w-full bg-white rounded-xl overflow-hidden">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Posición</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Jugador</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Categoría</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Ajustar</th>
+                  </tr>
+                </thead>
+                <tbody id="ranking-table-body-masculino" class="divide-y divide-gray-200"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Femenino -->
+          <div id="ranking-content-femenino" class="hidden">
+            <div class="overflow-x-auto">
+              <table class="min-w-full bg-white rounded-xl overflow-hidden">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Posición</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Jugador</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Categoría</th>
+                    <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Ajustar</th>
+                  </tr>
+                </thead>
+                <tbody id="ranking-table-body-femenino" class="divide-y divide-gray-200"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Libro de Desafíos -->
+      <div id="content-desafios" class="hidden">
+        <div class="bg-white p-6 rounded-2xl shadow-md" style="border:1px solid var(--border-soft);">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold">Libro de Desafíos</h2>
+            <button id="add-challenge-btn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300">
+              Nuevo Desafío
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-xl overflow-hidden">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Fecha y Hora</th>
+                  <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Partido</th>
+                  <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Resultado</th>
+                  <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Estado</th>
+                  <th class="py-3 px-4 text-left text-xs font-semibold uppercase tracking-wider text-blue-600">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="challenges-table-body" class="divide-y divide-gray-200"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER con enlaces a juego -->
+    <footer class="mt-8 text-center">
+      <div class="footer-links flex flex-wrap justify-center gap-2 md:gap-3">
+        <a href="index.html">Reservar Canchas</a>
+        <a href="ranking.html">Ver Ranking Público</a>
+        <a href="normas.html">Normas de Uso</a>
+      </div>
+      <div class="flex items-center justify-center gap-2 mt-3 text-sm" style="color:var(--subtle-text-color);">
+        <img src="logo_uctenis_v03.png" alt="UCTenis" style="width:36px;height:auto;filter:drop-shadow(0 1px 3px rgba(0,0,0,.3))">
+        <span>UCTenis Club · Universidad Católica de Temuco</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Input oculto para CSV -->
+  <input type="file" id="csv-file-input" class="hidden" accept=".csv">
+
+  <!-- Modales (tus mismos IDs; sólo toman el skin nuevo) -->
+  <div id="member-modal" class="modal-backdrop hidden">
+    <div class="modal-content w-11/12 md:max-w-md mx-auto shadow-lg z-50 p-8">
+      <h2 id="member-modal-title" class="text-2xl font-bold mb-6">Agregar Miembro</h2>
+      <form id="member-form">
+        <input type="hidden" id="member-id">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="mb-4"><label for="nombres" class="block text-sm font-medium text-gray-700">Nombres</label><input type="text" id="nombres" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></div>
+          <div class="mb-4"><label for="apellidos" class="block text-sm font-medium text-gray-700">Apellidos</label><input type="text" id="apellidos" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></div>
+        </div>
+        <div class="mb-4"><label for="rut" class="block text-sm font-medium text-gray-700">RUT</label><input type="text" id="rut" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></div>
+        <div class="mb-4"><label for="correo" class="block text-sm font-medium text-gray-700">Correo</label><input type="email" id="correo" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="mb-4"><label for="categoria" class="block text-sm font-medium text-gray-700">Categoría</label><select id="categoria" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option>1ra</option><option>2da</option><option>3ra</option><option>4ta</option><option>5ta</option></select></div>
+          <div class="mb-4"><label for="division" class="block text-sm font-medium text-gray-700">División</label><select id="division" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option>Masculino</option><option>Femenino</option></select></div>
+        </div>
+        <div class="mb-4"><label for="estado" class="block text-sm font-medium text-gray-700">Estado</label><select id="estado" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"><option value="ACTIVO">Activo</option><option value="INACTIVO">Inactivo</option></select></div>
+        <div class="flex justify-end gap-3 mt-6">
+          <button type="button" id="cancel-member-btn" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400">Cancelar</button>
+          <button type="submit" class="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="challenge-modal" class="modal-backdrop hidden">
+    <div class="modal-content w-11/12 md:max-w-md mx-auto shadow-lg z-50 p-8">
+      <h2 class="text-2xl font-bold mb-6">Registrar Nuevo Desafío</h2>
+      <form id="challenge-form">
+        <div class="mb-4"><label for="challenger" class="block text-sm font-medium text-gray-700">Desafiante</label><select id="challenger" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm" required></select></div>
+        <div class="mb-4"><label for="defender" class="block text-sm font-medium text-gray-700">Defensor</label><select id="defender" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm" required></select></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="mb-4"><label for="fecha" class="block text-sm font-medium text-gray-700">Fecha</label><input type="date" id="fecha" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm" required></div>
+          <div class="mb-4"><label for="hora" class="block text-sm font-medium text-gray-700">Hora</label><input type="time" id="hora" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm" required></div>
+        </div>
+        <div class="flex justify-end gap-3 mt-6">
+          <button type="button" id="cancel-challenge-btn" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400">Cancelar</button>
+          <button type="submit" class="bg-green-600 px-4 py-2 rounded-lg hover:bg-green-700">Guardar Desafío</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="result-modal" class="modal-backdrop hidden">
+    <div class="modal-content w-11/12 md:max-w-md mx-auto shadow-lg z-50 p-8">
+      <h2 class="text-2xl font-bold mb-6">Registrar Resultado del Partido</h2>
+      <form id="result-form">
+        <input type="hidden" id="challenge-id">
+        <div class="mb-4 p-4 rounded-md" style="background:rgba(255,255,255,0.06); border:1px solid var(--border-soft);">
+          <p class="text-sm text-gray-600">Partido:</p>
+          <p id="result-match-info" class="font-semibold text-lg"></p>
+        </div>
+        <div class="mb-4"><label for="winner" class="block text-sm font-medium text-gray-700">Ganador</label><select id="winner" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm" required></select></div>
+        <div class="mb-4"><label for="resultado" class="block text-sm font-medium text-gray-700">Resultado</label><input type="text" id="resultado" placeholder="Ej: 6-2, 6-3" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm" required></div>
+        <div class="mb-4"><label for="comentarios" class="block text-sm font-medium text-gray-700">Comentarios</label><textarea id="comentarios" rows="3" class="mt-1 block w-full px-3 py-2 rounded-md shadow-sm"></textarea></div>
+        <div class="flex justify-end gap-3 mt-6">
+          <button type="button" id="cancel-result-btn" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400">Cancelar</button>
+          <button type="submit" class="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700">Guardar Resultado</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="delete-confirm-modal" class="modal-backdrop hidden">
+    <div class="modal-content w-11/12 md:max-w-sm mx-auto shadow-lg z-50 p-6 text-center">
+      <h3 class="text-lg font-bold mb-4">Confirmar Eliminación</h3>
+      <p class="text-gray-600 mb-6">¿Estás seguro de que deseas eliminar a este miembro? Esta acción no se puede deshacer.</p>
+      <div class="flex justify-center gap-3">
+        <button id="cancel-delete-btn" class="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400">Cancelar</button>
+        <button id="confirm-delete-btn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Alerta -->
+  <div id="alert-modal" class="modal-backdrop hidden">
+    <div class="modal-content w-11/12 md:max-w-sm mx-auto shadow-lg z-50 p-6 text-center">
+      <h3 id="alert-title" class="text-lg font-bold mb-4" style="color:#ff8a8a">Alerta</h3>
+      <p id="alert-message" class="text-gray-600 mb-6"></p>
+      <div class="flex justify-center">
+        <button id="alert-ok-btn" class="bg-blue-600 px-6 py-2 rounded-lg hover:bg-blue-700">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tu JS original tal cual -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, addDoc, doc, setDoc, deleteDoc, query, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "...", authDomain: "...", projectId: "...", storageBucket: "...", messagingSenderId: "...", appId: "..." };
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-club-app';
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let membersCollectionRef;
+    let challengesCollectionRef;
+    let activeMembersCache = [];
+    let challengesCache = [];
+    let memberToDeleteId = null;
+
+    const tabs = { miembros: document.getElementById('tab-miembros'), ranking: document.getElementById('tab-ranking'), desafios: document.getElementById('tab-desafios') };
+    const contents = { miembros: document.getElementById('content-miembros'), ranking: document.getElementById('content-ranking'), desafios: document.getElementById('content-desafios') };
+
+    const memberModal = document.getElementById('member-modal');
+    const challengeModal = document.getElementById('challenge-modal');
+    const resultModal = document.getElementById('result-modal');
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+    const alertModal = document.getElementById('alert-modal');
+
+    const switchTab = (tabName) => {
+      Object.values(tabs).forEach(tab => tab.classList.remove('tab-active'));
+      Object.values(contents).forEach(content => content.classList.add('hidden'));
+      tabs[tabName].classList.add('tab-active');
+      contents[tabName].classList.remove('hidden');
+    };
+    Object.keys(tabs).forEach(tabName => tabs[tabName].addEventListener('click', () => switchTab(tabName)));
+
+    const openModal = (m) => m.classList.remove('hidden');
+    const closeModal = (m) => m.classList.add('hidden');
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        membersCollectionRef = collection(db, `artifacts/${appId}/public/data/members`);
+        challengesCollectionRef = collection(db, `artifacts/${appId}/public/data/challenges`);
+        listenToMembers();
+        listenToChallenges();
+      } else {
+        try {
+          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+        } catch (e) { console.error("Auth error:", e); }
+      }
+    });
+
+    const memberForm = document.getElementById('member-form');
+    document.getElementById('add-member-btn').addEventListener('click', () => {
+      memberForm.reset();
+      document.getElementById('member-id').value = '';
+      document.getElementById('member-modal-title').textContent = 'Agregar Miembro';
+      openModal(memberModal);
+    });
+    document.getElementById('cancel-member-btn').addEventListener('click', () => closeModal(memberModal));
+
+    memberForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const memberId = document.getElementById('member-id').value;
+      const memberData = {
+        nombres: document.getElementById('nombres').value,
+        apellidos: document.getElementById('apellidos').value,
+        rut: document.getElementById('rut').value,
+        correo: document.getElementById('correo').value,
+        categoria: document.getElementById('categoria').value,
+        division: document.getElementById('division').value,
+        estado: document.getElementById('estado').value,
+      };
+      try{
+        if (memberId) {
+          await setDoc(doc(db, membersCollectionRef.path, memberId), memberData, { merge: true });
+        } else {
+          memberData.ranking = Date.now();
+          await addDoc(membersCollectionRef, memberData);
+        }
+        closeModal(memberModal);
+      }catch(err){ console.error("Error al guardar miembro:", err); }
+    });
+
+    function listenToMembers(){
+      onSnapshot(membersCollectionRef, (snapshot)=>{
+        const members = snapshot.docs.map(doc => ({ id:doc.id, ...doc.data() }));
+        renderMembersTable(members);
+        updateSummary(members);
+        activeMembersCache = members.filter(m => m.estado === 'ACTIVO');
+        renderAllRankings(activeMembersCache);
+        populateChallengeDropdowns(activeMembersCache);
+      });
+    }
+
+    function renderMembersTable(members){
+      const body = document.getElementById('members-table-body');
+      body.innerHTML = '';
+      members.forEach(m=>{
+        const full = `${m.nombres} ${m.apellidos}`;
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-gray-50';
+        tr.innerHTML = `
+          <td class="py-4 px-4 whitespace-nowrap"><div class="text-sm font-semibold text-gray-900">${full}</div><div class="text-sm text-gray-500">${m.correo||''}</div></td>
+          <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${m.rut||''}</td>
+          <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${m.categoria||''}</td>
+          <td class="py-4 px-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${m.estado==='ACTIVO'?'bg-green-100 text-green-800':'bg-red-100 text-red-800'}">${m.estado}</span></td>
+          <td class="py-4 px-4 whitespace-nowrap text-sm font-medium">
+            <button class="edit-btn text-blue-600 hover:text-blue-600/90" data-id="${m.id}">Editar</button>
+            <button class="delete-btn text-red-600 hover:text-red-600/90 ml-4" data-id="${m.id}">Eliminar</button>
+          </td>
+        `;
+        body.appendChild(tr);
+      });
+      body.querySelectorAll('.edit-btn').forEach(b=> b.addEventListener('click', (e)=> handleEditMember(e.currentTarget.dataset.id, members)));
+      body.querySelectorAll('.delete-btn').forEach(b=> b.addEventListener('click', (e)=> handleDeleteMember(e.currentTarget.dataset.id)));
+    }
+
+    // CSV
+    const csvFileInput = document.getElementById('csv-file-input');
+    document.getElementById('bulk-upload-btn').addEventListener('click', ()=> csvFileInput.click());
+    csvFileInput.addEventListener('change', (ev)=>{
+      const file = ev.target.files?.[0]; if(!file) return;
+      const reader = new FileReader();
+      reader.onload = async (e)=>{ await parseAndUploadCSV(e.target.result); };
+      reader.readAsText(file,'UTF-8'); ev.target.value='';
+    });
+
+    async function parseAndUploadCSV(csvText){
+      if (csvText && csvText.charCodeAt(0) === 0xFEFF) csvText = csvText.substring(1);
+      const lines = String(csvText).trim().split(/\r?\n/);
+      if (lines.length < 2){ showAlert('Error en CSV','El archivo está vacío o solo tiene cabecera.'); return; }
+      const headers = lines[0].split(',').map(h=>h.trim());
+      const required = ['nombres','apellidos','rut','categoria','correo','estado','division'];
+      const missing = required.filter(h=>!headers.includes(h));
+      if (missing.length){ showAlert('Error en CSV',`Faltan columnas: ${missing.join(', ')}`); return; }
+
+      for(let i=1;i<lines.length;i++){
+        const values = lines[i].split(',').map(v=>v.trim());
+        if(values.length!==headers.length) continue;
+        const row = headers.reduce((o,h,idx)=> (o[h]=values[idx],o), {});
+        try{
+          await addDoc(membersCollectionRef,{
+            nombres: row.nombres||'',
+            apellidos: row.apellidos||'',
+            rut: row.rut||'',
+            categoria: row.categoria||'5ta',
+            correo: row.correo||'',
+            estado: row.estado||'ACTIVO',
+            division: row.division||'Masculino',
+            ranking: Date.now()+Math.random()
+          });
+        }catch(err){ console.error(`Error fila ${i+1}:`,err); }
+      }
+      showAlert('Carga Finalizada','Se cargaron los miembros correctamente.');
+    }
+
+    function showAlert(title,msg){
+      document.getElementById('alert-title').textContent = title;
+      document.getElementById('alert-message').textContent = msg;
+      openModal(alertModal);
+    }
+    document.getElementById('alert-ok-btn').addEventListener('click', ()=> closeModal(alertModal));
+
+    function handleEditMember(id, members){
+      const m = members.find(x=>x.id===id); if(!m) return;
+      document.getElementById('member-id').value = m.id;
+      document.getElementById('nombres').value = m.nombres||'';
+      document.getElementById('apellidos').value = m.apellidos||'';
+      document.getElementById('rut').value = m.rut||'';
+      document.getElementById('correo').value = m.correo||'';
+      document.getElementById('categoria').value = m.categoria||'5ta';
+      document.getElementById('division').value = m.division||'Masculino';
+      document.getElementById('estado').value = m.estado||'ACTIVO';
+      document.getElementById('member-modal-title').textContent = 'Editar Miembro';
+      openModal(memberModal);
+    }
+
+    function handleDeleteMember(id){
+      memberToDeleteId = id; openModal(deleteConfirmModal);
+    }
+    document.getElementById('cancel-delete-btn').addEventListener('click', ()=> closeModal(deleteConfirmModal));
+    document.getElementById('confirm-delete-btn').addEventListener('click', async ()=>{
+      if(!memberToDeleteId) return;
+      try{ await deleteDoc(doc(db, membersCollectionRef.path, memberToDeleteId)); }
+      catch(e){ console.error("Error al eliminar miembro:", e); }
+      finally { memberToDeleteId = null; closeModal(deleteConfirmModal); }
+    });
+
+    function updateSummary(members){
+      document.getElementById('total-miembros').textContent = members.length;
+      document.getElementById('miembros-activos').textContent = members.filter(m=>m.estado==='ACTIVO').length;
+      document.getElementById('division-masculino').textContent = members.filter(m=>m.division==='Masculino').length;
+      document.getElementById('division-femenino').textContent = members.filter(m=>m.division==='Femenino').length;
+    }
+
+    // Ranking
+    const subTabMasculino = document.getElementById('sub-tab-masculino');
+    const subTabFemenino  = document.getElementById('sub-tab-femenino');
+    const rankingMasculino = document.getElementById('ranking-content-masculino');
+    const rankingFemenino  = document.getElementById('ranking-content-femenino');
+
+    subTabMasculino.addEventListener('click', ()=>{
+      rankingMasculino.classList.remove('hidden');
+      rankingFemenino.classList.add('hidden');
+      subTabMasculino.classList.add('sub-tab-active');
+      subTabFemenino.classList.remove('sub-tab-active');
+    });
+    subTabFemenino.addEventListener('click', ()=>{
+      rankingFemenino.classList.remove('hidden');
+      rankingMasculino.classList.add('hidden');
+      subTabFemenino.classList.add('sub-tab-active');
+      subTabMasculino.classList.remove('sub-tab-active');
+    });
+
+    function renderAllRankings(active){
+      const masc = active.filter(m=>m.division==='Masculino');
+      const fem  = active.filter(m=>m.division==='Femenino');
+      renderSingleRanking(masc,'ranking-table-body-masculino');
+      renderSingleRanking(fem ,'ranking-table-body-femenino');
+    }
+    function renderSingleRanking(members, tbodyId){
+      const tbody = document.getElementById(tbodyId);
+      tbody.innerHTML='';
+      const sorted = [...members].sort((a,b)=>(a.ranking||9999)-(b.ranking||9999));
+      sorted.forEach((m,idx)=>{
+        const isFirst = idx===0, isLast = idx===sorted.length-1;
+        const tr = document.createElement('tr');
+        tr.className='hover:bg-gray-50';
+        tr.innerHTML = `
+          <td class="py-4 px-4 whitespace-nowrap text-sm font-semibold text-gray-900">${idx+1}</td>
+          <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-800">${m.nombres} ${m.apellidos}</td>
+          <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-500">${m.categoria||''}</td>
+          <td class="py-4 px-4 whitespace-nowrap text-sm">
+            <button class="rank-btn move-up-btn text-gray-600 hover:text-blue-600" data-id="${m.id}" data-division="${m.division}" ${isFirst?'disabled':''}>▲</button>
+            <button class="rank-btn move-down-btn text-gray-600 hover:text-blue-600" data-id="${m.id}" data-division="${m.division}" ${isLast?'disabled':''}>▼</button>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+      tbody.querySelectorAll('.move-up-btn').forEach(b=> b.addEventListener('click', (e)=> handleRankChange(e.currentTarget.dataset.id,'up',e.currentTarget.dataset.division)));
+      tbody.querySelectorAll('.move-down-btn').forEach(b=> b.addEventListener('click', (e)=> handleRankChange(e.currentTarget.dataset.id,'down',e.currentTarget.dataset.division)));
+    }
+
+    async function handleRankChange(memberId, direction, division){
+      const divisionMembers = activeMembersCache.filter(m=>m.division===division);
+      const sorted = [...divisionMembers].sort((a,b)=>(a.ranking||9999)-(b.ranking||9999));
+      const currentIndex = sorted.findIndex(m=>m.id===memberId);
+      let targetIndex = null;
+      if(direction==='up' && currentIndex>0) targetIndex=currentIndex-1;
+      else if(direction==='down' && currentIndex<sorted.length-1) targetIndex=currentIndex+1;
+      else return;
+
+      const a = sorted[currentIndex], b = sorted[targetIndex];
+      try{
+        await updateDoc(doc(db, membersCollectionRef.path, a.id), { ranking: b.ranking });
+        await updateDoc(doc(db, membersCollectionRef.path, b.id), { ranking: a.ranking });
+      }catch(e){ console.error("Rank swap error:",e); }
+    }
+
+    // Desafíos
+    const challengeForm = document.getElementById('challenge-form');
+    const resultForm = document.getElementById('result-form');
+
+    document.getElementById('add-challenge-btn').addEventListener('click', ()=>{ challengeForm.reset(); openModal(challengeModal); });
+    document.getElementById('cancel-challenge-btn').addEventListener('click', ()=> closeModal(challengeModal));
+    document.getElementById('cancel-result-btn').addEventListener('click', ()=> closeModal(resultModal));
+
+    function populateChallengeDropdowns(active){
+      const sorted = [...active].sort((a,b)=>(a.ranking||9999)-(b.ranking||9999));
+      const ch = document.getElementById('challenger'), df = document.getElementById('defender');
+      ch.innerHTML = '<option value="">Seleccione un jugador</option>';
+      df.innerHTML = '<option value="">Seleccione un jugador</option>';
+      sorted.forEach(m=>{
+        const rank = active.filter(x=>x.division===m.division).sort((a,b)=>a.ranking-b.ranking).findIndex(x=>x.id===m.id)+1;
+        const label = `${m.nombres} ${m.apellidos} (${m.division.slice(0,3)}. Rank: ${rank})`;
+        ch.innerHTML += `<option value="${m.id}">${label}</option>`;
+        df.innerHTML += `<option value="${m.id}">${label}</option>`;
+      });
+    }
+
+    function listenToChallenges(){
+      const q = query(collection(db, challengesCollectionRef.path));
+      onSnapshot(q, (snapshot)=>{
+        challengesCache = snapshot.docs.map(d=>({ id:d.id, ...d.data() }));
+        challengesCache.sort((a,b)=> new Date(`${b.fecha}T${b.hora}`) - new Date(`${a.fecha}T${a.hora}`));
+        renderChallengesTable(challengesCache);
+      });
+    }
+
+    function renderChallengesTable(challenges){
+      const body = document.getElementById('challenges-table-body');
+      body.innerHTML='';
+      challenges.forEach(c=>{
+        const tr = document.createElement('tr');
+        tr.className='hover:bg-gray-50';
+        const statusPill = c.status==='PENDIENTE'
+          ? `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pendiente</span>`
+          : `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Finalizado</span>`;
+        const winnerInfo = c.winnerName ? `<div class="text-xs text-gray-500">Ganador: ${c.winnerName}</div>` : '';
+        const actionBtn = c.status==='PENDIENTE'
+          ? `<button class="result-btn text-sm bg-blue-600 px-3 py-1 rounded-md hover:bg-blue-700" data-id="${c.id}">Registrar Resultado</button>`
+          : '';
+        tr.innerHTML = `
+          <td class="py-4 px-4 whitespace-nowrap text-sm text-gray-800">${c.fecha} <span class="text-gray-500">${c.hora}</span></td>
+          <td class="py-4 px-4 whitespace-nowrap"><div class="text-sm font-medium text-gray-900">${c.challengerName}</div><div class="text-sm text-gray-500">vs ${c.defenderName}</div></td>
+          <td class="py-4 px-4 whitespace-nowrap text-sm font-bold text-gray-800">${c.resultado||''}${winnerInfo}</td>
+          <td class="py-4 px-4 whitespace-nowrap">${statusPill}</td>
+          <td class="py-4 px-4 whitespace-nowrap text-sm font-medium">${actionBtn}</td>`;
+        body.appendChild(tr);
+      });
+      body.querySelectorAll('.result-btn').forEach(b=> b.addEventListener('click', (e)=> handleRegisterResult(e.currentTarget.dataset.id)));
+    }
+
+    function handleRegisterResult(id){
+      const c = challengesCache.find(x=>x.id===id); if(!c) return;
+      document.getElementById('challenge-id').value = id;
+      document.getElementById('result-match-info').textContent = `${c.challengerName} vs ${c.defenderName}`;
+      const w = document.getElementById('winner');
+      w.innerHTML = `<option value="${c.challengerId}">${c.challengerName}</option><option value="${c.defenderId}">${c.defenderName}</option>`;
+      document.getElementById('resultado').value = '';
+      document.getElementById('comentarios').value = '';
+      openModal(resultModal);
+    }
+
+    resultForm.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const challengeId = document.getElementById('challenge-id').value;
+      const winnerId = document.getElementById('winner').value;
+      const c = challengesCache.find(x=>x.id===challengeId); if(!c) return;
+      const winner = activeMembersCache.find(m=>m.id===winnerId);
+      const updateData = {
+        status:'FINALIZADO',
+        winnerId, winnerName:`${winner.nombres} ${winner.apellidos}`,
+        resultado: document.getElementById('resultado').value,
+        comentarios: document.getElementById('comentarios').value
+      };
+      try{
+        await updateDoc(doc(db, challengesCollectionRef.path, challengeId), updateData);
+        const challenger = activeMembersCache.find(m=>m.id===c.challengerId);
+        const defender   = activeMembersCache.find(m=>m.id===c.defenderId);
+        if (challenger.division===defender.division && winnerId===challenger.id && challenger.ranking>defender.ranking) {
+          await updateDoc(doc(db, membersCollectionRef.path, challenger.id), { ranking: defender.ranking });
+          await updateDoc(doc(db, membersCollectionRef.path, defender.id),   { ranking: challenger.ranking });
+        }
+        closeModal(resultModal);
+      }catch(err){ console.error("Resultado error:",err); }
+    });
+  </script>
+
+  <!-- Service Worker igual que index (si existe) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(()=>{});
+      });
+    }
+  </script>
+</body>
+</html>
