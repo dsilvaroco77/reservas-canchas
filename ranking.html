@@ -2,121 +2,135 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Ranking de Jugadores - UCTenis</title>
 <style>
-:root {
-    --background-color:#001f33; /* Azul medianoche */
-    --text-color:#f5f5f7;
-    --subtle-text-color:#a1a1a6;
-    --accent-color:#c6d300; /* Verde del logo */
-    --card-background:rgba(255,255,255,0.05);
+:root{
+  --background-color:#001f33; /* Azul medianoche */
+  --text-color:#f5f5f7;
+  --subtle-text-color:#a1a1a6;
+  --accent-color:#c6d300; /* Verde UCTenis */
+  --card-background:rgba(255,255,255,0.05);
 }
-@keyframes fadeIn { from { opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
-body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; margin:0; padding:0; background-color:var(--background-color); color:var(--text-color);}
-.main-container{max-width:900px; margin:0 auto; padding:40px 20px; animation:fadeIn 1s ease-out forwards;}
-.header-section{text-align:center; margin-bottom:20px;}
-h1{font-size:36px; font-weight:700; letter-spacing:-1px; margin:0;}
-h2{font-size:24px; font-weight:600; margin-top:30px; color:var(--accent-color);}
-.ranking-info{text-align:center; margin-bottom:20px;}
-.last-updated-date{font-size:14px; color:var(--subtle-text-color); font-style:italic;}
-.ranking-table-container{background-color:var(--card-background); border-radius:18px; padding:20px; margin-bottom:30px; border:1px solid rgba(255,255,255,0.1);}
-table{width:100%; border-collapse:collapse; color:var(--text-color);}
-th,td{padding:12px 15px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.1);}
-th{font-weight:600; color:var(--accent-color);}
-tr:last-child td{border-bottom:none;}
-tr:hover{background-color:rgba(255,255,255,0.05);}
-th:first-child,td:first-child{width:100px; text-align:center;}
-.loading-ranking{text-align:center; padding:20px; font-style:italic; color:var(--subtle-text-color);}
-.footer-nav{text-align:center; margin-top:40px;}
-.back-button{display:inline-block; background-color:var(--accent-color); color:#001f33; font-size:16px; font-weight:600; padding:12px 30px; border:none; border-radius:30px; cursor:pointer; text-decoration:none; transition:background-color 0.3s ease, transform 0.2s ease;}
-.back-button:hover{background-color:#a4b200; transform:translateY(-2px);}
-@media(max-width:768px){
-  h1{font-size:28px;}
-  h2{font-size:20px;}
-  th,td{padding:8px 10px; font-size:14px;}
-  th:first-child,td:first-child{width:80px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;background:var(--background-color);color:var(--text-color)}
+.main-container{max-width:900px;margin:0 auto;padding:40px 20px;animation:fadeIn 1s ease-out forwards}
+.header-section{text-align:center;margin-bottom:20px}
+.uct-logo{width:clamp(96px,14vw,168px);height:auto;display:block;margin:0 auto 12px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+h1{font-size:36px;font-weight:700;letter-spacing:-1px;margin:0}
+.ranking-info{text-align:center;margin-bottom:20px}
+.last-updated-date{font-size:14px;color:var(--subtle-text-color);font-style:italic}
+.section-title{font-size:22px;font-weight:700;margin:14px 6px;color:var(--accent-color)}
+.ranking-table-container{background:var(--card-background);border-radius:18px;padding:18px 16px;margin-bottom:24px;border:1px solid rgba(255,255,255,.1)}
+table{width:100%;border-collapse:collapse;color:var(--text-color);display:none}
+th,td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
+th{font-weight:600;color:var(--accent-color)}
+tr:last-child td{border-bottom:none}
+tr:hover{background:rgba(255,255,255,.05)}
+th:first-child,td:first-child{width:110px;text-align:center}
+.loading{color:var(--subtle-text-color);font-style:italic;text-align:center;padding:10px}
+.note{font-size:12px;color:var(--subtle-text-color);text-align:center;margin-top:6px;word-break:break-all}
+.footer-nav{text-align:center;margin-top:28px}
+.back-button{display:inline-block;background:var(--accent-color);color:#001f33;font-size:16px;font-weight:700;padding:12px 30px;border:none;border-radius:30px;cursor:pointer;text-decoration:none;transition:background-color .2s ease,transform .15s ease}
+.back-button:hover{background-color:#a4b200;transform:translateY(-2px)}
+@media (max-width:768px){
+  h1{font-size:28px}
+  th,td{padding:10px;font-size:14px}
+  th:first-child,td:first-child{width:80px}
+  .section-title{font-size:20px}
 }
-.uct-logo{width:clamp(96px,14vw,168px); height:auto; display:block; margin:0 auto 12px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.35));}
 </style>
 </head>
 <body>
 <div class="main-container">
   <div class="header-section">
     <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo" loading="lazy"/>
-    <h1>Ranking de Jugadores UCTenis</h1>
+    <h1>Ranking UCTenis</h1>
   </div>
 
   <div class="ranking-info">
-    <p class="last-updated-date" id="lastUpdatedDate"></p>
+    <p class="last-updated-date" id="lastUpdatedDate">Cargando fecha…</p>
   </div>
 
-  <!-- Ranking Mujeres -->
-  <div class="ranking-table-container">
-    <h2>Ranking Mujeres</h2>
-    <p class="loading-ranking" id="loadingM">Cargando ranking...</p>
-    <table id="tableM" style="display:none;">
+  <!-- MUJERES -->
+  <div class="ranking-table-container" id="boxM">
+    <h2 class="section-title">Ranking Mujeres</h2>
+    <div class="loading" id="loadingM">Cargando ranking…</div>
+    <table id="tableM">
       <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
-      <tbody id="bodyM"></tbody>
+      <tbody id="tbodyM"></tbody>
     </table>
+    <div class="note" id="noteM"></div>
   </div>
 
-  <!-- Ranking Varones -->
-  <div class="ranking-table-container">
-    <h2>Ranking Varones</h2>
-    <p class="loading-ranking" id="loadingH">Cargando ranking...</p>
-    <table id="tableH" style="display:none;">
+  <!-- VARONES -->
+  <div class="ranking-table-container" id="boxH">
+    <h2 class="section-title">Ranking Varones</h2>
+    <div class="loading" id="loadingH">Cargando ranking…</div>
+    <table id="tableH">
       <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
-      <tbody id="bodyH"></tbody>
+      <tbody id="tbodyH"></tbody>
     </table>
+    <div class="note" id="noteH"></div>
   </div>
 
   <div class="footer-nav">
-    <a href="index.html" class="back-button">Volver a Reservar</a>
+    <a class="back-button" href="index.html">Volver a Reservar</a>
   </div>
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbz7xwT8QECTamymk3fjq0K0XJZRmewkphc5yoHF_5IePkTM2MGamyefRypSj44XyYxeLg/exec';
+// PON AQUÍ TU URL /exec DEL WEB APP
+const BASE_URL = 'https://script.google.com/macros/s/AKfycbz7xwT8QECTamymk3fjq0K0XJZRmewkphc5yoHF_5IePkTM2MGamyefRypSj44XyYxeLg/exec';
 
 function setFecha(){
-  const hoy=new Date();
-  const opciones={year:'numeric',month:'long',day:'numeric'};
-  document.getElementById('lastUpdatedDate').textContent = 
-    `Ranking al día: ${hoy.toLocaleDateString('es-CL',opciones)}`;
+  const el = document.getElementById('lastUpdatedDate');
+  el.textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});
 }
 
-async function cargarRanking(sheet, bodyId, tableId, loadingId){
-  const body=document.getElementById(bodyId);
-  const table=document.getElementById(tableId);
-  const loading=document.getElementById(loadingId);
+async function cargarTabla(hoja, ids){
+  const url = `${BASE_URL}?sheet=${encodeURIComponent(hoja)}`;
+  const loading = document.getElementById(ids.loading);
+  const table = document.getElementById(ids.table);
+  const tbody = document.getElementById(ids.tbody);
+  const note  = document.getElementById(ids.note);
+
+  note.textContent = `Fuente: ${url}`;
   try{
-    const res=await fetch(`${API_URL}?sheet=${encodeURIComponent(sheet)}`);
-    if(!res.ok) throw new Error(res.statusText);
-    const data=await res.json();
-    body.innerHTML='';
-    if(!data || data.length===0){
-      loading.textContent="Aún no hay datos en el ranking.";
-      table.style.display='none'; return;
+    const res = await fetch(url, { cache: 'no-store' });
+    if(!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    const data = await res.json();
+
+    tbody.innerHTML = '';
+    if(!Array.isArray(data) || data.length === 0){
+      loading.textContent = 'No hay datos en esta hoja.';
+      table.style.display = 'none';
+      return;
     }
-    data.forEach(p=>{
-      const row=body.insertRow();
-      row.insertCell().textContent=p.posicion;
-      row.insertCell().textContent=p.nombre;
-    });
-    table.style.display='';
-    loading.style.display='none';
+
+    for(const p of data){
+      const tr = document.createElement('tr');
+      const tdPos = document.createElement('td'); tdPos.textContent = p.posicion ?? '';
+      const tdNom = document.createElement('td'); tdNom.textContent = p.nombre ?? '';
+      tr.appendChild(tdPos); tr.appendChild(tdNom);
+      tbody.appendChild(tr);
+    }
+
+    loading.style.display = 'none';
+    table.style.display = '';
   }catch(err){
-    console.error(err);
-    loading.textContent="Error cargando datos.";
-    table.style.display='none';
+    console.error('Fallo cargando', hoja, err);
+    loading.textContent = 'Error cargando datos. Revisa la URL /exec y que la hoja exista.';
+    table.style.display = 'none';
   }
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
   setFecha();
-  cargarRanking("ranking m","bodyM","tableM","loadingM");
-  cargarRanking("ranking h","bodyH","tableH","loadingH");
+  // Mujeres primero
+  cargarTabla('ranking m', { loading:'loadingM', table:'tableM', tbody:'tbodyM', note:'noteM' });
+  // Luego varones
+  cargarTabla('ranking h', { loading:'loadingH', table:'tableH', tbody:'tbodyH', note:'noteH' });
 });
 </script>
 </body>
