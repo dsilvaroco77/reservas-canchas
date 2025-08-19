@@ -1,80 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ranking de Jugadores - UCTenis</title>
-<style>
-        :root {
-            --background-color: #111;
-            --text-color: #f5f5f7;
-            --subtle-text-color: #a1a1a6;
-            --accent-color: #007aff;
-            --card-background: rgba(35, 35, 35, 0.5);
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: var(--background-color); color: var(--text-color); }
-        .main-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; animation: fadeIn 1s ease-out forwards; }
-        .header-section { text-align: center; margin-bottom: 20px; }
-        h1 { font-size: 36px; font-weight: 700; letter-spacing: -1px; color: var(--text-color); margin: 0; }
-
-        .ranking-info {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .last-updated-date {
-            font-size: 14px;
-            color: var(--subtle-text-color);
-            font-style: italic;
-        }
-
-        .ranking-table-container {
-            background-color: var(--card-background);
-            border-radius: 18px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        #rankingTable {
-            width: 100%;
-            border-collapse: collapse;
-            color: var(--text-color);
-        }
-        #rankingTable th, #rankingTable td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        #rankingTable th {
-            font-weight: 600;
-            color: var(--accent-color);
-        }
-        #rankingTable tr:last-child td {
-            border-bottom: none;
-        }
-        #rankingTable tr:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-        #rankingTable th:first-child, #rankingTable td:first-child {
-            width: 100px; 
-            text-align: center;
-        }
-        .loading-ranking {
-            text-align: center;
-            padding: 20px;
-            font-style: italic;
-            color: var(--subtle-text-color);
-        }
-        .footer-nav { text-align: center; margin-top: 40px; }
-        .back-button { display: inline-block; background-color: var(--accent-color); color: white; font-size: 16px; font-weight: 600; padding: 12px 30px; border: none; border-radius: 30px; cursor: pointer; text-decoration: none; transition: background-color 0.3s ease, transform 0.2s ease; }
-        .back-button:hover { background-color: #0056b3; transform: translateY(-2px); }
-        @media (max-width: 768px) { 
-            h1 { font-size: 28px; } 
-            .ranking-table-container { padding: 15px; }
-            #rankingTable th, #rankingTable td { padding: 8px 10px; font-size: 14px; }
-            #rankingTable th:first-child, #rankingTable td:first-child { width: 80px; }
-        }
-    </style>
 <style>
 :root {
     --background-color:#001f33; /* Azul medianoche */
@@ -83,109 +12,112 @@
     --accent-color:#c6d300; /* Verde del logo */
     --card-background:rgba(255,255,255,0.05);
 }
-body { background: var(--background-color); color: var(--text-color); }
-</style><style>
-/* Logo responsivo igual que en el sitio principal */
-.uct-logo{
-  width: clamp(96px, 14vw, 168px);
-  height: auto;
-  display: block;
-  margin: 0 auto 12px;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+@keyframes fadeIn { from { opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; margin:0; padding:0; background-color:var(--background-color); color:var(--text-color);}
+.main-container{max-width:900px; margin:0 auto; padding:40px 20px; animation:fadeIn 1s ease-out forwards;}
+.header-section{text-align:center; margin-bottom:20px;}
+h1{font-size:36px; font-weight:700; letter-spacing:-1px; margin:0;}
+h2{font-size:24px; font-weight:600; margin-top:30px; color:var(--accent-color);}
+.ranking-info{text-align:center; margin-bottom:20px;}
+.last-updated-date{font-size:14px; color:var(--subtle-text-color); font-style:italic;}
+.ranking-table-container{background-color:var(--card-background); border-radius:18px; padding:20px; margin-bottom:30px; border:1px solid rgba(255,255,255,0.1);}
+table{width:100%; border-collapse:collapse; color:var(--text-color);}
+th,td{padding:12px 15px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.1);}
+th{font-weight:600; color:var(--accent-color);}
+tr:last-child td{border-bottom:none;}
+tr:hover{background-color:rgba(255,255,255,0.05);}
+th:first-child,td:first-child{width:100px; text-align:center;}
+.loading-ranking{text-align:center; padding:20px; font-style:italic; color:var(--subtle-text-color);}
+.footer-nav{text-align:center; margin-top:40px;}
+.back-button{display:inline-block; background-color:var(--accent-color); color:#001f33; font-size:16px; font-weight:600; padding:12px 30px; border:none; border-radius:30px; cursor:pointer; text-decoration:none; transition:background-color 0.3s ease, transform 0.2s ease;}
+.back-button:hover{background-color:#a4b200; transform:translateY(-2px);}
+@media(max-width:768px){
+  h1{font-size:28px;}
+  h2{font-size:20px;}
+  th,td{padding:8px 10px; font-size:14px;}
+  th:first-child,td:first-child{width:80px;}
 }
-
-/* Tarjeta y tabla conservan estilos originales, solo ajustamos acento */
-#rankingTable th { color: var(--accent-color); }
-
-/* Botón de volver consistente con paleta del sitio */
-.back-button{
-  background-color: var(--accent-color);
-  color: #001f33;
-}
-.back-button:hover{
-  background-color: #a4b200;
-  transform: translateY(-2px);
-}
-</style></head>
+.uct-logo{width:clamp(96px,14vw,168px); height:auto; display:block; margin:0 auto 12px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.35));}
+</style>
+</head>
 <body>
 <div class="main-container">
-<div class="header-section"><img alt="Logo UCTenis Club" class="uct-logo" loading="lazy" src="logo_uctenis_v03.png"/>
-<h1>Ranking de Jugadores UCTenis</h1>
+  <div class="header-section">
+    <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo" loading="lazy"/>
+    <h1>Ranking de Jugadores UCTenis</h1>
+  </div>
+
+  <div class="ranking-info">
+    <p class="last-updated-date" id="lastUpdatedDate"></p>
+  </div>
+
+  <!-- Ranking Mujeres -->
+  <div class="ranking-table-container">
+    <h2>Ranking Mujeres</h2>
+    <p class="loading-ranking" id="loadingM">Cargando ranking...</p>
+    <table id="tableM" style="display:none;">
+      <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
+      <tbody id="bodyM"></tbody>
+    </table>
+  </div>
+
+  <!-- Ranking Varones -->
+  <div class="ranking-table-container">
+    <h2>Ranking Varones</h2>
+    <p class="loading-ranking" id="loadingH">Cargando ranking...</p>
+    <table id="tableH" style="display:none;">
+      <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
+      <tbody id="bodyH"></tbody>
+    </table>
+  </div>
+
+  <div class="footer-nav">
+    <a href="index.html" class="back-button">Volver a Reservar</a>
+  </div>
 </div>
-<div class="ranking-info">
-<p class="last-updated-date" id="lastUpdatedDate"></p>
-</div>
-<div class="ranking-table-container">
-<p class="loading-ranking" id="loadingMessage">Cargando ranking...</p>
-<table id="rankingTable" style="display:none;">
-<thead>
-<tr>
-<th>Posición</th>
-<th>Nombre</th>
-</tr>
-</thead>
-<tbody id="rankingBody">
-</tbody>
-</table>
-</div>
-<div class="footer-nav">
-<a class="back-button" href="index.html">Volver a Reservar</a>
-</div>
-</div>
+
 <script>
-        const RANKING_API_URL = 'https://script.google.com/macros/s/AKfycbz7xwT8QECTamymk3fjq0K0XJZRmewkphc5yoHF_5IePkTM2MGamyefRypSj44XyYxeLg/exec'; 
+const API_URL = 'https://script.google.com/macros/s/AKfycbz7xwT8QECTamymk3fjq0K0XJZRmewkphc5yoHF_5IePkTM2MGamyefRypSj44XyYxeLg/exec';
 
-        async function fetchRanking() {
-            const tableBody = document.getElementById('rankingBody');
-            const table = document.getElementById('rankingTable');
-            const loadingMessage = document.getElementById('loadingMessage');
-            const lastUpdatedElement = document.getElementById('lastUpdatedDate');
+function setFecha(){
+  const hoy=new Date();
+  const opciones={year:'numeric',month:'long',day:'numeric'};
+  document.getElementById('lastUpdatedDate').textContent = 
+    `Ranking al día: ${hoy.toLocaleDateString('es-CL',opciones)}`;
+}
 
-            if (!tableBody || !table || !loadingMessage || !lastUpdatedElement) {
-                console.error("Elementos de la página de ranking no encontrados.");
-                return;
-            }
+async function cargarRanking(sheet, bodyId, tableId, loadingId){
+  const body=document.getElementById(bodyId);
+  const table=document.getElementById(tableId);
+  const loading=document.getElementById(loadingId);
+  try{
+    const res=await fetch(`${API_URL}?sheet=${encodeURIComponent(sheet)}`);
+    if(!res.ok) throw new Error(res.statusText);
+    const data=await res.json();
+    body.innerHTML='';
+    if(!data || data.length===0){
+      loading.textContent="Aún no hay datos en el ranking.";
+      table.style.display='none'; return;
+    }
+    data.forEach(p=>{
+      const row=body.insertRow();
+      row.insertCell().textContent=p.posicion;
+      row.insertCell().textContent=p.nombre;
+    });
+    table.style.display='';
+    loading.style.display='none';
+  }catch(err){
+    console.error(err);
+    loading.textContent="Error cargando datos.";
+    table.style.display='none';
+  }
+}
 
-            // --- MOSTRAR LA FECHA ACTUAL ---
-            const hoy = new Date();
-            const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
-            lastUpdatedElement.textContent = `Ranking al día: ${hoy.toLocaleDateString('es-CL', opcionesFecha)}`; // Usamos es-CL para formato chileno
-
-            try {
-                const response = await fetch(RANKING_API_URL);
-                if (!response.ok) {
-                    throw new Error(`Error al cargar el ranking: ${response.status} ${response.statusText}`);
-                }
-                const rankingData = await response.json(); // El script ahora solo devuelve el array de ranking
-
-                tableBody.innerHTML = ''; 
-
-                if (!rankingData || rankingData.length === 0) {
-                    loadingMessage.textContent = "Aún no hay datos en el ranking o la hoja está vacía.";
-                    table.style.display = 'none';
-                    loadingMessage.style.display = 'block';
-                    return;
-                }
-
-                rankingData.forEach(player => {
-                    const row = tableBody.insertRow();
-                    row.insertCell().textContent = player.posicion;
-                    row.insertCell().textContent = player.nombre;
-                });
-
-                table.style.display = ''; 
-                loadingMessage.style.display = 'none';
-
-            } catch (error) {
-                console.error("Error al obtener el ranking:", error);
-                loadingMessage.textContent = "No se pudo cargar el ranking. Verifica la URL del script o la configuración de la Hoja de Cálculo.";
-                table.style.display = 'none';
-                loadingMessage.style.display = 'block';
-                // No borramos la fecha actual en caso de error, ya que es la fecha de consulta
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', fetchRanking);
-    </script>
+document.addEventListener('DOMContentLoaded', ()=>{
+  setFecha();
+  cargarRanking("ranking m","bodyM","tableM","loadingM");
+  cargarRanking("ranking h","bodyH","tableH","loadingH");
+});
+</script>
 </body>
 </html>
