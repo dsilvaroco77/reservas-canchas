@@ -54,25 +54,8 @@ th:first-child,td:first-child{width:110px;text-align:center}
     </div>
 </div>
 <script>
-    // URL NUEVA Y LIMPIA YA INSERTADA
-    const API_URL = "https://script.google.com/macros/s/AKfycbzDWjAqLNl8yu7pwRcL0uzYIuQ7wbQtxbKr4VE9kLabB-fcBSlBKBZUvcoYllAXVDfcFw/exec";
-
-    function renderTabla(tbodyId, tableId, loadingId, lista) {
-        const tbody = document.getElementById(tbodyId);
-        const table = document.getElementById(tableId);
-        const loading = document.getElementById(loadingId);
-        tbody.innerHTML = '';
-        if (!Array.isArray(lista) || lista.length === 0) {
-            loading.textContent = 'No hay datos en esta sección.';
-            return;
-        }
-        lista.forEach(p => {
-            const tr = tbody.insertRow();
-            tr.innerHTML = `<td>${p.posicion ?? ''}</td><td>${p.nombre ?? ''}</td>`;
-        });
-        loading.style.display = 'none';
-        table.style.display = 'table';
-    }
+    // URL DEL NUEVO SCRIPT YA INSERTADA
+    const API_URL = "https://script.google.com/macros/s/AKfycbzto9vInfXvCwsugtyAQq66GjM61GiWuCiH-ntCyHT3StQaYI-71Gf0yTgJMu4Nv5MqUQ/exec";
 
     async function cargarDatos() {
         document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -89,6 +72,23 @@ th:first-child,td:first-child{width:110px;text-align:center}
             document.getElementById('loadingM').textContent = `Error al cargar: ${err.message}`;
             document.getElementById('loadingH').textContent = `Error al cargar: ${err.message}`;
         }
+    }
+
+    function renderTabla(tbodyId, tableId, loadingId, lista) {
+        const tbody = document.getElementById(tbodyId);
+        const table = document.getElementById(tableId);
+        const loading = document.getElementById(loadingId);
+        tbody.innerHTML = '';
+        if (!Array.isArray(lista) || lista.length === 0) {
+            loading.textContent = 'No hay datos en esta sección.';
+            return;
+        }
+        lista.forEach(p => {
+            const tr = tbody.insertRow();
+            tr.innerHTML = `<td>${p.posicion ?? ''}</td><td>${p.nombre ?? ''}</td>`;
+        });
+        loading.style.display = 'none';
+        table.style.display = 'table';
     }
 
     document.addEventListener('DOMContentLoaded', cargarDatos);
