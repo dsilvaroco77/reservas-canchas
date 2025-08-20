@@ -37,7 +37,9 @@ tr:last-child td{border-bottom:none}
 .save-button.saving{background-color:#FFC107;}
 .save-button.success{background-color:#4CAF50;}
 .sortable-ghost{background:rgba(255,255,255,0.1);opacity:0.8;}
-.sortable-chosen, tbody tr:hover{cursor:grab;}
+.sortable-chosen, .ranked-player:hover{cursor:grab;}
+.unranked-player { opacity: 0.6; } /* Estilo para los no clasificados */
+.unranked-divider td { border-top: 2px solid var(--accent-color); padding: 0; height: 2px; } /* Línea divisoria */
 .arrow-up{color:#4CAF50;} .arrow-down{color:#F44336;} .new-entry{color:#FFC107;}
 .col-pos {width:80px;text-align:center;} .col-evol {width:60px;text-align:center;font-size:1.2em;}
 </style>
@@ -85,13 +87,11 @@ tr:last-child td{border-bottom:none}
     const API_URL = "https://script.google.com/macros/s/AKfycbzHtbq5qEcBkr6vU9iVn5Xt59byciz0gFUFkStd5KXXEtr5VzDeus6mZysN7ALLY6M3JQ/exec";
 
     async function cargarDatos() {
+        // ... (sin cambios)
+        document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
         document.getElementById('loadingM').textContent = "Cargando...";
         document.getElementById('loadingH').textContent = "Cargando...";
         try {
-            // ▼▼▼ LÍNEA RESTAURADA AQUÍ ▼▼▼
-            document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
-            // ▲▲▲ FIN DE LA CORRECCIÓN ▲▲▲
-
             const response = await fetch(API_URL + '?v=' + Date.now());
             const data = await response.json();
             if (data.status === 'error') throw new Error(data.message);
@@ -114,21 +114,36 @@ tr:last-child td{border-bottom:none}
             document.getElementById(tableId).style.display = 'none';
             return;
         }
+
+        let rankedCount = 0;
         lista.forEach(p => {
+            const isRanked = !isNaN(parseInt(p.posicion));
+            if (isRanked) rankedCount++;
+
             const tr = tbody.insertRow();
             tr.dataset.nombre = p.nombre;
+            tr.className = isRanked ? 'ranked-player' : 'unranked-player';
+
             const posActual = parseInt(p.posicion);
             const posAnterior = parseInt(p.posicionAnterior);
             let evolucionHtml = '';
-            if (!isNaN(posAnterior) && posAnterior > 0) {
+            if (isRanked && !isNaN(posAnterior) && posAnterior > 0) {
                 if (posActual < posAnterior) evolucionHtml = `<span class="arrow-up" title="Subió desde ${posAnterior}">▲</span>`;
                 else if (posActual > posAnterior) evolucionHtml = `<span class="arrow-down" title="Bajó desde ${posAnterior}">▼</span>`;
                 else evolucionHtml = `<span class="new-entry" title="Mantuvo la posición">●</span>`;
             } else {
-                evolucionHtml = `<span class="new-entry" title="Nuevo en el ranking">●</span>`;
+                evolucionHtml = `<span class="new-entry" title="Nuevo o Sin Ranking">●</span>`;
             }
             tr.innerHTML = `<td class="col-pos">${p.posicion}</td><td>${p.nombre}</td><td class="col-evol">${evolucionHtml}</td>`;
         });
+        
+        // Añade una línea divisoria si hay ambos tipos de jugadores
+        if (rankedCount > 0 && rankedCount < lista.length) {
+            const divider = tbody.insertRow(rankedCount);
+            divider.className = 'unranked-divider';
+            divider.innerHTML = `<td colspan="3"></td>`;
+        }
+
         document.getElementById(loadingId).style.display = 'none';
         document.getElementById(tableId).style.display = 'table';
     }
@@ -139,10 +154,13 @@ tr:last-child td{border-bottom:none}
                 animation: 150,
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
+                filter: '.unranked-player, .unranked-divider', // Hace que los no clasificados no se puedan mover
                 onEnd: (evt) => {
                     const tbody = evt.target;
-                    const rows = tbody.querySelectorAll('tr');
-                    rows.forEach((row, index) => { row.querySelector('.col-pos').textContent = index + 1; });
+                    const rows = tbody.querySelectorAll('.ranked-player'); // Solo renumera a los clasificados
+                    rows.forEach((row, index) => {
+                        row.querySelector('.col-pos').textContent = index + 1;
+                    });
                     document.getElementById(saveButtonId).style.display = 'block';
                 }
             });
@@ -163,31 +181,23 @@ tr:last-child td{border-bottom:none}
         button.textContent = "Guardando...";
         button.classList.add('saving');
 
-        const rows = document.getElementById(tbodyId).querySelectorAll('tr');
+        // Solo enviamos los jugadores clasificados
+        const rows = document.getElementById(tbodyId).querySelectorAll('.ranked-player');
         const newRanking = Array.from(rows).map(row => ({ nombre: row.dataset.nombre }));
 
-        const payload = {
-            category: category,
-            ranking: newRanking,
-            password: password
-        };
+        const payload = { category: category, ranking: newRanking, password: password };
 
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
                 body: JSON.stringify(payload),
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             });
-            
             const result = await response.json();
             if (result.status === 'error') throw new Error(result.message);
 
             button.textContent = "¡Guardado!";
-            button.classList.remove('saving');
             button.classList.add('success');
-
             setTimeout(() => {
                 button.style.display = 'none';
                 button.textContent = 'Guardar Cambios';
