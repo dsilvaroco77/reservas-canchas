@@ -76,7 +76,9 @@ tr:hover{background:rgba(255,255,255,.05)}
     </div>
 </div>
 <script>
+    // ▼▼▼ ERROR CORREGIDO AQUÍ ▼▼▼
     const API_URL = "https://script.google.com/macros/s/AKfycbzto9vInfXvCwsugtyAQq66GjM61GiWuCiH-ntCyHT3StQaYI-71Gf0yTgJMu4Nv5MqUQ/exec";
+    // ▲▲▲ ERROR CORREGIDO AQUÍ ▲▲▲
 
     async function cargarDatos() {
         document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
