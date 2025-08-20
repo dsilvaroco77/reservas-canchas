@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ranking UCTenis - Admin</title>
 
+<meta property="og:title" content="Ranking UCTenis" />
+<meta property="og:description" content="Revisa el ranking actualizado del club y la evolución de los jugadores." />
+<meta property="og:image" content="https://uctenis.github.io/reservas-canchas/logo_uctenis_v03.png" />
+<meta property="og:url" content="https://uctenis.github.io/reservas-canchas/ranking.html" />
+<meta property="og:type" content="website" />
+
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -42,6 +48,49 @@ tr:last-child td{border-bottom:none}
 .unranked-divider td { border-top: 2px solid var(--accent-color); padding: 0; height: 2px; }
 .arrow-up{color:#4CAF50;} .arrow-down{color:#F44336;} .new-entry{color:#FFC107;}
 .col-pos {width:80px;text-align:center;} .col-evol {width:60px;text-align:center;font-size:1.2em;}
+td.col-nombre { font-weight: 600; }
+
+/* --- NUEVOS ESTILOS PARA VISTA MÓVIL (Formato Tarjetas) --- */
+@media (max-width:768px){
+  h1{font-size:28px}
+  .section h2{font-size:20px}
+  
+  /* Ocultamos los encabezados de la tabla en móvil */
+  table thead { display: none; }
+  
+  /* Forzamos a la tabla y sus elementos a comportarse como bloques */
+  table, tbody, tr, td { display: block; }
+  
+  /* Cada fila (tr) ahora es una tarjeta */
+  tr {
+    display: flex; /* Usamos flexbox para alinear los elementos */
+    align-items: center;
+    padding: 10px 5px;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+    margin-bottom: 5px;
+  }
+  tr:last-child { border-bottom: none; }
+  
+  /* Quitamos el borde de las celdas internas */
+  td { border: none; padding: 2px 5px; }
+
+  /* Estilos para cada columna dentro de la tarjeta */
+  .col-pos {
+    font-size: 1.1em;
+    font-weight: bold;
+    width: 45px; /* Ancho fijo para la posición */
+    text-align: center;
+  }
+  .col-nombre {
+    flex-grow: 1; /* El nombre ocupa todo el espacio sobrante */
+    width: auto;
+  }
+  .col-evol {
+    width: 45px; /* Ancho fijo para la evolución */
+    text-align: center;
+    font-size: 1.4em;
+  }
+}
 </style>
 </head>
 <body>
@@ -133,7 +182,7 @@ tr:last-child td{border-bottom:none}
             } else {
                 evolucionHtml = `<span class="new-entry" title="Nuevo o Sin Ranking">●</span>`;
             }
-            tr.innerHTML = `<td class="col-pos">${p.posicion}</td><td>${p.nombre}</td><td class="col-evol">${evolucionHtml}</td>`;
+            tr.innerHTML = `<td class="col-pos">${p.posicion}</td><td class="col-nombre">${p.nombre}</td><td class="col-evol">${evolucionHtml}</td>`;
         });
         
         if (rankedCount > 0 && rankedCount < lista.length) {
@@ -149,10 +198,8 @@ tr:last-child td{border-bottom:none}
     function initSortable() {
         const createSortable = (tbodyId, saveButtonId) => {
             new Sortable(document.getElementById(tbodyId), {
-                // ▼▼▼ CAMBIOS AQUÍ ▼▼▼
-                delay: 200, // Retardo de 200ms antes de iniciar el arrastre
-                delayOnTouchOnly: true, // El retardo solo se aplica en dispositivos táctiles
-                // ▲▲▲ FIN DE LOS CAMBIOS ▲▲▲
+                delay: 200,
+                delayOnTouchOnly: true,
                 animation: 150,
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
