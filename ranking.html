@@ -8,7 +8,7 @@
 <style>
 :root{
   --background-color:#001f33; /* Azul medianoche */
-  --text-color:#f5f5f7;
+  --text-color:#f5f5f7;       /* Color de texto principal (blanco) */
   --subtle-text-color:#a1a1a6;
   --accent-color:#c6d300;     /* Verde UCTenis */
   --card-background:rgba(255,255,255,0.05);
@@ -21,27 +21,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 h1{font-size:36px;font-weight:700;letter-spacing:-1px;margin:0}
 .ranking-info{text-align:center;margin-bottom:20px}
 .last-updated-date{font-size:14px;color:var(--subtle-text-color);font-style:italic}
-
-/* Secciones */
 .section{background:var(--card-background);border-radius:18px;padding:18px 16px;margin-bottom:24px;border:1px solid rgba(255,255,255,.1)}
 .section h2{font-size:22px;font-weight:700;margin:6px 6px 12px;color:var(--accent-color)}
-
-/* Tablas */
 table{width:100%;border-collapse:collapse;color:var(--text-color);display:none}
 th,td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
-th{font-weight:600;color:var(--accent-color)}
+
+/* --- MODIFICACIÓN AQUÍ --- */
+/* El color del encabezado de la tabla ahora es blanco */
+th{font-weight:600; color:var(--text-color);}
+
 tr:last-child td{border-bottom:none}
 tr:hover{background:rgba(255,255,255,.05)}
 th:first-child,td:first-child{width:110px;text-align:center}
-
 .loading{color:var(--subtle-text-color);font-style:italic;text-align:center;padding:10px}
 .note{font-size:12px;color:var(--subtle-text-color);text-align:center;margin-top:6px;word-break:break-all}
-
-/* Footer */
 .footer-nav{text-align:center;margin-top:28px}
 .back-button{display:inline-block;background:var(--accent-color);color:#001f33;font-size:16px;font-weight:700;padding:12px 30px;border:none;border-radius:30px;cursor:pointer;text-decoration:none;transition:background-color .2s ease,transform .15s ease}
 .back-button:hover{background-color:#a4b200;transform:translateY(-2px)}
-
 @media (max-width:768px){
   h1{font-size:28px}
   th,td{padding:10px;font-size:14px}
@@ -61,7 +57,6 @@ th:first-child,td:first-child{width:110px;text-align:center}
     <p class="last-updated-date" id="lastUpdatedDate">Cargando fecha…</p>
   </div>
 
-  <!-- MUJERES PRIMERO -->
   <section class="section" id="secM">
     <h2>Ranking Mujeres</h2>
     <div class="loading" id="loadingM">Cargando ranking…</div>
@@ -72,7 +67,6 @@ th:first-child,td:first-child{width:110px;text-align:center}
     <div class="note" id="noteM"></div>
   </section>
 
-  <!-- VARONES -->
   <section class="section" id="secH">
     <h2>Ranking Varones</h2>
     <div class="loading" id="loadingH">Cargando ranking…</div>
@@ -89,7 +83,7 @@ th:first-child,td:first-child{width:110px;text-align:center}
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyS7tp51jlEFQhwVH0vf_DT6JgOFv9s9T7b4eXRqjethEIZoNKCDe-N1gsb1lv7K7Wfyw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyH2qZ6xjiFbKabfBPNhFF4yBZ5tt0LJ5uwklyqeJPeWpwRaAO4sFpicBbqtekFru1NwA/exec";
 
 function setFecha(){
   document.getElementById('lastUpdatedDate').textContent =
@@ -124,26 +118,19 @@ function renderTabla(tbodyId, tableId, loadingId, lista){
   table.style.display = '';
 }
 
-function pintarFuente(id, fuente){
-  const el = document.getElementById(id);
-  el.textContent = 'Fuente: ' + fuente;
-}
-
 async function cargar(){
   setFecha();
   try{
-    const data = await fetchJSON(API_URL); // esperamos { mujeres:[], hombres:[] }
+    const data = await fetchJSON(API_URL);
     if(!data || !Array.isArray(data.mujeres) || !Array.isArray(data.hombres)){
-      throw new Error('Formato JSON inesperado');
+      throw new Error('Formato JSON inesperado. Revisa el script.');
     }
     renderTabla('tbodyM','tableM','loadingM', data.mujeres);
     renderTabla('tbodyH','tableH','loadingH', data.hombres);
-    pintarFuente('noteM', API_URL + ' (objeto combinado)');
-    pintarFuente('noteH', API_URL + ' (objeto combinado)');
   }catch(err){
     console.error('Fallo cargando ranking:', err);
-    document.getElementById('loadingM').textContent = 'Error cargando datos. Verifica el Web App.';
-    document.getElementById('loadingH').textContent = 'Error cargando datos. Verifica el Web App.';
+    document.getElementById('loadingM').textContent = 'Error al cargar. Verifica la URL del script y los permisos de la planilla.';
+    document.getElementById('loadingH').textContent = 'Error al cargar. Verifica la URL del script y los permisos de la planilla.';
     document.getElementById('tableM').style.display = 'none';
     document.getElementById('tableH').style.display = 'none';
   }
