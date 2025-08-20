@@ -32,11 +32,10 @@ tr:hover{background:rgba(255,255,255,.05)}
 .back-button{display:inline-block;background:var(--accent-color);color:#001f33;font-size:16px;font-weight:700;padding:12px 30px;border:none;border-radius:30px;cursor:pointer;text-decoration:none;transition:background-color .2s ease,transform .15s ease}
 .back-button:hover{background-color:#a4b200;transform:translateY(-2px)}
 
-/* --- ESTILOS PARA LA EVOLUCIÓN --- */
+/* --- ESTILOS PARA LA EVOLUCIÓN (MODIFICADOS) --- */
 .arrow-up { color: #4CAF50; /* Verde */ font-weight: bold; }
 .arrow-down { color: #F44336; /* Rojo */ font-weight: bold; }
-.steady { color: var(--subtle-text-color); }
-.new-entry { color: #FFC107; /* Dorado */ font-weight: bold; }
+.new-entry { color: #FFC107; /* Dorado/Amarillo */ font-weight: bold; }
 
 /* Ajuste de anchos de columna */
 .col-pos { width: 80px; text-align: center; }
@@ -76,9 +75,7 @@ tr:hover{background:rgba(255,255,255,.05)}
     </div>
 </div>
 <script>
-    // ▼▼▼ ERROR CORREGIDO AQUÍ ▼▼▼
     const API_URL = "https://script.google.com/macros/s/AKfycbzto9vInfXvCwsugtyAQq66GjM61GiWuCiH-ntCyHT3StQaYI-71Gf0yTgJMu4Nv5MqUQ/exec";
-    // ▲▲▲ ERROR CORREGIDO AQUÍ ▲▲▲
 
     async function cargarDatos() {
         document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -114,15 +111,18 @@ tr:hover{background:rgba(255,255,255,.05)}
             const posAnterior = parseInt(p.posicionAnterior);
             let evolucionHtml = '';
 
+            // --- LÓGICA DE EVOLUCIÓN MODIFICADA ---
             if (!isNaN(posAnterior) && posAnterior > 0) {
                 if (posActual < posAnterior) {
                     evolucionHtml = `<span class="arrow-up" title="Subió desde la posición ${posAnterior}">▲</span>`;
                 } else if (posActual > posAnterior) {
                     evolucionHtml = `<span class="arrow-down" title="Bajó desde la posición ${posAnterior}">▼</span>`;
                 } else {
-                    evolucionHtml = `<span class="steady" title="Mantuvo la posición">—</span>`;
+                    // Si la posición es la misma, muestra el círculo amarillo
+                    evolucionHtml = `<span class="new-entry" title="Mantuvo la posición">●</span>`;
                 }
             } else {
+                // Si es nuevo, también muestra el círculo amarillo
                 evolucionHtml = `<span class="new-entry" title="Nuevo en el ranking">●</span>`;
             }
 
