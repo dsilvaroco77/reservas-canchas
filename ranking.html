@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ranking UCTenis - Admin</title>
 
-<meta property="og:title" content="Ranking UCTenis" />
-<meta property="og:description" content="Revisa el ranking actualizado del club y la evolución de los jugadores." />
-<meta property="og:image" content="https://uctenis.github.io/reservas-canchas/logo_uctenis_v03.png" />
-<meta property="og:url" content="https://uctenis.github.io/reservas-canchas/ranking.html" />
-<meta property="og:type" content="website" />
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -154,6 +149,10 @@ tr:last-child td{border-bottom:none}
     function initSortable() {
         const createSortable = (tbodyId, saveButtonId) => {
             new Sortable(document.getElementById(tbodyId), {
+                // ▼▼▼ CAMBIOS AQUÍ ▼▼▼
+                delay: 200, // Retardo de 200ms antes de iniciar el arrastre
+                delayOnTouchOnly: true, // El retardo solo se aplica en dispositivos táctiles
+                // ▲▲▲ FIN DE LOS CAMBIOS ▲▲▲
                 animation: 150,
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
