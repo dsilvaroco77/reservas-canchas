@@ -16,7 +16,11 @@
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;background:var(--background-color);color:var(--text-color)}
 .main-container{max-width:900px;margin:0 auto;padding:40px 20px;animation:fadeIn 1s ease-out forwards}
-h1{font-size:36px;font-weight:700;margin:0}
+.header-section{text-align:center;margin-bottom:20px}
+.uct-logo{width:clamp(96px,14vw,168px);height:auto;display:block;margin:0 auto 12px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+h1{font-size:36px;font-weight:700;letter-spacing:-1px;margin:0}
+.ranking-info{text-align:center;margin-bottom:20px}
+.last-updated-date{font-size:14px;color:var(--subtle-text-color);font-style:italic}
 .section{background:var(--card-background);border-radius:18px;padding:18px 16px;margin-bottom:24px;}
 .section-header{display:flex;justify-content:space-between;align-items:center;margin:6px 6px 12px;}
 .section-header h2{font-size:22px;margin:0;color:var(--text-color);}
@@ -25,6 +29,9 @@ th,td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(255,255,255
 th{font-weight:600; color:var(--text-color);}
 tr:last-child td{border-bottom:none}
 .loading{color:var(--subtle-text-color);font-style:italic;text-align:center;padding:10px}
+.footer-nav{text-align:center;margin-top:28px}
+.back-button{display:inline-block;background:var(--accent-color);color:#001f33;font-size:16px;font-weight:700;padding:12px 30px;border:none;border-radius:30px;cursor:pointer;text-decoration:none;transition:background-color .2s ease,transform .15s ease}
+.back-button:hover{background-color:#a4b200;transform:translateY(-2px)}
 .save-button{background-color:var(--accent-color);color:var(--background-color);border:none;padding:8px 16px;font-size:14px;font-weight:700;border-radius:20px;cursor:pointer;display:none;transition:all .2s ease;}
 .save-button:disabled{background-color:#555;cursor:not-allowed;}
 .save-button.saving{background-color:#FFC107;}
@@ -37,7 +44,13 @@ tr:last-child td{border-bottom:none}
 </head>
 <body>
 <div class="main-container">
-    <h1>Ranking UCTenis (Modo Admin)</h1>
+    <div class="header-section">
+        <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo" loading="lazy"/>
+        <h1>Ranking UCTenis</h1>
+    </div>
+    <div class="ranking-info">
+        <p class="last-updated-date" id="lastUpdatedDate">Cargando...</p>
+    </div>
     
     <section class="section" id="secM">
         <div class="section-header">
@@ -62,6 +75,10 @@ tr:last-child td{border-bottom:none}
             <tbody id="tbodyH"></tbody>
         </table>
     </section>
+
+    <div class="footer-nav">
+        <a class="back-button" href="index.html">Volver a Reservar</a>
+    </div>
 </div>
 
 <script>
@@ -152,11 +169,16 @@ tr:last-child td{border-bottom:none}
         };
 
         try {
+            // ▼▼▼ CAMBIO IMPORTANTE AQUÍ ▼▼▼
+            // Enviamos los datos como texto plano para evitar errores de CORS
             const response = await fetch(API_URL, {
                 method: 'POST',
                 body: JSON.stringify(payload),
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
             });
+            // ▲▲▲ FIN DEL CAMBIO ▲▲▲
             
             const result = await response.json();
             if (result.status === 'error') throw new Error(result.message);
