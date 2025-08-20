@@ -6,13 +6,7 @@
 <title>Ranking UCTenis</title>
 <meta name="theme-color" content="#001f33"/>
 <style>
-:root{
-  --background-color:#001f33; /* Azul medianoche */
-  --text-color:#f5f5f7;       /* Color de texto principal (blanco) */
-  --subtle-text-color:#a1a1a6;
-  --accent-color:#c6d300;     /* Verde UCTenis */
-  --card-background:rgba(255,255,255,0.05);
-}
+:root{--background-color:#001f33;--text-color:#f5f5f7;--subtle-text-color:#a1a1a6;--accent-color:#c6d300;--card-background:rgba(255,255,255,0.05);}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;background:var(--background-color);color:var(--text-color)}
 .main-container{max-width:900px;margin:0 auto;padding:40px 20px;animation:fadeIn 1s ease-out forwards}
@@ -30,108 +24,74 @@ tr:last-child td{border-bottom:none}
 tr:hover{background:rgba(255,255,255,.05)}
 th:first-child,td:first-child{width:110px;text-align:center}
 .loading{color:var(--subtle-text-color);font-style:italic;text-align:center;padding:10px}
-.note{font-size:12px;color:var(--subtle-text-color);text-align:center;margin-top:6px;word-break:break-all}
 .footer-nav{text-align:center;margin-top:28px}
 .back-button{display:inline-block;background:var(--accent-color);color:#001f33;font-size:16px;font-weight:700;padding:12px 30px;border:none;border-radius:30px;cursor:pointer;text-decoration:none;transition:background-color .2s ease,transform .15s ease}
 .back-button:hover{background-color:#a4b200;transform:translateY(-2px)}
-@media (max-width:768px){
-  h1{font-size:28px}
-  th,td{padding:10px;font-size:14px}
-  th:first-child,td:first-child{width:80px}
-  .section h2{font-size:20px}
-}
+@media (max-width:768px){h1{font-size:28px}th,td{padding:10px 10px;font-size:14px}th:first-child,td:first-child{width:80px}.section h2{font-size:20px}}
 </style>
 </head>
 <body>
 <div class="main-container">
-  <div class="header-section">
-    <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo" loading="lazy"/>
-    <h1>Ranking UCTenis</h1>
-  </div>
-
-  <div class="ranking-info">
-    <p class="last-updated-date" id="lastUpdatedDate">Cargando fecha…</p>
-  </div>
-
-  <section class="section" id="secM">
-    <h2>Ranking Mujeres</h2>
-    <div class="loading" id="loadingM">Cargando ranking…</div>
-    <table id="tableM">
-      <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
-      <tbody id="tbodyM"></tbody>
-    </table>
-  </section>
-
-  <section class="section" id="secH">
-    <h2>Ranking Varones</h2>
-    <div class="loading" id="loadingH">Cargando ranking…</div>
-    <table id="tableH">
-      <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
-      <tbody id="tbodyH"></tbody>
-    </table>
-  </section>
-
-  <div class="footer-nav">
-    <a class="back-button" href="index.html">Volver a Reservar</a>
-  </div>
+    <div class="header-section">
+        <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo" loading="lazy"/>
+        <h1>Ranking UCTenis</h1>
+    </div>
+    <div class="ranking-info">
+        <p class="last-updated-date" id="lastUpdatedDate">Cargando...</p>
+    </div>
+    <section class="section" id="secM">
+        <h2>Ranking Mujeres</h2>
+        <div class="loading" id="loadingM">Cargando ranking...</div>
+        <table id="tableM"><thead><tr><th>Posición</th><th>Nombre</th></tr></thead><tbody id="tbodyM"></tbody></table>
+    </section>
+    <section class="section" id="secH">
+        <h2>Ranking Varones</h2>
+        <div class="loading" id="loadingH">Cargando ranking...</div>
+        <table id="tableH"><thead><tr><th>Posición</th><th>Nombre</th></tr></thead><tbody id="tbodyH"></tbody></table>
+    </section>
+    <div class="footer-nav">
+        <a class="back-button" href="index.html">Volver a Reservar</a>
+    </div>
 </div>
-
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyH2qZ6xjiFbKabfBPNhFF4yBZ5tt0LJ5uwklyqeJPeWpwRaAO4sFpicBbqtekFru1NwA/exec";
+    // URL NUEVA Y LIMPIA YA INSERTADA
+    const API_URL = "https://script.google.com/macros/s/AKfycbzDWjAqLNl8yu7pwRcL0uzYIuQ7wbQtxbKr4VE9kLabB-fcBSlBKBZUvcoYllAXVDfcFw/exec";
 
-function setFecha(){
-  // --- CORRECCIÓN AQUÍ ---
-  document.getElementById('lastUpdatedDate').textContent =
-    'Ranking al día: ' + new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});
-}
-
-async function fetchJSON(url){
-  const res = await fetch(url + '?v=' + Date.now(), { cache: 'no-store' }); // cache-bust
-  if(!res.ok) throw new Error('HTTP ' + res.status);
-  return res.json();
-}
-
-function renderTabla(tbodyId, tableId, loadingId, lista){
-  const tbody = document.getElementById(tbodyId);
-  const table = document.getElementById(tableId);
-  const loading = document.getElementById(loadingId);
-  tbody.innerHTML = '';
-
-  if(!Array.isArray(lista) || lista.length === 0){
-    loading.textContent = 'No hay datos en esta sección.';
-    table.style.display = 'none';
-    return;
-  }
-
-  for(const p of lista){
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${p.posicion ?? ''}</td><td>${p.nombre ?? ''}</td>`;
-    tbody.appendChild(tr);
-  }
-
-  loading.style.display = 'none';
-  table.style.display = '';
-}
-
-async function cargar(){
-  setFecha();
-  try{
-    const data = await fetchJSON(API_URL);
-    if(!data || !Array.isArray(data.mujeres) || !Array.isArray(data.hombres)){
-      throw new Error('Formato JSON inesperado. Revisa el script.');
+    function renderTabla(tbodyId, tableId, loadingId, lista) {
+        const tbody = document.getElementById(tbodyId);
+        const table = document.getElementById(tableId);
+        const loading = document.getElementById(loadingId);
+        tbody.innerHTML = '';
+        if (!Array.isArray(lista) || lista.length === 0) {
+            loading.textContent = 'No hay datos en esta sección.';
+            return;
+        }
+        lista.forEach(p => {
+            const tr = tbody.insertRow();
+            tr.innerHTML = `<td>${p.posicion ?? ''}</td><td>${p.nombre ?? ''}</td>`;
+        });
+        loading.style.display = 'none';
+        table.style.display = 'table';
     }
-    renderTabla('tbodyM','tableM','loadingM', data.mujeres);
-    renderTabla('tbodyH','tableH','loadingH', data.hombres);
-  }catch(err){
-    console.error('Fallo cargando ranking:', err);
-    document.getElementById('loadingM').textContent = 'Error al cargar los datos.';
-    document.getElementById('loadingH').textContent = 'Error al cargar los datos.';
-    document.getElementById('tableM').style.display = 'none';
-    document.getElementById('tableH').style.display = 'none';
-  }
-}
 
-document.addEventListener('DOMContentLoaded', cargar);
+    async function cargarDatos() {
+        document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
+        try {
+            const response = await fetch(API_URL + '?v=' + Date.now());
+            if (!response.ok) throw new Error(`Error de red: ${response.statusText}`);
+            const data = await response.json();
+            if (!data || !data.mujeres || !data.hombres) throw new Error('La respuesta del script no tiene el formato esperado.');
+            
+            renderTabla('tbodyM', 'tableM', 'loadingM', data.mujeres);
+            renderTabla('tbodyH', 'tableH', 'loadingH', data.hombres);
+        } catch (err) {
+            console.error('Fallo cargando ranking:', err);
+            document.getElementById('loadingM').textContent = `Error al cargar: ${err.message}`;
+            document.getElementById('loadingH').textContent = `Error al cargar: ${err.message}`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarDatos);
 </script>
 </body>
 </html>
