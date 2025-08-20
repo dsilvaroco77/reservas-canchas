@@ -88,6 +88,10 @@ tr:last-child td{border-bottom:none}
         document.getElementById('loadingM').textContent = "Cargando...";
         document.getElementById('loadingH').textContent = "Cargando...";
         try {
+            // ▼▼▼ LÍNEA RESTAURADA AQUÍ ▼▼▼
+            document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
+            // ▲▲▲ FIN DE LA CORRECCIÓN ▲▲▲
+
             const response = await fetch(API_URL + '?v=' + Date.now());
             const data = await response.json();
             if (data.status === 'error') throw new Error(data.message);
@@ -169,8 +173,6 @@ tr:last-child td{border-bottom:none}
         };
 
         try {
-            // ▼▼▼ CAMBIO IMPORTANTE AQUÍ ▼▼▼
-            // Enviamos los datos como texto plano para evitar errores de CORS
             const response = await fetch(API_URL, {
                 method: 'POST',
                 body: JSON.stringify(payload),
@@ -178,7 +180,6 @@ tr:last-child td{border-bottom:none}
                     'Content-Type': 'text/plain;charset=utf-8',
                 },
             });
-            // ▲▲▲ FIN DEL CAMBIO ▲▲▲
             
             const result = await response.json();
             if (result.status === 'error') throw new Error(result.message);
