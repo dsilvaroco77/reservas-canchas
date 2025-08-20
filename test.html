@@ -69,7 +69,7 @@
         .modal-stats li:last-child { border-bottom: none; }
         .modal-stats .label { color: var(--subtle-text-color); }
         .modal-stats .value { font-weight: bold; color: var(--text-color); }
-        
+
         @media (max-width:768px){
             h1{font-size:28px}
             .section h2{font-size:20px}
@@ -96,7 +96,7 @@
         <div class="ranking-info">
             <p class="last-updated-date" id="lastUpdatedDate">Cargando...</p>
         </div>
-        
+
         <section class="section" id="secM">
             <div class="section-header">
                 <h2>Ranking Femenino</h2>
@@ -206,7 +206,7 @@
         document.getElementById('playerModal').addEventListener('click', function(e) {
             if (e.target === this) this.classList.remove('visible');
         });
-        
+
         function initSortable() {
             const createSortable = (tbodyId, saveButtonId) => {
                 new Sortable(document.getElementById(tbodyId), {
