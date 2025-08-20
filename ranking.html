@@ -22,11 +22,7 @@ h1{font-size:36px;font-weight:700;letter-spacing:-1px;margin:0}
 .ranking-info{text-align:center;margin-bottom:20px}
 .last-updated-date{font-size:14px;color:var(--subtle-text-color);font-style:italic}
 .section{background:var(--card-background);border-radius:18px;padding:18px 16px;margin-bottom:24px;border:1px solid rgba(255,255,255,.1)}
-
-/* --- MODIFICACIÓN TÍTULOS AQUÍ --- */
-/* El color de los títulos de cada sección ahora es blanco */
 .section h2{font-size:22px;font-weight:700;margin:6px 6px 12px;color:var(--text-color);}
-
 table{width:100%;border-collapse:collapse;color:var(--text-color);display:none}
 th,td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
 th{font-weight:600; color:var(--text-color);}
@@ -64,7 +60,6 @@ th:first-child,td:first-child{width:110px;text-align:center}
       <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
       <tbody id="tbodyM"></tbody>
     </table>
-    <div class="note" id="noteM"></div>
   </section>
 
   <section class="section" id="secH">
@@ -74,7 +69,6 @@ th:first-child,td:first-child{width:110px;text-align:center}
       <thead><tr><th>Posición</th><th>Nombre</th></tr></thead>
       <tbody id="tbodyH"></tbody>
     </table>
-    <div class="note" id="noteH"></div>
   </section>
 
   <div class="footer-nav">
@@ -86,8 +80,9 @@ th:first-child,td:first-child{width:110px;text-align:center}
 const API_URL = "https://script.google.com/macros/s/AKfycbyH2qZ6xjiFbKabfBPNhFF4yBZ5tt0LJ5uwklyqeJPeWpwRaAO4sFpicBbqtekFru1NwA/exec";
 
 function setFecha(){
+  // --- CORRECCIÓN AQUÍ ---
   document.getElementById('lastUpdatedDate').textContent =
-    'Ranking al día: ' + new Date().toLocaleDateDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});
+    'Ranking al día: ' + new Date().toLocaleDateString('es-CL',{year:'numeric',month:'long',day:'numeric'});
 }
 
 async function fetchJSON(url){
@@ -129,8 +124,8 @@ async function cargar(){
     renderTabla('tbodyH','tableH','loadingH', data.hombres);
   }catch(err){
     console.error('Fallo cargando ranking:', err);
-    document.getElementById('loadingM').textContent = 'Error al cargar. Verifica la URL del script y los permisos de la planilla.';
-    document.getElementById('loadingH').textContent = 'Error al cargar. Verifica la URL del script y los permisos de la planilla.';
+    document.getElementById('loadingM').textContent = 'Error al cargar los datos.';
+    document.getElementById('loadingH').textContent = 'Error al cargar los datos.';
     document.getElementById('tableM').style.display = 'none';
     document.getElementById('tableH').style.display = 'none';
   }
