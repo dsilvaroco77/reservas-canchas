@@ -33,6 +33,7 @@ h1{font-size:36px;font-weight:700;letter-spacing:-1px;margin:0}
 table{width:100%;border-collapse:collapse;color:var(--text-color);display:none}
 th,td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
 th{font-weight:600; color:var(--text-color);}
+tr{transition: background-color 0.3s ease;}
 tr:last-child td{border-bottom:none}
 .loading{color:var(--subtle-text-color);font-style:italic;text-align:center;padding:10px}
 .footer-nav{text-align:center;margin-top:28px}
@@ -44,52 +45,32 @@ tr:last-child td{border-bottom:none}
 .save-button.success{background-color:#4CAF50;}
 .sortable-ghost{background:rgba(255,255,255,0.1);opacity:0.8;}
 .sortable-chosen, .ranked-player:hover{cursor:grab;}
-.unranked-player { opacity: 0.6; }
-.unranked-divider td { border-top: 2px solid var(--accent-color); padding: 0; height: 2px; }
 .arrow-up{color:#4CAF50;} .arrow-down{color:#F44336;} .new-entry{color:#FFC107;}
 .col-pos {width:80px;text-align:center;} .col-evol {width:60px;text-align:center;font-size:1.2em;}
 td.col-nombre { font-weight: 600; }
+.player-highlight {
+    background-image: linear-gradient(to right, rgba(200, 211, 0, 0.1), transparent 80%);
+    border-left: 4px solid var(--accent-color);
+}
 
-/* --- NUEVOS ESTILOS PARA VISTA MÓVIL (Formato Tarjetas) --- */
 @media (max-width:768px){
   h1{font-size:28px}
   .section h2{font-size:20px}
-  
-  /* Ocultamos los encabezados de la tabla en móvil */
   table thead { display: none; }
-  
-  /* Forzamos a la tabla y sus elementos a comportarse como bloques */
   table, tbody, tr, td { display: block; }
-  
-  /* Cada fila (tr) ahora es una tarjeta */
   tr {
-    display: flex; /* Usamos flexbox para alinear los elementos */
+    display: flex;
     align-items: center;
     padding: 10px 5px;
     border-bottom: 1px solid rgba(255,255,255,.1);
     margin-bottom: 5px;
   }
+  .player-highlight { border-left-width: 5px; }
   tr:last-child { border-bottom: none; }
-  
-  /* Quitamos el borde de las celdas internas */
   td { border: none; padding: 2px 5px; }
-
-  /* Estilos para cada columna dentro de la tarjeta */
-  .col-pos {
-    font-size: 1.1em;
-    font-weight: bold;
-    width: 45px; /* Ancho fijo para la posición */
-    text-align: center;
-  }
-  .col-nombre {
-    flex-grow: 1; /* El nombre ocupa todo el espacio sobrante */
-    width: auto;
-  }
-  .col-evol {
-    width: 45px; /* Ancho fijo para la evolución */
-    text-align: center;
-    font-size: 1.4em;
-  }
+  .col-pos { font-size: 1.1em; font-weight: bold; width: 45px; text-align: center; }
+  .col-nombre { flex-grow: 1; width: auto; }
+  .col-evol { width: 45px; text-align: center; font-size: 1.4em; }
 }
 </style>
 </head>
@@ -159,22 +140,19 @@ td.col-nombre { font-weight: 600; }
         tbody.innerHTML = '';
         if (!lista || lista.length === 0) {
             document.getElementById(loadingId).textContent = 'No hay datos en esta sección.';
-            document.getElementById(tableId).style.display = 'none';
             return;
         }
 
-        let rankedCount = 0;
         lista.forEach(p => {
-            const isRanked = !isNaN(parseInt(p.posicion));
-            if (isRanked) rankedCount++;
-
             const tr = tbody.insertRow();
             tr.dataset.nombre = p.nombre;
+            const isRanked = !isNaN(parseInt(p.posicion));
             tr.className = isRanked ? 'ranked-player' : 'unranked-player';
 
             const posActual = parseInt(p.posicion);
             const posAnterior = parseInt(p.posicionAnterior);
             let evolucionHtml = '';
+
             if (isRanked && !isNaN(posAnterior) && posAnterior > 0) {
                 if (posActual < posAnterior) evolucionHtml = `<span class="arrow-up" title="Subió desde ${posAnterior}">▲</span>`;
                 else if (posActual > posAnterior) evolucionHtml = `<span class="arrow-down" title="Bajó desde ${posAnterior}">▼</span>`;
@@ -182,14 +160,13 @@ td.col-nombre { font-weight: 600; }
             } else {
                 evolucionHtml = `<span class="new-entry" title="Nuevo o Sin Ranking">●</span>`;
             }
+
+            if (isRanked && !isNaN(posAnterior) && posAnterior > 0 && posActual !== posAnterior) {
+                tr.classList.add('player-highlight');
+            }
+            
             tr.innerHTML = `<td class="col-pos">${p.posicion}</td><td class="col-nombre">${p.nombre}</td><td class="col-evol">${evolucionHtml}</td>`;
         });
-        
-        if (rankedCount > 0 && rankedCount < lista.length) {
-            const divider = tbody.insertRow(rankedCount);
-            divider.className = 'unranked-divider';
-            divider.innerHTML = `<td colspan="3"></td>`;
-        }
 
         document.getElementById(loadingId).style.display = 'none';
         document.getElementById(tableId).style.display = 'table';
@@ -203,7 +180,7 @@ td.col-nombre { font-weight: 600; }
                 animation: 150,
                 ghostClass: 'sortable-ghost',
                 chosenClass: 'sortable-chosen',
-                filter: '.unranked-player, .unranked-divider',
+                filter: '.unranked-player',
                 onEnd: (evt) => {
                     const tbody = evt.target;
                     const rows = tbody.querySelectorAll('.ranked-player');
