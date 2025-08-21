@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>ADMINISTRADOR Ranking</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-    <meta name="theme-color" content="#001f33"/>
     <style>
         :root{--background-color:#001f33;--text-color:#f5f5f7;--subtle-text-color:#a1a1a6;--accent-color:#c6d300;--card-background:rgba(255,255,255,0.05);}
         @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -22,8 +21,8 @@
         table{width:100%;border-collapse:collapse;color:var(--text-color);display:none}
         th,td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
         th{font-weight:600; color:var(--text-color);}
-        tbody tr {cursor: grab;}
-        tbody tr:active {cursor: grabbing;}
+        tbody tr { cursor: grab; } /* MODIFICADO: Cursor para arrastrar */
+        tbody tr:active { cursor: grabbing; }
         tr:last-child td{border-bottom:none}
         .loading, .error-message {text-align:center; padding:20px; color:var(--subtle-text-color); font-weight:bold;}
         .footer-nav{text-align:center;margin-top:28px}
@@ -33,6 +32,23 @@
         .col-evol {width:60px;text-align:center;font-size:1.2em;}
         td.col-nombre { font-weight: 600; }
         .player-highlight { background-image: linear-gradient(to right, rgba(200, 211, 0, 0.1), transparent 80%); border-left: 4px solid var(--accent-color); }
+        .modal-overlay {position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s ease; z-index: 1000; padding: 20px; box-sizing: border-box;}
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content {position: relative; background: linear-gradient(145deg, #002a42, #001f33); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; width: 100%; max-width: 380px; text-align: center; transform: translateY(20px); transition: transform 0.4s ease; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);}
+        .modal-overlay.visible .modal-content { transform: translateY(0); }
+        .modal-close-btn {position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 50%; font-size: 20px; line-height: 32px; text-align: center; cursor: pointer; transition: background-color 0.2s ease;}
+        .modal-close-btn:hover { background: rgba(255,255,255,0.2); }
+        .modal-header { padding: 40px 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .modal-photo {width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 5px solid var(--accent-color); margin-bottom: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); background-color: #001f33;}
+        .modal-name { font-size: 2.2em; font-weight: 700; margin: 0; letter-spacing: -1px; }
+        .modal-logo { position: absolute; top: 20px; left: 20px; width: 40px; opacity: 0.5; }
+        .modal-stats { list-style: none; padding: 15px 25px; margin: 0; }
+        .modal-stats li { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; font-size: 1em; }
+        .modal-stats li:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,.05); }
+        .modal-stats .label { display: flex; align-items: center; color: var(--subtle-text-color); }
+        .modal-stats .icon { width: 18px; height: 18px; margin-right: 12px; opacity: 0.7; }
+        .modal-stats .value { font-weight: 600; font-size: 1.1em; color: var(--text-color); }
+        /* AÑADIDO: Estilos para el botón de guardar y la animación de arrastre */
         .save-button{ display:none; background-color:var(--accent-color); color:var(--background-color); border:none; padding:8px 16px; font-size:14px; font-weight:700; border-radius:20px; cursor:pointer; margin-left: auto; }
         .save-button:disabled { background-color: #555; cursor: not-allowed; }
         .sortable-ghost{ background:rgba(255,255,255,0.1); opacity: 0.8; }
@@ -64,21 +80,27 @@
         </section>
         <div class="footer-nav"><a class="back-button" href="ranking.html">Ver Ranking Público</a></div>
     </div>
+    <div class="modal-overlay" id="playerModal"><div class="modal-content"></div></div>
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzHtbq5qEcBkr6vU9iVn5Xt59byciz0gFUFkStd5KXXEtr5VzDeus6mZysN7ALLY6M3JQ/exec";
+        // ▼▼▼ Pega aquí la URL de tu script de la hoja "test ranking" ▼▼▼
+        const API_URL = "https://script.google.com/macros/s/AKfycbxCpCp0gy4fEENaItRbt8qX3B0zt3EsbKifX_MWSu3gC2UqMDjf1uQku9bk9qYkNBLtuw/exec";
 
+        let allPlayersData = [];
+        const modalOverlay = document.getElementById('playerModal');
+
+        // --- Las funciones cargarDatos, renderTabla, showPlayerProfile y closePlayerProfile son EXACTAMENTE las mismas de tu test.html ---
         async function cargarDatos() {
             document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
             try {
-                const response = await fetch(API_URL + '?v=' + Date.now());
+                const response = await fetch(`${API_URL}?v=${new Date().getTime()}`);
                 const data = await response.json();
                 if (data.status === 'error') throw new Error(data.message);
+                allPlayersData = [...(data.hombres || []), ...(data.mujeres || [])];
                 renderTabla('M', data.mujeres);
                 renderTabla('H', data.hombres);
             } catch (err) {
-                console.error('Fallo cargando ranking:', err);
-                document.getElementById('loadingM').textContent = `Error: ${err.message}`;
-                document.getElementById('loadingH').textContent = `Error: ${err.message}`;
+                document.getElementById('loadingM').innerHTML = `<div class="error-message">Error al cargar: ${err.message}</div>`;
+                document.getElementById('loadingH').innerHTML = ``;
             }
         }
         function renderTabla(gender, lista) {
@@ -90,11 +112,12 @@
             const loading = document.getElementById(loadingId);
             tbody.innerHTML = '';
             if (!lista || lista.length === 0) {
-                loading.textContent = 'No hay datos en esta sección.';
+                loading.textContent = 'No hay jugadores en esta sección.';
                 return;
             }
             lista.forEach(p => {
                 const tr = tbody.insertRow();
+                tr.addEventListener('click', () => showPlayerProfile(p.nombre));
                 const posActual = parseInt(p.posicion);
                 const posAnterior = parseInt(p.posicionAnterior);
                 let evolucionHtml = '<span class="new-entry" title="Nuevo o Sin Ranking">●</span>';
@@ -111,42 +134,96 @@
             loading.style.display = 'none';
             table.style.display = 'table';
         }
+        function showPlayerProfile(playerName) {
+          const playerData = allPlayersData.find(p => p.nombre === playerName);
+          if (!playerData) return;
+          const modalContent = modalOverlay.querySelector('.modal-content');
+          const iconRanking = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>`;
+          const iconAge = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"></path></svg>`;
+          const iconCategory = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.86L12 5.84zM21.5 11h-19L12 22l9.5-11zM13 18h-2v-4h2v4z"></path></svg>`;
+          const iconHand = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10.53 11.45c.47-.21.96-.32 1.47-.32s1,.11 1.47,.32L17.93 9l-3.6-2.18c-.46-.27-1.01-.42-1.57-.42s-1.11,.15-1.57,.42L7.54 9l4.46 2.45c.17,.1.36,.15.53,.15s.36-.05,.53-.15zM4.77 10.5L2 12l10 6 10-6-2.77-1.5-4.46 2.45c-.17,.1-.36,.15-.53,.15s-.36-.05-.53-.15L4.77 10.5z"></path></svg>`;
+          const iconBackhand = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3HIOv2h7.01v3L21 9z"></path></svg>`;
+          modalContent.innerHTML = `
+              <button class="modal-close-btn" onclick="closePlayerProfile()">×</button>
+              <img src="logo_uctenis_v03.png" class="modal-logo" alt="Logo UCTenis">
+              <div class="modal-header">
+                  <img src="${playerData.foto || 'default_avatar.png'}" class="modal-photo" onerror="this.src='default_avatar.png';">
+                  <h2 class="modal-name">${playerData.nombre}</h2>
+              </div>
+              <ul class="modal-stats">
+                  <li><span class="label">${iconRanking} Ranking</span><span class="value">${playerData.posicion || '-'}</span></li>
+                  <li><span class="label">${iconAge} Edad</span><span class="value">${playerData.edad || '-'}</span></li>
+                  <li><span class="label">${iconCategory} Categoría</span><span class="value">${playerData.categoria || '-'}</span></li>
+                  <li><span class="label">${iconHand} Mano Hábil</span><span class="value">${playerData.manoHabil || '-'}</span></li>
+                  <li><span class="label">${iconBackhand} Revés</span><span class="value">${playerData.reves || '-'}</span></li>
+              </ul>`;
+          modalOverlay.classList.add('visible');
+        }
+        function closePlayerProfile() {
+            modalOverlay.classList.remove('visible');
+        }
+        modalOverlay.addEventListener('click', function(e) { if (e.target === this) closePlayerProfile(); });
+
+        // --- AÑADIDO: Funciones de Administrador ---
         function initSortable() {
             const createSortable = (tbodyId, saveButtonId) => {
-                new Sortable(document.getElementById(tbodyId), { animation: 150, ghostClass: 'sortable-ghost', onEnd: () => { document.getElementById(saveButtonId).style.display = 'block'; } });
+                new Sortable(document.getElementById(tbodyId), {
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    onEnd: () => {
+                        document.getElementById(saveButtonId).style.display = 'block';
+                    }
+                });
             };
             createSortable('tbodyM', 'saveM');
             createSortable('tbodyH', 'saveH');
         }
         async function saveRanking(category) {
-            const password = prompt("Ingresa la clave de administrador:");
+            const password = prompt("Para guardar, ingresa la clave de administrador:");
             if (!password) return;
+
             const buttonId = category === 'mujeres' ? 'saveM' : 'saveH';
             const tbodyId = category === 'mujeres' ? 'tbodyM' : 'tbodyH';
             const button = document.getElementById(buttonId);
             button.disabled = true;
             button.textContent = "Guardando...";
+
             const rows = document.getElementById(tbodyId).querySelectorAll('tr');
-            const newRanking = Array.from(rows).map(row => ({ nombre: row.querySelector('.col-nombre').textContent }));
+            const newRanking = Array.from(rows).map(row => ({
+                nombre: row.querySelector('.col-nombre').textContent
+            }));
+
             try {
-                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ password, category, ranking: newRanking }) });
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        password: password,
+                        category: category,
+                        ranking: newRanking
+                    })
+                });
                 const result = await response.json();
                 if (result.status === 'error') throw new Error(result.message);
+
                 button.textContent = "¡Guardado!";
                 setTimeout(() => {
                     button.style.display = 'none';
                     button.textContent = 'Guardar Cambios';
                     button.disabled = false;
-                    cargarDatos();
+                    cargarDatos(); // Recargar para ver todo actualizado
                 }, 1500);
             } catch (err) {
-                alert(`Error: ${err.message}`);
+                alert(`Error al guardar: ${err.message}`);
                 button.disabled = false;
                 button.textContent = 'Reintentar';
             }
         }
+
+        // MODIFICADO: Se llama a initSortable() después de cargar los datos
         document.addEventListener('DOMContentLoaded', () => {
-            cargarDatos().then(() => { initSortable(); });
+            cargarDatos().then(() => {
+                initSortable(); 
+            });
         });
     </script>
 </body>
