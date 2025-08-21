@@ -131,7 +131,9 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzHtbq5qEcBkr6vU9iVn5Xt59byciz0gFUFkStd5KXXEtr5VzDeus6mZysN7ALLY6M3JQ/exec";
+        // URL del script conectado a "test ranking"
+        const API_URL = "https://script.google.com/macros/s/AKfycbxCpCp0gy4fEENaItRbt8qX3B0zt3EsbKifX_MWSu3gC2UqMDjf1uQku9bk9qYkNBLtuw/exec";
+
         let allPlayersData = []; 
 
         async function cargarDatos() {
@@ -208,53 +210,12 @@
         });
 
         function initSortable() {
-            const createSortable = (tbodyId, saveButtonId) => {
-                new Sortable(document.getElementById(tbodyId), {
-                    delay: 200, delayOnTouchOnly: true, animation: 150,
-                    ghostClass: 'sortable-ghost', chosenClass: 'sortable-chosen',
-                    filter: '.unranked-player',
-                    onEnd: (evt) => {
-                        const tbody = evt.target;
-                        const rows = tbody.querySelectorAll('.ranked-player');
-                        rows.forEach((row, index) => {
-                            row.querySelector('.col-pos').textContent = index + 1;
-                        });
-                        document.getElementById(saveButtonId).style.display = 'block';
-                    }
-                });
-            };
-            createSortable('tbodyM', 'saveM');
-            createSortable('tbodyH', 'saveH');
+            // Esta función está aquí para que la página de test no dé error, pero no guardará cambios
+            // en la hoja de "test ranking" a menos que la adaptemos.
         }
 
-        async function saveRanking(category) {
-            const password = prompt("Para guardar, ingresa la clave de administrador:");
-            if (!password) return; 
-            const buttonId = (category === 'mujeres') ? 'saveM' : 'saveH';
-            const tbodyId = (category === 'mujeres') ? 'tbodyM' : 'tbodyH';
-            const button = document.getElementById(buttonId);
-            button.disabled = true; button.textContent = "Guardando..."; button.classList.add('saving');
-            const rows = document.getElementById(tbodyId).querySelectorAll('.ranked-player');
-            const newRanking = Array.from(rows).map(row => ({ nombre: row.dataset.nombre }));
-            const payload = { category, ranking: newRanking, password };
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST', body: JSON.stringify(payload),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                });
-                const result = await response.json();
-                if (result.status === 'error') throw new Error(result.message);
-                button.textContent = "¡Guardado!"; button.classList.remove('saving'); button.classList.add('success');
-                setTimeout(() => {
-                    button.style.display = 'none'; button.textContent = 'Guardar Cambios';
-                    button.classList.remove('success'); button.disabled = false;
-                    cargarDatos();
-                }, 2000);
-            } catch (err) {
-                console.error('Error al guardar:', err);
-                alert(`Error al guardar: ${err.message}`);
-                button.textContent = 'Reintentar'; button.disabled = false; button.classList.remove('saving');
-            }
+        function saveRanking(category) {
+            alert("La función de guardar está deshabilitada en la página de pruebas.");
         }
         document.addEventListener('DOMContentLoaded', cargarDatos);
     </script>
