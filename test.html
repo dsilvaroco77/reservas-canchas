@@ -3,208 +3,201 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>TEST FINAL - Fichas de Jugador</title>
+    <title>TEST - Fichas de Jugador v2</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <meta name="theme-color" content="#001f33"/>
     <style>
+        /* --- ESTILOS GENERALES (SIN CAMBIOS) --- */
         :root{--background-color:#001f33;--text-color:#f5f5f7;--subtle-text-color:#a1a1a6;--accent-color:#c6d300;--card-background:rgba(255,255,255,0.05);}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;background:var(--background-color);color:var(--text-color)}
-        .main-container{max-width:900px;margin:0 auto;padding:40px 20px;animation:fadeIn 1s ease-out forwards}
-        .header-section, .ranking-info { text-align: center; margin-bottom: 20px; }
-        .uct-logo{width:clamp(96px,14vw,168px);height:auto;display:block;margin:0 auto 12px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+        .main-container{max-width:900px;margin:0 auto;padding:40px 20px;}
+        .header-section{text-align:center;margin-bottom:20px}
+        .uct-logo{width:clamp(96px,14vw,168px);height:auto;display:block;margin:0 auto 12px;}
         h1{font-size:36px;font-weight:700;letter-spacing:-1px;margin:0}
-        .last-updated-date{font-size:14px;color:var(--subtle-text-color);font-style:italic}
         .section{background:var(--card-background);border-radius:18px;padding:18px 16px;margin-bottom:24px;}
-        .section-header{display:flex;justify-content:space-between;align-items:center;margin:6px 6px 12px;}
-        .section-header h2{font-size:22px;margin:0;}
-        table{width:100%;border-collapse:collapse;color:var(--text-color);display:none}
+        .section h2{font-size:22px;margin:6px 6px 12px;}
+        table{width:100%;border-collapse:collapse;}
         th,td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
-        th{font-weight:600;}
-        tbody tr { cursor: pointer; transition: background-color 0.2s ease; }
-        tbody tr:hover { background-color: rgba(255,255,255,0.03); }
-        tr:last-child td{border-bottom:none}
-        .loading{color:var(--subtle-text-color);font-style:italic;text-align:center;padding:10px}
-        .error-message { color: #F44336; font-weight: bold; text-align: center; padding: 10px; }
-        .footer-nav{text-align:center;margin-top:28px}
-        .back-button{display:inline-block;background:var(--accent-color);color:#001f33;font-size:16px;font-weight:700;padding:12px 30px;border:none;border-radius:30px;cursor:pointer;text-decoration:none;transition:background-color .2s ease,transform .15s ease}
-        .save-button{background-color:var(--accent-color);color:var(--background-color);border:none;padding:8px 16px;font-size:14px;font-weight:700;border-radius:20px;cursor:pointer;display:none;transition:all .2s ease;}
-        
-        /* Estilos del Modal (Ficha de Jugador) */
+        tbody tr {cursor: pointer;}
+        .loading, .error-message {text-align:center; padding:20px; color:var(--subtle-text-color);}
+
+        /* --- ▼▼▼ NUEVOS ESTILOS PARA LA FICHA DE JUGADOR ▼▼▼ --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: all 0.4s ease; z-index: 1000; padding: 15px;
         }
         .modal-overlay.visible { opacity: 1; visibility: visible; }
         .modal-content {
-            position: relative; background: linear-gradient(145deg, #002a42, #001f33);
-            border: 1px solid rgba(255,255,255,.1); border-radius: 20px;
-            width: 100%; max-width: 380px; text-align: center;
-            transform: translateY(20px); transition: transform 0.4s ease;
-            overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            background: linear-gradient(145deg, #002a42, #001f33);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 20px;
+            width: 100%; max-width: 380px;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         .modal-overlay.visible .modal-content { transform: translateY(0); }
-        .modal-header { padding: 30px 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        .modal-header {
+            padding: 30px 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
         .modal-photo {
-            width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
-            border: 4px solid var(--accent-color); margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-color);
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background-color: #001f33;
         }
         .modal-name { font-size: 2em; font-weight: 700; margin: 0; letter-spacing: -1px; }
         .modal-category {
-            display: inline-block; background: var(--accent-color); color: var(--background-color);
-            font-size: 0.8em; font-weight: bold; padding: 4px 12px; border-radius: 15px;
-            margin-top: 8px; text-transform: uppercase;
+            display: inline-block;
+            background: var(--accent-color);
+            color: var(--background-color);
+            font-size: 0.8em; font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 15px;
+            margin-top: 8px;
+            text-transform: uppercase;
         }
-        .modal-logo { position: absolute; top: 20px; right: 20px; width: 40px; opacity: 0.5; }
+        .modal-logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            opacity: 0.5;
+        }
+
         .modal-stats { list-style: none; padding: 15px 25px; margin: 0; }
         .modal-stats li {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 15px 0; font-size: 1em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            font-size: 1em;
         }
         .modal-stats li:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,.05); }
-        .modal-stats .label { display: flex; align-items: center; color: var(--subtle-text-color); }
-        .modal-stats .icon { width: 18px; height: 18px; margin-right: 10px; opacity: 0.7; }
+        .modal-stats .label {
+            display: flex;
+            align-items: center;
+            color: var(--subtle-text-color);
+        }
+        .modal-stats .icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            opacity: 0.7;
+        }
         .modal-stats .value { font-weight: 600; font-size: 1.1em; color: var(--text-color); }
     </style>
 </head>
 <body>
     <div class="main-container">
         <div class="header-section">
-            <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo" loading="lazy"/>
+            <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo" />
             <h1>TEST DE FICHAS</h1>
         </div>
-        <div class="ranking-info">
-            <p class="last-updated-date" id="lastUpdatedDate">Cargando...</p>
-        </div>
-        
-        <section class="section" id="secM">
-            <div class="section-header">
-                <h2>Ranking Femenino</h2>
-                <button id="saveM" class="save-button" onclick="saveRanking('mujeres')">Guardar Cambios</button>
-            </div>
-            <div class="loading" id="loadingM">Cargando ranking...</div>
-            <table id="tableM">
-                <thead><tr><th>Pos.</th><th>Nombre</th><th>Evol.</th></tr></thead>
-                <tbody id="tbodyM"></tbody>
-            </table>
-        </section>
-
         <section class="section" id="secH">
-            <div class="section-header">
-                <h2>Ranking Masculino</h2>
-                <button id="saveH" class="save-button" onclick="saveRanking('hombres')">Guardar Cambios</button>
-            </div>
+            <h2>Ranking Masculino</h2>
             <div class="loading" id="loadingH">Cargando ranking...</div>
-            <table id="tableH">
-                <thead><tr><th>Pos.</th><th>Nombre</th><th>Evol.</th></tr></thead>
-                <tbody id="tbodyH"></tbody>
-            </table>
+            <table id="tableH" style="display:none;"><thead><tr><th>Pos.</th><th>Nombre</th></tr></thead><tbody id="tbodyH"></tbody></table>
         </section>
-
-        <div class="footer-nav">
-            <a class="back-button" href="index.html">Volver a Reservar</a>
-        </div>
+        <section class="section" id="secM">
+            <h2>Ranking Femenino</h2>
+            <div class="loading" id="loadingM">Cargando ranking...</div>
+            <table id="tableM" style="display:none;"><thead><tr><th>Pos.</th><th>Nombre</th></tr></thead><tbody id="tbodyM"></tbody></table>
+        </section>
     </div>
-
-    <div class="modal-overlay" id="playerModal">
-        <div class="modal-content"></div>
-    </div>
+    <div class="modal-overlay" id="playerModal"><div class="modal-content"></div></div>
 
     <script>
-        // La URL de tu script de pruebas
         const API_URL = "https://script.google.com/macros/s/AKfycbxCpCp0gy4fEENaItRbt8qX3B0zt3EsbKifX_MWSu3gC2UqMDjf1uQku9bk9qYkNBLtuw/exec";
-        
-        let allPlayersData = []; 
+        let allPlayersData = [];
 
         async function cargarDatos() {
-            document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
-            
-            try {
-                const response = await fetch(API_URL + '?v=' + Date.now());
-                if (!response.ok) {
-                    throw new Error(`Error de red: ${response.statusText}`);
-                }
-                const data = await response.json();
+          try {
+            const response = await fetch(`${API_URL}?v=${new Date().getTime()}`);
+            const data = await response.json();
 
-                // --- DIAGNÓSTICO EN CONSOLA ---
-                console.log("Datos recibidos del script:", data);
+            if (data.status === 'error') throw new Error(data.message);
 
-                if (data.status === 'error' || !data.hombres || !data.mujeres) {
-                    throw new Error(data.message || "La estructura de datos recibida no es correcta.");
-                }
-                
-                allPlayersData = [...(data.mujeres || []), ...(data.hombres || [])];
-                
-                renderTabla('tbodyM', 'tableM', 'loadingM', data.mujeres || []);
-                renderTabla('tbodyH', 'tableH', 'loadingH', data.hombres || []);
+            allPlayersData = [...(data.hombres || []), ...(data.mujeres || [])];
 
-            } catch (err) {
-                console.error('Fallo cargando ranking:', err);
-                document.getElementById('loadingM').innerHTML = `<div class="error-message">Error al cargar ranking femenino.</div>`;
-                document.getElementById('loadingH').innerHTML = `<div class="error-message">Error al cargar ranking masculino.</div>`;
-            }
+            renderTabla('H', data.hombres);
+            renderTabla('M', data.mujeres);
+
+          } catch (err) {
+            document.getElementById('loadingH').innerHTML = `<div class="error-message">Error: ${err.message}</div>`;
+            document.getElementById('loadingM').innerHTML = ``;
+          }
         }
 
-        function renderTabla(tbodyId, tableId, loadingId, lista) {
-            const tbody = document.getElementById(tbodyId);
-            const loadingDiv = document.getElementById(loadingId);
-            const table = document.getElementById(tableId);
-            
-            tbody.innerHTML = '';
-            if (!lista || lista.length === 0) {
-                loadingDiv.textContent = 'No hay jugadores en esta sección.';
-                table.style.display = 'none';
-                return;
-            }
+        function renderTabla(gender, lista) {
+          const table = document.getElementById(`table${gender}`);
+          const tbody = document.getElementById(`tbody${gender}`);
+          const loading = document.getElementById(`loading${gender}`);
 
-            lista.forEach(p => {
-                const tr = tbody.insertRow();
-                tr.dataset.nombre = p.nombre;
-                tr.addEventListener('click', () => showPlayerProfile(p.nombre));
-                
-                tr.innerHTML = `<td class="col-pos">${p.posicion || 'SR'}</td><td>${p.nombre}</td><td></td>`;
-            });
+          if (!lista || lista.length === 0) {
+            loading.textContent = 'No hay jugadores en esta sección.';
+            return;
+          }
 
-            loadingDiv.style.display = 'none';
-            table.style.display = 'table';
+          tbody.innerHTML = '';
+          lista.forEach(p => {
+            const tr = tbody.insertRow();
+            tr.addEventListener('click', () => showPlayerProfile(p.nombre));
+            tr.innerHTML = `<td>${p.posicion || 'SR'}</td><td>${p.nombre}</td>`;
+          });
+
+          loading.style.display = 'none';
+          table.style.display = 'table';
         }
 
+        // --- ▼▼▼ FUNCIÓN showPlayerProfile ACTUALIZADA CON EL NUEVO DISEÑO ▼▼▼ ---
         function showPlayerProfile(playerName) {
-            const playerData = allPlayersData.find(p => p.nombre === playerName);
-            if (!playerData) return;
+          const playerData = allPlayersData.find(p => p.nombre === playerName);
+          if (!playerData) return;
 
-            const modalOverlay = document.getElementById('playerModal');
-            const modalContent = modalOverlay.querySelector('.modal-content');
+          const modalOverlay = document.getElementById('playerModal');
+          const modalContent = modalOverlay.querySelector('.modal-content');
 
-            const iconRanking = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>`;
-            const iconAge = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"></path></svg>`;
-            const iconHand = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10.53 11.45c.47-.21.96-.32 1.47-.32s1,.11 1.47,.32L17.93 9l-3.6-2.18c-.46-.27-1.01-.42-1.57-.42s-1.11,.15-1.57,.42L7.54 9l4.46 2.45c.17,.1.36,.15.53,.15s.36-.05,.53-.15zM4.77 10.5L2 12l10 6 10-6-2.77-1.5-4.46 2.45c-.17,.1-.36,.15-.53,.15s-.36-.05-.53-.15L4.77 10.5z"></path></svg>`;
-            const iconBackhand = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"></path></svg>`;
+          // Iconos SVG para las estadísticas
+          const iconRanking = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>`;
+          const iconAge = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"></path></svg>`;
+          const iconCategory = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.86L12 5.84zM21.5 11h-19L12 22l9.5-11zM13 18h-2v-4h2v4z"></path></svg>`;
+          const iconHand = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10.53 11.45c.47-.21.96-.32 1.47-.32s1,.11 1.47,.32L17.93 9l-3.6-2.18c-.46-.27-1.01-.42-1.57-.42s-1.11,.15-1.57,.42L7.54 9l4.46 2.45c.17,.1.36,.15.53,.15s.36-.05,.53-.15zM4.77 10.5L2 12l10 6 10-6-2.77-1.5-4.46 2.45c-.17,.1-.36,.15-.53,.15s-.36-.05-.53-.15L4.77 10.5z"></path></svg>`;
+          const iconBackhand = `<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"></path></svg>`;
 
-            modalContent.innerHTML = `
-                <img src="logo_uctenis_v03.png" class="modal-logo" alt="Logo UCTenis">
-                <div class="modal-header">
-                    <img src="${playerData.foto || 'default_avatar.png'}" class="modal-photo" alt="Foto de ${playerData.nombre}" onerror="this.src='default_avatar.png';">
-                    <h2 class="modal-name">${playerData.nombre}</h2>
-                    ${playerData.categoria ? `<div class="modal-category">${playerData.categoria}</div>` : ''}
-                </div>
-                <ul class="modal-stats">
-                    <li><span class="label">${iconRanking} Ranking</span><span class="value">${playerData.posicion || 'SR'}</span></li>
-                    ${playerData.edad ? `<li><span class="label">${iconAge} Edad</span><span class="value">${playerData.edad}</span></li>` : ''}
-                    ${playerData.manoHabil ? `<li><span class="label">${iconHand} Mano Hábil</span><span class="value">${playerData.manoHabil}</span></li>` : ''}
-                    ${playerData.reves ? `<li><span class="label">${iconBackhand} Revés</span><span class="value">${playerData.reves}</span></li>` : ''}
-                </ul>
-            `;
-            
-            modalOverlay.classList.add('visible');
+          modalContent.innerHTML = `
+              <img src="logo_uctenis_v03.png" class="modal-logo" alt="Logo UCTenis">
+              <div class="modal-header">
+                  <img src="${playerData.foto || 'default_avatar.png'}" class="modal-photo" onerror="this.src='default_avatar.png';">
+                  <h2 class="modal-name">${playerData.nombre}</h2>
+                  ${playerData.categoria ? `<div class="modal-category">${playerData.categoria}</div>` : ''}
+              </div>
+              <ul class="modal-stats">
+                  <li><span class="label">${iconRanking} Ranking</span><span class="value">${playerData.posicion || 'SR'}</span></li>
+                  ${playerData.edad ? `<li><span class="label">${iconAge} Edad</span><span class="value">${playerData.edad}</span></li>` : ''}
+                  ${playerData.categoria ? `<li><span class="label">${iconCategory} Categoría</span><span class="value">${playerData.categoria}</span></li>` : ''}
+                  ${playerData.manoHabil ? `<li><span class="label">${iconHand} Mano Hábil</span><span class="value">${playerData.manoHabil}</span></li>` : ''}
+                  ${playerData.reves ? `<li><span class="label">${iconBackhand} Revés</span><span class="value">${playerData.reves}</span></li>` : ''}
+              </ul>`;
+
+          modalOverlay.classList.add('visible');
         }
 
         document.getElementById('playerModal').addEventListener('click', function(e) {
             if (e.target === this) this.classList.remove('visible');
         });
-        
+
         document.addEventListener('DOMContentLoaded', cargarDatos);
     </script>
 </body>
