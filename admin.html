@@ -26,19 +26,6 @@
         .col-evol {width:60px;text-align:center;font-size:1.2em;}
         td.col-nombre { font-weight: 600; }
         .player-highlight { background-image: linear-gradient(to right, rgba(200, 211, 0, 0.1), transparent 80%); border-left: 4px solid var(--accent-color); }
-        .modal-overlay {position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s ease; z-index: 1000; padding: 20px; box-sizing: border-box;}
-        .modal-overlay.visible { opacity: 1; visibility: visible; }
-        .modal-content {position: relative; background: linear-gradient(145deg, #002a42, #001f33); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; width: 100%; max-width: 380px; text-align: center; transform: translateY(20px); transition: transform 0.4s ease; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);}
-        .modal-overlay.visible .modal-content { transform: translateY(0); }
-        .modal-close-btn {position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 50%; font-size: 20px; line-height: 32px; text-align: center; cursor: pointer; transition: background-color 0.2s ease;}
-        .modal-close-btn:hover { background: rgba(255,255,255,0.2); }
-        .modal-header { padding: 40px 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .modal-photo {width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 5px solid var(--accent-color); margin-bottom: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); background-color: #001f33;}
-        .modal-name { font-size: 2.2em; font-weight: 700; margin: 0; letter-spacing: -1px; }
-        .modal-logo { position: absolute; top: 20px; left: 20px; width: 40px; opacity: 0.5; }
-        .modal-stats { list-style: none; padding: 15px 25px; margin: 0; }
-        .modal-stats li { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; font-size: 1em; }
-        .modal-stats li:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,.05); }
         .save-button{ display:none; background-color:var(--accent-color); color:var(--background-color); border:none; padding:8px 16px; font-size:14px; font-weight:700; border-radius:20px; cursor:pointer; margin-left: auto; }
         .save-button:disabled { background-color: #555; cursor: not-allowed; }
         .sortable-ghost{ background:rgba(255,255,255,0.1); opacity: 0.8; }
@@ -67,17 +54,48 @@
             <table id="tableH"><thead><tr><th class="col-pos">Pos.</th><th>Nombre</th><th class="col-evol">Evol.</th></tr></thead><tbody id="tbodyH"></tbody></table>
         </section>
     </div>
-    <div class="modal-overlay" id="playerModal"><div class="modal-content"></div></div>
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxCpCp0gy4fEENaItRbt8qX3B0zt3EsbKifX_MWSu3gC2UqMDjf1uQku9bk9qYkNBLtuw/exec";
-        let allPlayersData = [];
-        const modalOverlay = document.getElementById('playerModal');
-        async function cargarDatos() { /* ... (código sin cambios) ... */ }
-        function renderTabla(gender, lista) { /* ... (código sin cambios) ... */ }
-        function showPlayerProfile(playerName) { /* ... (código sin cambios) ... */ }
-        function closePlayerProfile() { modalOverlay.classList.remove('visible'); }
-        modalOverlay.addEventListener('click', function(e) { if (e.target === this) closePlayerProfile(); });
+        // ▼▼▼ Pega aquí la URL de tu script de la hoja "ranking" (la de producción) ▼▼▼
+        const API_URL = "URL_DE_TU_SCRIPT_DE_PRODUCCION";
 
+        async function cargarDatos() {
+            try {
+                const response = await fetch(`${API_URL}?v=${new Date().getTime()}`);
+                const data = await response.json();
+                if (data.status === 'error') throw new Error(data.message);
+                renderTabla('M', data.mujeres);
+                renderTabla('H', data.hombres);
+            } catch (err) {
+                document.getElementById('loadingM').innerHTML = `<div class="error-message">Error: ${err.message}</div>`;
+            }
+        }
+        function renderTabla(gender, lista) {
+            const tbody = document.getElementById(`tbody${gender}`);
+            const table = document.getElementById(`table${gender}`);
+            const loading = document.getElementById(`loading${gender}`);
+            if (!lista || lista.length === 0) {
+                loading.textContent = 'No hay jugadores.';
+                return;
+            }
+            tbody.innerHTML = '';
+            lista.forEach(p => {
+                const tr = tbody.insertRow();
+                const posActual = parseInt(p.posicion);
+                const posAnterior = parseInt(p.posicionAnterior);
+                let evolucionHtml = '<span class="new-entry" title="Nuevo">●</span>';
+                if (!isNaN(posAnterior) && posAnterior > 0) {
+                    if (posActual < posAnterior) evolucionHtml = `<span class="arrow-up" title="Subió">▲</span>`;
+                    else if (posActual > posAnterior) evolucionHtml = `<span class="arrow-down" title="Bajó">▼</span>`;
+                    else evolucionHtml = `<span>-</span>`;
+                }
+                if (!isNaN(posAnterior) && posAnterior > 0 && posActual !== posAnterior) {
+                    tr.classList.add('player-highlight');
+                }
+                tr.innerHTML = `<td class="col-pos">${p.posicion}</td><td class="col-nombre">${p.nombre}</td><td class="col-evol">${evolucionHtml}</td>`;
+            });
+            loading.style.display = 'none';
+            table.style.display = 'table';
+        }
         function initSortable() {
             const createSortable = (tbodyId, saveButtonId) => {
                 new Sortable(document.getElementById(tbodyId), { animation: 150, ghostClass: 'sortable-ghost', onEnd: () => { document.getElementById(saveButtonId).style.display = 'block'; } });
