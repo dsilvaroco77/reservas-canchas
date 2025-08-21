@@ -7,64 +7,41 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
         :root{--background-color:#001f33;--text-color:#f5f5f7;--subtle-text-color:#a1a1a6;--accent-color:#c6d300;--card-background:rgba(255,255,255,0.05);}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0;padding:0;background:var(--background-color);color:var(--text-color)}
-        .main-container{max-width:900px;margin:0 auto;padding:40px 20px;animation:fadeIn 1s ease-out forwards}
+        .main-container{max-width:900px;margin:0 auto;padding:40px 20px;}
         .header-section{text-align:center;margin-bottom:20px}
-        .uct-logo{width:clamp(96px,14vw,168px);height:auto;display:block;margin:0 auto 12px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+        .uct-logo{width:clamp(96px,14vw,168px);height:auto;display:block;margin:0 auto 12px;}
         h1{font-size:36px;font-weight:700;letter-spacing:-1px;margin:0}
-        .ranking-info{text-align:center;margin-bottom:20px}
-        .last-updated-date{font-size:14px;color:var(--subtle-text-color);font-style:italic}
         .section{background:var(--card-background);border-radius:18px;padding:18px 16px;margin-bottom:24px;}
-        .section-header{display:flex; align-items:center; margin:6px 6px 12px;} /* Contenedor para título y botón */
+        .section-header{display:flex; align-items:center; margin:6px 6px 12px;}
         .section-header h2{font-size:22px;margin:0;}
-        table{width:100%;border-collapse:collapse;color:var(--text-color);display:none}
+        table{width:100%;border-collapse:collapse;display:none;}
         th,td{padding:12px 15px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
-        th{font-weight:600; color:var(--text-color);}
-        tbody tr { cursor: grab; } /* MODIFICADO: Cursor para arrastrar */
-        tbody tr:active { cursor: grabbing; }
-        tr:last-child td{border-bottom:none}
+        tbody tr {cursor: grab;}
+        tbody tr:active {cursor: grabbing;}
         .loading, .error-message {text-align:center; padding:20px; color:var(--subtle-text-color); font-weight:bold;}
-        .footer-nav{text-align:center;margin-top:28px}
-        .back-button{display:inline-block;background:var(--accent-color);color:#001f33;font-size:16px;font-weight:700;padding:12px 30px;border:none;border-radius:30px;cursor:pointer;text-decoration:none}
         .arrow-up{color:#4CAF50;} .arrow-down{color:#F44336;} .new-entry{color:#FFC107;}
         .col-pos {width:80px;text-align:center;}
         .col-evol {width:60px;text-align:center;font-size:1.2em;}
         td.col-nombre { font-weight: 600; }
         .player-highlight { background-image: linear-gradient(to right, rgba(200, 211, 0, 0.1), transparent 80%); border-left: 4px solid var(--accent-color); }
-        .modal-overlay {position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.4s ease; z-index: 1000; padding: 20px; box-sizing: border-box;}
-        .modal-overlay.visible { opacity: 1; visibility: visible; }
-        .modal-content {position: relative; background: linear-gradient(145deg, #002a42, #001f33); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; width: 100%; max-width: 380px; text-align: center; transform: translateY(20px); transition: transform 0.4s ease; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3);}
-        .modal-overlay.visible .modal-content { transform: translateY(0); }
-        .modal-close-btn {position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border: none; background: rgba(255,255,255,0.1); color: white; border-radius: 50%; font-size: 20px; line-height: 32px; text-align: center; cursor: pointer; transition: background-color 0.2s ease;}
-        .modal-close-btn:hover { background: rgba(255,255,255,0.2); }
-        .modal-header { padding: 40px 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .modal-photo {width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 5px solid var(--accent-color); margin-bottom: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); background-color: #001f33;}
-        .modal-name { font-size: 2.2em; font-weight: 700; margin: 0; letter-spacing: -1px; }
-        .modal-logo { position: absolute; top: 20px; left: 20px; width: 40px; opacity: 0.5; }
-        .modal-stats { list-style: none; padding: 15px 25px; margin: 0; }
-        .modal-stats li { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; font-size: 1em; }
-        .modal-stats li:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,.05); }
-        /* AÑADIDO: Estilos para el botón de guardar y la animación de arrastre */
         .save-button{ display:none; background-color:var(--accent-color); color:var(--background-color); border:none; padding:8px 16px; font-size:14px; font-weight:700; border-radius:20px; cursor:pointer; margin-left: auto; }
         .save-button:disabled { background-color: #555; cursor: not-allowed; }
         .sortable-ghost{ background:rgba(255,255,255,0.1); opacity: 0.8; }
-        @media (max-width:768px){h1{font-size:28px}.section h2{font-size:20px}table thead { display: none; }table, tbody, tr, td { display: block; }tr {display: flex;align-items: center;padding: 10px 5px;border-bottom: 1px solid rgba(255,255,255,.1);margin-bottom: 5px;}.player-highlight { border-left-width: 5px; }tr:last-child { border-bottom: none; }td { border: none; padding: 2px 5px; }.col-pos { font-size: 1.1em; font-weight: bold; width: 45px; text-align: center; }.col-nombre { flex-grow: 1; width: auto; }.col-evol { width: 45px; text-align: center; font-size: 1.4em; }}
     </style>
 </head>
 <body>
     <div class="main-container">
         <div class="header-section">
-            <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo" loading="lazy"/>
+            <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo"/>
             <h1>Administrador del Ranking</h1>
         </div>
-        <div class="ranking-info"><p class="last-updated-date" id="lastUpdatedDate">Cargando...</p></div>
         <section class="section" id="secM">
             <div class="section-header">
                 <h2>Ranking Femenino</h2>
                 <button class="save-button" id="saveM" onclick="saveRanking('mujeres')">Guardar Cambios</button>
             </div>
-            <div class="loading" id="loadingM">Cargando ranking...</div>
+            <div class="loading" id="loadingM">Cargando...</div>
             <table id="tableM"><thead><tr><th class="col-pos">Pos.</th><th>Nombre</th><th class="col-evol">Evol.</th></tr></thead><tbody id="tbodyM"></tbody></table>
         </section>
         <section class="section" id="secH">
@@ -72,18 +49,14 @@
                 <h2>Ranking Masculino</h2>
                 <button class="save-button" id="saveH" onclick="saveRanking('hombres')">Guardar Cambios</button>
             </div>
-            <div class="loading" id="loadingH">Cargando ranking...</div>
+            <div class="loading" id="loadingH">Cargando...</div>
             <table id="tableH"><thead><tr><th class="col-pos">Pos.</th><th>Nombre</th><th class="col-evol">Evol.</th></tr></thead><tbody id="tbodyH"></tbody></table>
         </section>
-        <div class="footer-nav"><a class="back-button" href="ranking.html">Ver Ranking Público</a></div>
     </div>
-    <div class="modal-overlay" id="playerModal"><div class="modal-content"></div></div>
     <script>
-        // ▼▼▼ Pega aquí la URL de tu script de la hoja "test ranking" ▼▼▼
         const API_URL = "https://script.google.com/macros/s/AKfycbxCpCp0gy4fEENaItRbt8qX3B0zt3EsbKifX_MWSu3gC2UqMDjf1uQku9bk9qYkNBLtuw/exec";
 
         async function cargarDatos() {
-            document.getElementById('lastUpdatedDate').textContent = 'Ranking al día: ' + new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
             try {
                 const response = await fetch(`${API_URL}?v=${new Date().getTime()}`);
                 const data = await response.json();
@@ -91,8 +64,7 @@
                 renderTabla('M', data.mujeres);
                 renderTabla('H', data.hombres);
             } catch (err) {
-                document.getElementById('loadingM').innerHTML = `<div class="error-message">Error al cargar: ${err.message}</div>`;
-                document.getElementById('loadingH').innerHTML = ``;
+                document.getElementById('loadingM').innerHTML = `<div class="error-message">Error: ${err.message}</div>`;
             }
         }
         function renderTabla(gender, lista) {
@@ -101,19 +73,18 @@
             const loading = document.getElementById(`loading${gender}`);
             tbody.innerHTML = '';
             if (!lista || lista.length === 0) {
-                loading.textContent = 'No hay jugadores en esta sección.';
+                loading.textContent = 'No hay jugadores.';
                 return;
             }
             lista.forEach(p => {
                 const tr = tbody.insertRow();
-                // SE ELIMINA EL addEventListener para que no abra la ficha
                 const posActual = parseInt(p.posicion);
                 const posAnterior = parseInt(p.posicionAnterior);
-                let evolucionHtml = '<span class="new-entry" title="Nuevo o Sin Ranking">●</span>';
+                let evolucionHtml = '<span class="new-entry" title="Nuevo">●</span>';
                 if (!isNaN(posAnterior) && posAnterior > 0) {
-                    if (posActual < posAnterior) evolucionHtml = `<span class="arrow-up" title="Subió desde ${posAnterior}">▲</span>`;
-                    else if (posActual > posAnterior) evolucionHtml = `<span class="arrow-down" title="Bajó desde ${posAnterior}">▼</span>`;
-                    else evolucionHtml = `<span class="new-entry" title="Mantuvo la posición">●</span>`;
+                    if (posActual < posAnterior) evolucionHtml = `<span class="arrow-up" title="Subió">▲</span>`;
+                    else if (posActual > posAnterior) evolucionHtml = `<span class="arrow-down" title="Bajó">▼</span>`;
+                    else evolucionHtml = `<span>-</span>`;
                 }
                 if (!isNaN(posAnterior) && posAnterior > 0 && posActual !== posAnterior) {
                     tr.classList.add('player-highlight');
@@ -123,57 +94,40 @@
             loading.style.display = 'none';
             table.style.display = 'table';
         }
-
-        // --- AÑADIDO: Funciones de Administrador ---
         function initSortable() {
             const createSortable = (tbodyId, saveButtonId) => {
-                new Sortable(document.getElementById(tbodyId), {
-                    animation: 150,
-                    ghostClass: 'sortable-ghost',
-                    onEnd: () => { document.getElementById(saveButtonId).style.display = 'block'; }
-                });
+                new Sortable(document.getElementById(tbodyId), { animation: 150, ghostClass: 'sortable-ghost', onEnd: () => { document.getElementById(saveButtonId).style.display = 'block'; } });
             };
             createSortable('tbodyM', 'saveM');
             createSortable('tbodyH', 'saveH');
         }
         async function saveRanking(category) {
-            const password = prompt("Para guardar, ingresa la clave de administrador:");
+            const password = prompt("Ingresa la clave de administrador:");
             if (!password) return;
-
             const buttonId = category === 'mujeres' ? 'saveM' : 'saveH';
             const tbodyId = category === 'mujeres' ? 'tbodyM' : 'tbodyH';
             const button = document.getElementById(buttonId);
             button.disabled = true;
             button.textContent = "Guardando...";
-
             const rows = document.getElementById(tbodyId).querySelectorAll('tr');
-            const newRanking = Array.from(rows).map(row => ({
-                nombre: row.querySelector('.col-nombre').textContent
-            }));
-
+            const newRanking = Array.from(rows).map(row => ({ nombre: row.querySelector('.col-nombre').textContent }));
             try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ password, category, ranking: newRanking })
-                });
+                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ password, category, ranking: newRanking }) });
                 const result = await response.json();
                 if (result.status === 'error') throw new Error(result.message);
-
                 button.textContent = "¡Guardado!";
                 setTimeout(() => {
                     button.style.display = 'none';
                     button.textContent = 'Guardar Cambios';
                     button.disabled = false;
-                    cargarDatos(); // Recargar para ver todo actualizado
+                    cargarDatos();
                 }, 1500);
             } catch (err) {
-                alert(`Error al guardar: ${err.message}`);
+                alert(`Error: ${err.message}`);
                 button.disabled = false;
                 button.textContent = 'Reintentar';
             }
         }
-
-        // MODIFICADO: Se llama a initSortable() después de cargar los datos
         document.addEventListener('DOMContentLoaded', () => {
             cargarDatos().then(() => { initSortable(); });
         });
