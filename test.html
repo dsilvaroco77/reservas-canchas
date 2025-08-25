@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UCTenis</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
     <meta name="theme-color" content="#111111"/>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="logo_uctenis_v03.png" type="image/png">
+
     <style>
         :root {
             --background-color: #111;
@@ -32,20 +35,48 @@
         .weather-info .temp { font-size: 48px; font-weight: 600; }
         .weather-info .condition { text-transform: capitalize; margin: 10px 0; }
         #motivational-message { font-style: italic; color: var(--subtle-text-color); margin-top: 20px; }
-        .instagram-widget-container { width: 100%; overflow: hidden; }
-        .instagram-header { text-align: center; margin-bottom: 20px; }
-        .instagram-header p { font-size: 16px; color: var(--subtle-text-color); line-height: 1.6; }
-        .instagram-header a { color: var(--accent-color); font-weight: 600; text-decoration: none; transition: opacity 0.2s; }
-        .instagram-header a:hover { opacity: 0.8; }
+
+        /* --- ESTILOS PARA EL NUEVO BOTÓN DE INSTAGRAM --- */
+        .instagram-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px; /* Forma de píldora */
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: -10px; /* Sube un poco para estar más cerca del eslogan */
+            margin-bottom: 30px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .instagram-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .instagram-link svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
     </style>
 </head>
 <body>
     <div class="main-container">
+
         <div class="header-section">
             <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo">
             <h1>UCTenis Club</h1>
             <p class="tagline">Tu punto de encuentro.</p>
-        </div>
+
+            <a href="https://www.instagram.com/uct.tenis" target="_blank" class="instagram-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
+                <span>Síguenos en Instagram</span>
+            </a>
+            </div>
+
         <div class="section">
             <h2>Acciones Rápidas</h2>
             <div class="button-grid">
@@ -54,6 +85,7 @@
                 <a href="ranking.html" class="button">Ver Ranking del Club</a>
             </div>
         </div>
+
         <div class="section">
             <h2>Clima en Temuco Hoy</h2>
             <div id="weather-forecast" class="weather-info">
@@ -61,23 +93,16 @@
             </div>
             <p id="motivational-message">"El mejor día para jugar es hoy."</p>
         </div>
-        <div class="section">
-            <div class="instagram-header">
-                <h2>Vive el Club en Instagram</h2>
-                <p>Sigue nuestro Instagram <a href="https://www.instagram.com/uct.tenis" target="_blank">@uct.tenis</a> para no perderte ninguna novedad, fotos y los mejores puntos de la semana.</p>
-            </div>
-            <div class="instagram-widget-container">
-                <script src="https://cdn.lightwidget.com/widgets/lightwidget.js"></script>
-                <iframe src="//lightwidget.com/widgets/f7959da6982959a8b3b6df8045c9b2c0.html" scrolling="no" allowtransparency="true" class="lightwidget-widget" style="width:100%;border:0;overflow:hidden;"></iframe>
-            </div>
-        </div>
+
     </div>
+
     <script>
-        // Tu script del clima va aquí...
+        // ... (Tu script del clima sin cambios)
     </script>
+    
     <script>
       if ('serviceWorker' in navigator) {
-        // ...
+        // ... (Tu script de Service Worker sin cambios)
       }
     </script>
 </body>
