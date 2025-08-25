@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCTenis</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta name="theme-color" content="#111111"/>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="logo_uctenis_v03.png" type="image/png">
+    <style>
+        :root {
+            --background-color: #111;
+            --text-color: #f5f5f7;
+            --subtle-text-color: #a1a1a6;
+            --accent-color: #007aff;
+            --card-background: rgba(35, 35, 35, 0.5);
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: var(--background-color); color: var(--text-color); overflow-x: hidden; }
+        .main-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; animation: fadeIn 1s ease-out forwards; }
+        .header-section { text-align: center; margin-bottom: 20px; }
+        .uct-logo { width: clamp(120px, 20vw, 180px); height: auto; display: block; margin: 0 auto 15px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+        h1 { font-size: 42px; font-weight: 700; letter-spacing: -1.5px; margin: 0 0 10px; }
+        .tagline { font-size: 18px; color: var(--subtle-text-color); margin-bottom: 30px; }
+        .section { background: var(--card-background); border-radius: 20px; padding: 25px; margin-bottom: 25px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .section h2 { font-size: 24px; margin-top: 0; margin-bottom: 20px; color: var(--accent-color); text-align: center; }
+        .button-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .button { display: flex; align-items: center; justify-content: center; background-color: var(--accent-color); color: white; font-size: 16px; font-weight: 600; padding: 18px; border: none; border-radius: 15px; cursor: pointer; text-decoration: none; transition: all 0.2s ease; text-align: center; }
+        .button:hover { background-color: #0056b3; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0, 122, 255, 0.2); }
+        .weather-info { text-align: center; font-size: 16px; }
+        .weather-info .temp { font-size: 48px; font-weight: 600; }
+        .weather-info .condition { text-transform: capitalize; margin: 10px 0; }
+        #motivational-message { font-style: italic; color: var(--subtle-text-color); margin-top: 20px; }
+        .instagram-widget-container { width: 100%; overflow: hidden; }
+        .instagram-header { text-align: center; margin-bottom: 20px; }
+        .instagram-header p { font-size: 16px; color: var(--subtle-text-color); line-height: 1.6; }
+        .instagram-header a { color: var(--accent-color); font-weight: 600; text-decoration: none; transition: opacity 0.2s; }
+        .instagram-header a:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <img src="logo_uctenis_v03.png" alt="Logo UCTenis Club" class="uct-logo">
+            <h1>UCTenis Club</h1>
+            <p class="tagline">Tu punto de encuentro.</p>
+        </div>
+        <div class="section">
+            <h2>Acciones Rápidas</h2>
+            <div class="button-grid">
+                <a href="https://docs.google.com/spreadsheets/d/1Bxd9b2709U8y3a-w24p8_sWk44H209z8-9K8H6A6d6E/edit?gid=0#gid=0" class="button">Reservar Cancha CEC</a>
+                <a href="https://docs.google.com/spreadsheets/d/16gJw-JSAiDEe_x3Df9T-2XJb-5L4D4E8Y1j1E1a1a1A/edit?gid=0#gid=0" class="button">Reservar Cancha CJP</a>
+                <a href="ranking.html" class="button">Ver Ranking del Club</a>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Clima en Temuco Hoy</h2>
+            <div id="weather-forecast" class="weather-info">
+                <p>Cargando pronóstico...</p>
+            </div>
+            <p id="motivational-message">"El mejor día para jugar es hoy."</p>
+        </div>
+        <div class="section">
+            <div class="instagram-header">
+                <h2>Vive el Club en Instagram</h2>
+                <p>Sigue nuestro Instagram <a href="https://www.instagram.com/uct.tenis" target="_blank">@uct.tenis</a> para no perderte ninguna novedad, fotos y los mejores puntos de la semana.</p>
+            </div>
+            <div class="instagram-widget-container">
+                <script src="https://cdn.lightwidget.com/widgets/lightwidget.js"></script>
+                <iframe src="//lightwidget.com/widgets/f7959da6982959a8b3b6df8045c9b2c0.html" scrolling="no" allowtransparency="true" class="lightwidget-widget" style="width:100%;border:0;overflow:hidden;"></iframe>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Tu script del clima va aquí...
+    </script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        // ...
+      }
+    </script>
+</body>
+</html>
